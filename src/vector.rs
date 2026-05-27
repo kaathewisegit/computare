@@ -1,4 +1,6 @@
 pub trait Vector<T> {
+    fn length(&self) -> usize;
+
     unsafe fn at_u(&self, index: usize) -> &T;
 
     fn at(&self, index: usize) -> &T {
@@ -6,10 +8,6 @@ pub trait Vector<T> {
         unsafe { self.at_u(index) }
     }
 
-    fn length(&self) -> usize;
-}
-
-pub trait VectorMut<T>: Vector<T> {
     unsafe fn at_mut_u(&mut self, index: usize) -> &mut T;
 
     fn at_mut(&mut self, index: usize) -> &mut T {
@@ -19,32 +17,28 @@ pub trait VectorMut<T>: Vector<T> {
 }
 
 impl<T, const N: usize> Vector<T> for [T; N] {
+    fn length(&self) -> usize {
+        N
+    }
+
     unsafe fn at_u(&self, index: usize) -> &T {
         unsafe { self.get_unchecked(index) }
     }
 
-    fn length(&self) -> usize {
-        N
-    }
-}
-
-impl<T, const N: usize> VectorMut<T> for [T; N] {
     unsafe fn at_mut_u(&mut self, index: usize) -> &mut T {
         unsafe { self.get_unchecked_mut(index) }
     }
 }
 
 impl<T> Vector<T> for [T] {
+    fn length(&self) -> usize {
+        self.len()
+    }
+
     unsafe fn at_u(&self, index: usize) -> &T {
         unsafe { self.get_unchecked(index) }
     }
 
-    fn length(&self) -> usize {
-        self.len()
-    }
-}
-
-impl<T> VectorMut<T> for [T] {
     unsafe fn at_mut_u(&mut self, index: usize) -> &mut T {
         unsafe { self.get_unchecked_mut(index) }
     }

@@ -1,9 +1,6 @@
 use num_traits::NumAssign;
 
-use crate::{
-    matrix::Matrix,
-    vector::{Vector, VectorMut},
-};
+use crate::{matrix::Matrix, vector::Vector};
 
 use super::dot_u;
 
@@ -12,7 +9,7 @@ where
     T: Copy + NumAssign,
     M: Matrix<T> + ?Sized,
     V: Vector<T> + ?Sized,
-    Dst: VectorMut<T> + ?Sized,
+    Dst: Vector<T> + ?Sized,
 {
     debug_assert!(m.is_square());
     debug_assert_eq!(m.num_cols(), v.length());
