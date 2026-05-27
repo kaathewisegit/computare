@@ -23,7 +23,7 @@ fn scaling_uniform() {
 
     check_uniform(1e300);
     check_uniform(1e-300);
-    check_uniform(4.9406564584124654e-324); // subnormal
+    check_uniform(5e-324); // subnormal
 }
 
 #[test]
