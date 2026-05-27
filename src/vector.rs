@@ -1,5 +1,3 @@
-use num_traits::NumAssign;
-
 pub trait Vector<T> {
     unsafe fn at_u(&self, index: usize) -> &T;
 
@@ -50,24 +48,4 @@ impl<T> VectorMut<T> for [T] {
     unsafe fn at_mut_u(&mut self, index: usize) -> &mut T {
         unsafe { self.get_unchecked_mut(index) }
     }
-}
-
-pub unsafe fn dot_u<T, A, B>(a: &A, b: &B) -> T
-where
-    T: Copy + NumAssign,
-    A: Vector<T> + ?Sized,
-    B: Vector<T> + ?Sized,
-{
-    debug_assert_eq!(a.length(), b.length());
-
-    let mut i = 0;
-    let len = a.length();
-    let mut out = T::zero();
-
-    while i < len {
-        out += unsafe { *a.at_u(i) * *b.at_u(i) };
-        i += 1;
-    }
-
-    out
 }

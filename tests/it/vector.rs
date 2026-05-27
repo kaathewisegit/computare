@@ -1,6 +1,6 @@
 use core::hint::black_box as bb;
 
-use linalg::vector::dot_u;
+use linalg::ops::dot_u;
 
 #[test]
 fn dot_array() {
