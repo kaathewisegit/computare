@@ -1,5 +1,5 @@
 use core::{
-    ptr::{slice_from_raw_parts, slice_from_raw_parts_mut},
+    ptr::{self, slice_from_raw_parts, slice_from_raw_parts_mut},
     slice::{from_raw_parts, from_raw_parts_mut},
 };
 
@@ -69,6 +69,22 @@ impl<T> Matrix<T> for MatrixRef<T> {
             from_raw_parts_mut(ptr, self.num_cols())
         }
     }
+
+    unsafe fn swap_rows_u(&mut self, a: usize, b: usize) {
+        if a == b {
+            return;
+        }
+
+        unsafe {
+            let ptr_a = self.at_mut_u(a, 0) as *mut T;
+            let ptr_b = self.at_mut_u(b, 0) as *mut T;
+            ptr::swap_nonoverlapping(ptr_a, ptr_b, self.num_rows());
+        };
+    }
+
+    fn for_each(&mut self, f: impl FnMut(&mut T)) {
+        self.as_slice_mut().iter_mut().for_each(f);
+    }
 }
 
 impl<T> MatrixRef<T> {
@@ -78,6 +94,18 @@ impl<T> MatrixRef<T> {
 
     pub fn as_mut_ptr(&mut self) -> *mut T {
         self.0.as_mut_ptr()
+    }
+
+    pub fn num_elements(&self) -> usize {
+        self.num_rows() * self.num_cols()
+    }
+
+    pub fn as_slice(&self) -> &[T] {
+        unsafe { from_raw_parts(self.as_ptr(), self.num_elements()) }
+    }
+
+    pub fn as_slice_mut(&mut self) -> &mut [T] {
+        unsafe { from_raw_parts_mut(self.as_mut_ptr(), self.num_elements()) }
     }
 
     fn index_of(&self, row: usize, col: usize) -> usize {

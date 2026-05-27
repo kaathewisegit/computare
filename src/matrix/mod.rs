@@ -35,17 +35,20 @@ pub trait Matrix<T> {
 
     unsafe fn row_mut_u(&mut self, index: usize) -> &mut Self::Row;
 
+    /// # Safety
+    ///
+    /// - `a, b < self.num_rows()`
     unsafe fn swap_rows_u(&mut self, a: usize, b: usize) {
         if a == b {
             return;
         }
 
-        unsafe {
-            let ptr_a = self.at_mut_u(a, 0) as *mut T;
-            let ptr_b = self.at_mut_u(b, 0) as *mut T;
-            ptr::swap_nonoverlapping(ptr_a, ptr_b, self.num_rows());
-        };
+        for i in 0..self.num_cols() {
+            unsafe { ptr::swap(self.at_mut_u(a, i), self.at_mut_u(b, i)) };
+        }
     }
+
+    fn for_each(&mut self, f: impl FnMut(&mut T));
 }
 
 impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
@@ -77,5 +80,9 @@ impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
 
     unsafe fn row_mut_u(&mut self, index: usize) -> &mut [T; M] {
         unsafe { self.get_unchecked_mut(index) }
+    }
+
+    fn for_each(&mut self, f: impl FnMut(&mut T)) {
+        self.as_flattened_mut().iter_mut().for_each(f)
     }
 }
