@@ -7,3 +7,5 @@ edition = "2024"
 
 [dev-dependencies]
 approx = "0.5.1"
+arbitrary = "1.4.2"
+arbtest = "0.3.2"
