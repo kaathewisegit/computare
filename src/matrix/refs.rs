@@ -85,26 +85,57 @@ impl<T> MatrixRef<T> {
     }
 }
 
+#[cfg(target_pointer_width = "64")]
+fn into_metadata(num_rows: u32, num_cols: u32) -> usize {
+    ((num_rows as usize) << 32) + num_cols as usize
+}
+
 impl<T> MatrixRef<T> {
+    #[cfg(target_pointer_width = "64")]
     pub unsafe fn from_raw_parts<'a>(
         ptr: *const T,
         num_rows: u32,
         num_cols: u32,
     ) -> &'a Self {
-        #[cfg(target_pointer_width = "64")]
-        let metadata = ((num_rows as usize) << 32) + num_cols as usize;
-        let slice = slice_from_raw_parts(ptr, metadata);
+        let slice =
+            slice_from_raw_parts(ptr, into_metadata(num_rows, num_cols));
         unsafe { &*(slice as *const Self) }
     }
 
+    #[cfg(target_pointer_width = "64")]
     pub unsafe fn from_raw_parts_mut<'a>(
         ptr: *mut T,
         num_rows: u32,
         num_cols: u32,
     ) -> &'a mut Self {
-        #[cfg(target_pointer_width = "64")]
-        let metadata = ((num_rows as usize) << 32) + num_cols as usize;
-        let slice = slice_from_raw_parts_mut(ptr, metadata);
+        let slice =
+            slice_from_raw_parts_mut(ptr, into_metadata(num_rows, num_cols));
         unsafe { &mut *(slice as *mut Self) }
+    }
+
+    pub fn from_slice(data: &[T], num_rows: usize, num_cols: usize) -> &Self {
+        assert!(data.len() >= num_rows * num_cols);
+        unsafe {
+            Self::from_raw_parts(
+                data.as_ptr(),
+                num_rows.try_into().unwrap(),
+                num_cols.try_into().unwrap(),
+            )
+        }
+    }
+
+    pub fn from_slice_mut(
+        data: &mut [T],
+        num_rows: usize,
+        num_cols: usize,
+    ) -> &mut Self {
+        assert!(data.len() >= num_rows * num_cols);
+        unsafe {
+            Self::from_raw_parts_mut(
+                data.as_mut_ptr(),
+                num_rows.try_into().unwrap(),
+                num_cols.try_into().unwrap(),
+            )
+        }
     }
 }
