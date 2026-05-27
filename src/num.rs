@@ -77,9 +77,16 @@ pub trait Float: Num + PartialOrd + Neg<Output = Self> {
     const MIN_EXP: i32;
     const MAX_EXP: i32;
 
+    const RADIX: Self;
+    const MANTISSA_DIGITS: u32;
+
     fn is_nan(self) -> bool;
 
+    fn abs(self) -> Self;
+
     fn sqrt(self) -> Self;
+
+    fn powi(self, n: i32) -> Self;
 }
 
 macro_rules! impl_float {
@@ -98,14 +105,27 @@ macro_rules! impl_float {
             const MIN_EXP: i32 = <$t>::MIN_EXP;
             const MAX_EXP: i32 = <$t>::MAX_EXP;
 
+            const RADIX: $t = 2.0;
+            const MANTISSA_DIGITS: u32 = <$t>::MANTISSA_DIGITS;
+
             #[inline]
             fn is_nan(self) -> bool {
                 <$t>::is_nan(self)
             }
 
             #[inline]
+            fn abs(self) -> Self {
+                <$t>::abs(self)
+            }
+
+            #[inline]
             fn sqrt(self) -> Self {
                 <$t>::sqrt(self)
+            }
+
+            #[inline]
+            fn powi(self, n: i32) -> Self {
+                <$t>::powi(self, n)
             }
         }
     };

@@ -1,7 +1,7 @@
 use core::ptr;
 
 use crate::{
-    num::{Float, Num, NumAssign},
+    num::{Num, NumAssign},
     vector::Vector,
 };
 
@@ -46,19 +46,4 @@ where
     }
 
     out
-}
-
-pub unsafe fn two_norm_u<T, V>(v: &V) -> T
-where
-    T: Float + NumAssign,
-    V: Vector<T> + ?Sized,
-{
-    let mut out = T::ZERO;
-
-    for i in 0..v.length() {
-        let value = unsafe { *v.at_u(i) };
-        out += value * value;
-    }
-
-    out.sqrt()
 }
