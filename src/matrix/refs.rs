@@ -82,7 +82,11 @@ impl<T> Matrix<T> for MatrixRef<T> {
         };
     }
 
-    fn for_each(&mut self, f: impl FnMut(&mut T)) {
+    fn for_each(&self, f: impl FnMut(&T)) {
+        self.as_slice().iter().for_each(f);
+    }
+
+    fn for_each_mut(&mut self, f: impl FnMut(&mut T)) {
         self.as_slice_mut().iter_mut().for_each(f);
     }
 }

@@ -4,5 +4,5 @@
 mod eucledian_norm;
 mod givens_rotation;
 mod matrix;
-mod max;
+mod vec_max;
 mod vector;

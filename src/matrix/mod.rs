@@ -48,7 +48,9 @@ pub trait Matrix<T> {
         }
     }
 
-    fn for_each(&mut self, f: impl FnMut(&mut T));
+    fn for_each(&self, f: impl FnMut(&T));
+
+    fn for_each_mut(&mut self, f: impl FnMut(&mut T));
 }
 
 impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
@@ -82,7 +84,11 @@ impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
         unsafe { self.get_unchecked_mut(index) }
     }
 
-    fn for_each(&mut self, f: impl FnMut(&mut T)) {
+    fn for_each(&self, f: impl FnMut(&T)) {
+        self.as_flattened().iter().for_each(f)
+    }
+
+    fn for_each_mut(&mut self, f: impl FnMut(&mut T)) {
         self.as_flattened_mut().iter_mut().for_each(f)
     }
 }

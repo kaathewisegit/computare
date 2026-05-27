@@ -2,7 +2,7 @@ use arbtest::arbtest;
 
 use std::cmp::Ordering;
 
-use linalg::ops::max_abs_idx;
+use linalg::ops::vec_max_abs_idx;
 
 #[test]
 fn max_abs_idx_basic() {
@@ -19,7 +19,7 @@ fn max_abs_idx_basic() {
             .map(|(index, _)| index)
             .unwrap_or(0);
 
-        assert_eq!(max_index, max_abs_idx(&values[..]), "{values:?}");
+        assert_eq!(max_index, vec_max_abs_idx(&values[..]), "{values:?}");
         Ok(())
     })
     .size_min(2u32.pow(10));

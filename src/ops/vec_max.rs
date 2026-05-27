@@ -1,6 +1,6 @@
 use crate::{num::Float, vector::Vector};
 
-pub fn max_abs_idx<T, V>(v: &V) -> usize
+pub fn vec_max_abs_idx<T, V>(v: &V) -> usize
 where
     T: Float,
     V: Vector<T> + ?Sized,
