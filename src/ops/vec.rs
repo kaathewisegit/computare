@@ -1,7 +1,9 @@
 use core::ptr;
-use num_traits::{Float, Num, NumAssign};
 
-use crate::vector::Vector;
+use crate::{
+    num::{Float, Num, NumAssign},
+    vector::Vector,
+};
 
 pub fn swap_u<T, A, B>(a: &mut A, b: &mut B)
 where
@@ -37,7 +39,7 @@ where
 {
     debug_assert_eq!(a.length(), b.length());
 
-    let mut out = T::zero();
+    let mut out = T::ZERO;
 
     for i in 0..a.length() {
         out += unsafe { *a.at_u(i) * *b.at_u(i) };
@@ -51,7 +53,7 @@ where
     T: Float + NumAssign,
     V: Vector<T> + ?Sized,
 {
-    let mut out = T::zero();
+    let mut out = T::ZERO;
 
     for i in 0..v.length() {
         let value = unsafe { *v.at_u(i) };

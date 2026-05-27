@@ -1,4 +1,4 @@
-use num_traits::NumAssign;
+use crate::num::NumAssign;
 
 use crate::matrix::Matrix;
 
@@ -19,7 +19,7 @@ where
 
     for i in 0..n {
         for j in 0..p {
-            let mut acc = T::zero();
+            let mut acc = T::ZERO;
             for k in 0..m {
                 acc += unsafe { *a.at_u(i, k) * *b.at_u(k, j) };
             }

@@ -1,4 +1,4 @@
-use num_traits::NumAssign;
+use crate::num::NumAssign;
 
 use crate::{matrix::Matrix, vector::Vector};
 
