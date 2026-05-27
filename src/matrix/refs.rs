@@ -10,7 +10,7 @@ pub struct MatrixRef<'a, T> {
 }
 
 impl<T> Matrix<T> for MatrixRef<'_, T> {
-    unsafe fn u_at(&self, row: usize, col: usize) -> &T {
+    unsafe fn at_u(&self, row: usize, col: usize) -> &T {
         let idx = self.index_of(row, col);
         unsafe { &*self.ptr.add(idx) }
     }
@@ -71,7 +71,7 @@ pub struct MatrixRefMut<'a, T> {
 }
 
 impl<T> Matrix<T> for MatrixRefMut<'_, T> {
-    unsafe fn u_at(&self, row: usize, col: usize) -> &T {
+    unsafe fn at_u(&self, row: usize, col: usize) -> &T {
         let idx = self.index_of(row, col);
         unsafe { &*self.ptr.add(idx) }
     }
