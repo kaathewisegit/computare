@@ -4,5 +4,6 @@
 mod eucledian_norm;
 mod givens_rotation;
 mod matrix;
+mod strided_vec_ref;
 mod vec_max;
 mod vector;
