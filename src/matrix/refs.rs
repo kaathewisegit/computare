@@ -4,6 +4,7 @@ use core::{
 };
 
 use super::Matrix;
+use crate::packing::Packed;
 
 // This is a hack I came up with after several iterations.  The issue is that in
 // Rust only `&` and `&mut` are first class references.  The previous design
@@ -34,12 +35,12 @@ impl<T> Matrix<T> for MatrixRef<T> {
 
     #[cfg(target_pointer_width = "64")]
     fn num_rows(&self) -> usize {
-        self.0.len() >> 32
+        self.0.len().lower()
     }
 
     #[cfg(target_pointer_width = "64")]
     fn num_cols(&self) -> usize {
-        self.0.len() as u32 as usize
+        self.0.len().upper()
     }
 
     fn row_stride(&self) -> usize {
@@ -117,11 +118,6 @@ impl<T> MatrixRef<T> {
     }
 }
 
-#[cfg(target_pointer_width = "64")]
-fn into_metadata(num_rows: u32, num_cols: u32) -> usize {
-    ((num_rows as usize) << 32) + num_cols as usize
-}
-
 impl<T> MatrixRef<T> {
     #[cfg(target_pointer_width = "64")]
     pub unsafe fn from_raw_parts<'a>(
@@ -130,7 +126,7 @@ impl<T> MatrixRef<T> {
         num_cols: u32,
     ) -> &'a Self {
         let slice =
-            slice_from_raw_parts(ptr, into_metadata(num_rows, num_cols));
+            slice_from_raw_parts(ptr, usize::from_halves(num_rows, num_cols));
         unsafe { &*(slice as *const Self) }
     }
 
@@ -140,8 +136,10 @@ impl<T> MatrixRef<T> {
         num_rows: u32,
         num_cols: u32,
     ) -> &'a mut Self {
-        let slice =
-            slice_from_raw_parts_mut(ptr, into_metadata(num_rows, num_cols));
+        let slice = slice_from_raw_parts_mut(
+            ptr,
+            usize::from_halves(num_rows, num_cols),
+        );
         unsafe { &mut *(slice as *mut Self) }
     }
 

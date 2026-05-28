@@ -76,7 +76,7 @@ impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
         unsafe { self.get_unchecked_mut(row).get_unchecked_mut(col) }
     }
 
-    unsafe fn row_u(&self, index: usize) -> &Self::Row {
+    unsafe fn row_u(&self, index: usize) -> &[T; M] {
         unsafe { self.get_unchecked(index) }
     }
 

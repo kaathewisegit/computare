@@ -1,5 +1,11 @@
+mod strided;
+
+pub use strided::StridedVectorRef;
+
 pub trait Vector<T> {
     fn length(&self) -> usize;
+
+    fn stride(&self) -> usize;
 
     unsafe fn at_u(&self, index: usize) -> &T;
 
@@ -21,6 +27,10 @@ impl<T, const N: usize> Vector<T> for [T; N] {
         N
     }
 
+    fn stride(&self) -> usize {
+        1
+    }
+
     unsafe fn at_u(&self, index: usize) -> &T {
         unsafe { self.get_unchecked(index) }
     }
@@ -33,6 +43,10 @@ impl<T, const N: usize> Vector<T> for [T; N] {
 impl<T> Vector<T> for [T] {
     fn length(&self) -> usize {
         self.len()
+    }
+
+    fn stride(&self) -> usize {
+        1
     }
 
     unsafe fn at_u(&self, index: usize) -> &T {
