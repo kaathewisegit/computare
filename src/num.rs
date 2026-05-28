@@ -86,6 +86,10 @@ pub trait Float: Num + PartialOrd + Neg<Output = Self> {
 
     fn sqrt(self) -> Self;
 
+    fn cbrt(self) -> Self;
+
+    fn nth_root(self, n: u8) -> Self;
+
     fn powi(self, n: i32) -> Self;
 
     fn signum(self) -> Self;
@@ -123,6 +127,16 @@ macro_rules! impl_float {
             #[inline]
             fn sqrt(self) -> Self {
                 <$t>::sqrt(self)
+            }
+
+            #[inline]
+            fn cbrt(self) -> Self {
+                <$t>::cbrt(self)
+            }
+
+            #[inline]
+            fn nth_root(self, n: u8) -> Self {
+                <$t>::powf(self, 1.0 / <$t>::from(n))
             }
 
             #[inline]
