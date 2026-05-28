@@ -23,11 +23,11 @@ impl<T> Vector<T> for StridedVectorRef<T> {
     }
 
     unsafe fn at_u(&self, index: usize) -> &T {
-        unsafe { &*self.as_ptr().add(index) }
+        unsafe { &*self.as_ptr().add(self.stride() * index) }
     }
 
     unsafe fn at_mut_u(&mut self, index: usize) -> &mut T {
-        unsafe { &mut *self.as_mut_ptr().add(index) }
+        unsafe { &mut *self.as_mut_ptr().add(self.stride() * index) }
     }
 }
 
