@@ -87,6 +87,8 @@ pub trait Float: Num + PartialOrd + Neg<Output = Self> {
     fn sqrt(self) -> Self;
 
     fn powi(self, n: i32) -> Self;
+
+    fn signum(self) -> Self;
 }
 
 macro_rules! impl_float {
@@ -126,6 +128,11 @@ macro_rules! impl_float {
             #[inline]
             fn powi(self, n: i32) -> Self {
                 <$t>::powi(self, n)
+            }
+
+            #[inline]
+            fn signum(self) -> Self {
+                <$t>::signum(self)
             }
         }
     };
