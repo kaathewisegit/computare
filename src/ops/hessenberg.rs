@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use crate::{matrix::Matrix, num::Float, vector::Vector};
 
 pub unsafe fn hessenberg_upper_u<T, M, VT>(
@@ -37,7 +39,7 @@ unsafe fn unblocked<T, M, VT>(
     tau: &mut VT,
     low: usize,
     high: usize,
-    scratch: &mut Vec<T>,
+    #[expect(clippy::ptr_arg)] scratch: &mut Vec<T>,
 ) where
     T: Float,
     M: Matrix<T> + ?Sized,
