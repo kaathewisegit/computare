@@ -4,10 +4,11 @@ use core::ptr;
 
 pub use refs::MatrixRef;
 
-use crate::vector::Vector;
+use crate::vector::{StridedVectorRef, Vector};
 
 pub trait Matrix<T> {
     type Row: Vector<T> + ?Sized;
+    type Column: Vector<T> + ?Sized;
 
     fn num_rows(&self) -> usize;
     fn num_cols(&self) -> usize;
@@ -35,6 +36,10 @@ pub trait Matrix<T> {
 
     unsafe fn row_mut_u(&mut self, index: usize) -> &mut Self::Row;
 
+    unsafe fn col_u(&self, index: usize) -> &Self::Column;
+
+    unsafe fn col_mut_u(&mut self, index: usize) -> &mut Self::Column;
+
     /// # Safety
     ///
     /// - `a, b < self.num_rows()`
@@ -55,6 +60,7 @@ pub trait Matrix<T> {
 
 impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
     type Row = [T; M];
+    type Column = StridedVectorRef<T>;
 
     fn num_rows(&self) -> usize {
         N
@@ -82,6 +88,26 @@ impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
 
     unsafe fn row_mut_u(&mut self, index: usize) -> &mut [T; M] {
         unsafe { self.get_unchecked_mut(index) }
+    }
+
+    unsafe fn col_u(&self, index: usize) -> &StridedVectorRef<T> {
+        unsafe {
+            StridedVectorRef::from_raw_parts(
+                Matrix::at_u(self, 0, index) as *const T,
+                self.num_rows() as u32,
+                self.row_stride() as u32,
+            )
+        }
+    }
+
+    unsafe fn col_mut_u(&mut self, index: usize) -> &mut StridedVectorRef<T> {
+        unsafe {
+            StridedVectorRef::from_raw_parts_mut(
+                Matrix::at_mut_u(self, 0, index) as *mut T,
+                self.num_rows() as u32,
+                self.row_stride() as u32,
+            )
+        }
     }
 
     fn for_each(&self, f: impl FnMut(&T)) {

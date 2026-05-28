@@ -4,7 +4,7 @@ use core::{
 };
 
 use super::Matrix;
-use crate::packing::Packed;
+use crate::{packing::Packed, vector::StridedVectorRef};
 
 // This is a hack I came up with after several iterations.  The issue is that in
 // Rust only `&` and `&mut` are first class references.  The previous design
@@ -32,6 +32,7 @@ pub struct MatrixRef<T>([T]);
 
 impl<T> Matrix<T> for MatrixRef<T> {
     type Row = [T];
+    type Column = StridedVectorRef<T>;
 
     #[cfg(target_pointer_width = "64")]
     fn num_rows(&self) -> usize {
@@ -68,6 +69,26 @@ impl<T> Matrix<T> for MatrixRef<T> {
         unsafe {
             let ptr = self.as_mut_ptr().add(index * self.num_cols());
             from_raw_parts_mut(ptr, self.num_cols())
+        }
+    }
+
+    unsafe fn col_u(&self, index: usize) -> &StridedVectorRef<T> {
+        unsafe {
+            StridedVectorRef::from_raw_parts(
+                Matrix::at_u(self, 0, index) as *const T,
+                self.num_rows() as u32,
+                self.row_stride() as u32,
+            )
+        }
+    }
+
+    unsafe fn col_mut_u(&mut self, index: usize) -> &mut StridedVectorRef<T> {
+        unsafe {
+            StridedVectorRef::from_raw_parts_mut(
+                Matrix::at_mut_u(self, 0, index) as *mut T,
+                self.num_rows() as u32,
+                self.row_stride() as u32,
+            )
         }
     }
 
