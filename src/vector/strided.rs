@@ -14,6 +14,8 @@ use crate::packing::Packed;
 pub struct StridedVectorRef<T>([T]);
 
 impl<T> Vector<T> for StridedVectorRef<T> {
+    type Slice = StridedVectorRef<T>;
+
     fn length(&self) -> usize {
         self.0.len().lower()
     }
@@ -28,6 +30,30 @@ impl<T> Vector<T> for StridedVectorRef<T> {
 
     unsafe fn at_mut_u(&mut self, index: usize) -> &mut T {
         unsafe { &mut *self.as_mut_ptr().add(self.stride() * index) }
+    }
+
+    unsafe fn slice_u(&self, start: usize, end: usize) -> &Self::Slice {
+        unsafe {
+            Self::from_raw_parts(
+                self.as_ptr().add(self.stride() * start),
+                (end - start) as u32,
+                self.stride() as u32,
+            )
+        }
+    }
+
+    unsafe fn slice_mut_u(
+        &mut self,
+        start: usize,
+        end: usize,
+    ) -> &mut Self::Slice {
+        unsafe {
+            Self::from_raw_parts_mut(
+                self.as_mut_ptr().add(self.stride() * start),
+                (end - start) as u32,
+                self.stride() as u32,
+            )
+        }
     }
 }
 
