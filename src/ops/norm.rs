@@ -68,11 +68,14 @@ fn accumulate<const P: u8, T: Float + NumAssign>(
 /// Calculates the `p-norm`: `∥v∥_p ≡ (∑v_i^p)^(1/p)`
 ///
 /// This is a generalization of the [Edward Anderson's 2017 update][p0] of
-/// [James. L.  Blue's original 1978 scaling algorithm].  It splits all input
-/// values into 3 bins: small, large, and big, and sums their squares
+/// [James. L.  Blue's original 1978 scaling algorithm][p1].  It splits all
+/// input values into 3 bins: small, large, and big, and sums their squares
 /// separately.  The scaling is done in a way that `∀x < small : x^p` doesn't
 /// underflow (and the same idea for the upper threshold).  The scaling
 /// constants are powers of two to make multiplication easier.
+///
+/// [p0]: https://doi.org/10.1145/3061665
+/// [p1]: https://doi.org/10.1145/355769.355771
 pub fn p_norm<const P: u8, T, V>(v: &V) -> T
 where
     T: Float + NumAssign,
