@@ -1,3 +1,9 @@
+// Contrary to what the lint says, I find the arithmetic to be clearer with an
+// explicit +1
+#![expect(clippy::int_plus_one)]
+
+use core::ptr::{slice_from_raw_parts, slice_from_raw_parts_mut};
+
 use super::Vector;
 use crate::packing::Packed;
 
@@ -32,5 +38,55 @@ impl<T> StridedVectorRef<T> {
 
     pub fn as_mut_ptr(&mut self) -> *mut T {
         self.0.as_mut_ptr()
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    pub unsafe fn from_raw_parts<'a>(
+        ptr: *const T,
+        len: u32,
+        stride: u32,
+    ) -> &'a Self {
+        let slice = slice_from_raw_parts(ptr, usize::from_halves(len, stride));
+        unsafe { &*(slice as *const Self) }
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    pub unsafe fn from_raw_parts_mut<'a>(
+        ptr: *mut T,
+        len: u32,
+        stride: u32,
+    ) -> &'a mut Self {
+        let slice =
+            slice_from_raw_parts_mut(ptr, usize::from_halves(len, stride));
+        unsafe { &mut *(slice as *mut Self) }
+    }
+
+    pub fn from_slice(data: &[T], len: usize, stride: usize) -> &Self {
+        assert!(len == 0 || data.len() >= (len - 1) * stride + 1);
+        // SAFETY: `data` is valid, and the new slice is either empty or is long
+        // enough to fit `len` elements and `len - 1` strides inbetween.
+        unsafe {
+            Self::from_raw_parts(
+                data.as_ptr(),
+                len.try_into().unwrap(),
+                stride.try_into().unwrap(),
+            )
+        }
+    }
+
+    pub fn from_slice_mut(
+        data: &mut [T],
+        len: usize,
+        stride: usize,
+    ) -> &mut Self {
+        assert!(len == 0 || data.len() >= (len - 1) * stride + 1);
+        // SAFETY: see `from_slice`
+        unsafe {
+            Self::from_raw_parts_mut(
+                data.as_mut_ptr(),
+                len.try_into().unwrap(),
+                stride.try_into().unwrap(),
+            )
+        }
     }
 }
