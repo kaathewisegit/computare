@@ -1,10 +1,8 @@
 use core::f64::consts::PI;
 
-use crate::polynomial::polynomial;
+use computare_core::FloatMath;
 
-fn sinpi(x: f64) -> f64 {
-    (std::f64::consts::PI * x).sin()
-}
+use crate::polynomial::polynomial;
 
 #[expect(clippy::excessive_precision)]
 pub fn gamma(mut x: f64) -> f64 {
@@ -89,7 +87,7 @@ pub fn gamma(mut x: f64) -> f64 {
                 p_mut += 1.0;
                 z = q - p_mut;
             }
-            z = q * sinpi(z);
+            z = q * z.sinpi();
             if z == 0.0 {
                 return sgngam * f64::INFINITY;
             }

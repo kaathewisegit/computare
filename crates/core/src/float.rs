@@ -23,6 +23,8 @@ pub trait Float:
     const RADIX: Self;
     const MANTISSA_DIGITS: u32;
 
+    const PI: Self;
+
     fn is_nan(self) -> bool;
     fn is_infinite(self) -> bool;
     fn is_finite(self) -> bool;
@@ -46,7 +48,7 @@ pub trait Float:
 }
 
 macro_rules! impl_float {
-    ($t:ty) => {
+    ($t:ident) => {
         impl Float for $t {
             const NAN: Self = <$t>::NAN;
             const INFINITY: Self = <$t>::INFINITY;
@@ -66,6 +68,8 @@ macro_rules! impl_float {
 
             const RADIX: Self = <$t>::RADIX as Self;
             const MANTISSA_DIGITS: u32 = <$t>::MANTISSA_DIGITS;
+
+            const PI: Self = core::$t::consts::PI;
 
             #[inline]
             fn is_nan(self) -> bool {
@@ -182,6 +186,15 @@ pub trait FloatMath: Float {
     fn asinh(self) -> Self;
     fn acosh(self) -> Self;
     fn atanh(self) -> Self;
+
+    fn sinpi(self) -> Self {
+        if !self.is_finite() {
+            return self;
+        }
+
+        let rem = self % (Self::one() + Self::one());
+        (rem * Self::PI).sin()
+    }
 }
 
 macro_rules! impl_float_math {
