@@ -3,6 +3,7 @@ mod float;
 mod identities;
 mod integer;
 mod num;
+pub mod ranged;
 
 pub use complex::Complex;
 pub use float::{Float, FloatMath};
