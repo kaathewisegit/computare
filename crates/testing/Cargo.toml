@@ -8,5 +8,6 @@ authors.workspace = true
 
 [dependencies]
 arbitrary = { workspace = true }
+arbtest = { workspace = true }
 
 computare-core = { workspace = true }

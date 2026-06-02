@@ -11,3 +11,5 @@ computare-core = { workspace = true }
 
 [dev-dependencies]
 rug = { workspace = true }
+
+computare-testing = { workspace = true }
