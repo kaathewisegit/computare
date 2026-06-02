@@ -3,6 +3,7 @@ resolver = "3"
 members = [
 	"crates/core",
 	"crates/special",
+	"crates/testing",
 ]
 
 [workspace.package]
@@ -15,4 +16,6 @@ authors = ["Andrej Kolčin <self@kaathewise.net>"]
 computare-core = { version = "0.1.0-alpha.0", path = "crates/core" }
 computare-special = { version = "0.1.0-alpha.0", path = "crates/special" }
 
+arbitrary = "1.4.2"
+arbtest = "0.3.2"
 rug = "1.30.0"
