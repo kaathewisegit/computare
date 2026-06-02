@@ -4,6 +4,7 @@ mod identities;
 mod integer;
 mod num;
 pub mod ranged;
+pub mod tolerance;
 
 pub use complex::Complex;
 pub use float::{Float, FloatMath};
