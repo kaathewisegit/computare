@@ -1,0 +1,15 @@
+[workspace]
+resolver = "3"
+members = [
+	"crates/core",
+]
+
+[workspace.package]
+version = "0.1.0-alpha.0"
+edition = "2024"
+license = "MPL-2.0"
+authors = ["Andrej Kolčin <self@kaathewise.net>"]
+
+[workspace.dependencies]
+
+core = { version = "0.1.0-alpha.0", path = "crates/core" }
