@@ -2,6 +2,7 @@
 resolver = "3"
 members = [
 	"crates/core",
+	"crates/special",
 ]
 
 [workspace.package]
@@ -11,5 +12,7 @@ license = "MPL-2.0"
 authors = ["Andrej Kolčin <self@kaathewise.net>"]
 
 [workspace.dependencies]
+computare-core = { version = "0.1.0-alpha.0", path = "crates/core" }
+computare-special = { version = "0.1.0-alpha.0", path = "crates/special" }
 
-core = { version = "0.1.0-alpha.0", path = "crates/core" }
+rug = "1.30.0"
