@@ -1,11 +1,15 @@
 use rug::{Float, az::Az};
 
 use computare_core::tolerance::assert_almost_eq;
-use computare_special::gamma::{gamma, ln_gamma};
+use computare_special::gamma::{
+    gamma, ln_gamma, regularized_lower_gamma, regularized_upper_gamma,
+};
 use computare_testing::arbitrary::{Result, arbtest, f64_range, f64_unit};
 
+const PREC: u32 = 500;
+
 fn compare_gamma(f: f64, relative: f64) -> Result<()> {
-    let rug_gamma = Float::with_val_64(500, f).gamma().az::<f64>();
+    let rug_gamma = Float::with_val(PREC, f).gamma().az::<f64>();
     let my_gamma = gamma(f);
 
     assert_almost_eq!(my_gamma, rug_gamma, relative = relative);
@@ -33,7 +37,7 @@ fn gamma_10_33() {
 }
 
 fn compare_ln_gamma(f: f64, relative: f64) -> Result<()> {
-    let rug_gamma = Float::with_val_64(500, f).ln_gamma().az::<f64>();
+    let rug_gamma = Float::with_val(PREC, f).ln_gamma().az::<f64>();
     let my_gamma = ln_gamma(f);
 
     assert_almost_eq!(my_gamma, rug_gamma, relative = relative);
@@ -68,4 +72,40 @@ fn ln_gamma_10_35() {
 #[test]
 fn ln_gamma_35_100() {
     arbtest(|u| compare_ln_gamma(f64_range(u, 5.0, 33.0)?, 1e-16));
+}
+
+fn rug_regularized_upper(a: f64, x: f64) -> Float {
+    let rug_a = Float::with_val(PREC, a);
+    let rug_x = Float::with_val(PREC, x);
+    let upper_gamma = rug_a.clone().gamma_inc(&rug_x);
+    let complete_gamma = rug_a.gamma();
+    upper_gamma / complete_gamma
+}
+
+fn compare_regularized_lower(a: f64, x: f64, relative: f64) -> Result<()> {
+    let rug_res =
+        (Float::with_val(PREC, 1.0) - rug_regularized_upper(a, x)).az::<f64>();
+    let my_res = regularized_lower_gamma(a, x);
+
+    assert_almost_eq!(my_res, rug_res, relative = relative);
+    Ok(())
+}
+
+#[test]
+fn regularized_lower_gamma_unit() {
+    arbtest(|u| compare_regularized_lower(f64_unit(u)?, f64_unit(u)?, 1e-14));
+}
+
+fn compare_regularized_upper(a: f64, x: f64, relative: f64) -> Result<()> {
+    let rug_res = rug_regularized_upper(a, x).az::<f64>();
+    let my_res = regularized_upper_gamma(a, x);
+
+    assert_almost_eq!(my_res, rug_res, relative = relative);
+    Ok(())
+}
+
+#[test]
+#[ignore]
+fn regularized_upper_gamma_unit() {
+    arbtest(|u| compare_regularized_upper(f64_unit(u)?, f64_unit(u)?, 1e-14));
 }

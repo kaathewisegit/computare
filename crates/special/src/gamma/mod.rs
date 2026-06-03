@@ -1,8 +1,13 @@
+mod incomplete;
+mod incomplete_coefs;
+
+pub use incomplete::{regularized_lower_gamma, regularized_upper_gamma};
+
 use core::f64::consts::PI;
 
 use computare_core::{FloatMath, debug_panic};
 
-use crate::polynomial::{polynomial, polynomial1};
+use crate::evaluate::{polynomial, polynomial1};
 
 #[expect(clippy::excessive_precision)]
 pub fn gamma(mut x: f64) -> f64 {

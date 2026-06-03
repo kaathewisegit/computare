@@ -1,2 +1,4 @@
+pub(crate) mod consts;
+pub mod evaluate;
 pub mod gamma;
-pub mod polynomial;
+pub mod lanczos;

@@ -9,7 +9,9 @@ authors.workspace = true
 [dependencies]
 computare-core = { workspace = true }
 
-[dev-dependencies]
-rug = { workspace = true }
+libm = { workspace = true }
 
+[dev-dependencies]
 computare-testing = { workspace = true }
+
+rug = { workspace = true }
