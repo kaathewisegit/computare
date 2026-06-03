@@ -11,3 +11,12 @@ pub use float::{Float, FloatMath};
 pub use identities::{ConstOne, ConstZero, One, Zero};
 pub use integer::Integer;
 pub use num::{Num, NumAssignOps, NumOps};
+
+#[macro_export]
+macro_rules! debug_panic {
+    ($($arg:tt)*) => {
+        if cfg!(debug_assertions) {
+            panic!($($arg)*);
+        }
+    };
+}
