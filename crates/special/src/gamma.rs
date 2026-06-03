@@ -24,7 +24,7 @@ pub fn gamma(mut x: f64) -> f64 {
         3.58236398605498653373e-2,
         -2.34591795718243348568e-1,
         7.14304917030273074085e-2,
-        1.00000000000000000320E0,
+        1.00000000000000000320e0,
     ];
 
     pub const GAMMA_STIR: [f64; 5] = [
@@ -58,14 +58,14 @@ pub fn gamma(mut x: f64) -> f64 {
     let mut sgngam = 1.0;
 
     if !x.is_finite() {
-        if x > 0.0 {
+        if x == f64::INFINITY {
             return x;
         }
         return f64::NAN;
     }
 
     if x == 0.0 {
-        return f64::copysign(f64::INFINITY, x);
+        return f64::INFINITY.copysign(x);
     }
 
     let q = x.abs();
@@ -74,7 +74,7 @@ pub fn gamma(mut x: f64) -> f64 {
         let z = if x < 0.0 {
             let p = q.floor();
             if p == q {
-                // set_error("Gamma", SF_ERROR_SINGULAR);
+                debug_assert!(false, "pole: {x}");
                 return f64::NAN;
             }
             let i = p as i32;
@@ -101,6 +101,7 @@ pub fn gamma(mut x: f64) -> f64 {
 
     fn small(x: f64, z: f64) -> f64 {
         if x == 0.0 {
+            debug_assert!(false, "pole: {x}");
             f64::NAN
         } else {
             z / ((1.0 + 0.5772156649015329 * x) * x)
