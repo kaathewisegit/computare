@@ -1,12 +1,11 @@
 use rug::{Float, az::Az};
 
+use super::PREC;
 use computare_core::tolerance::assert_almost_eq;
 use computare_special::gamma::{
     gamma, ln_gamma, regularized_lower_gamma, regularized_upper_gamma,
 };
 use computare_testing::arbitrary::{Result, arbtest, f64_range, f64_unit};
-
-const PREC: u32 = 500;
 
 fn compare_gamma(f: f64, relative: f64) -> Result<()> {
     let rug_gamma = Float::with_val(PREC, f).gamma().az::<f64>();
