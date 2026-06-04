@@ -62,3 +62,23 @@ pub trait Continuous {
         self.support().1
     }
 }
+
+pub trait Statistics {
+    type MeanErr;
+    fn mean(&self) -> Result<f64, Self::MeanErr>;
+
+    type MedianErr;
+    fn median(&self) -> Result<f64, Self::MedianErr>;
+
+    type ModeErr;
+    fn mode(&self) -> Result<f64, Self::ModeErr>;
+
+    type VarianceErr;
+    fn variance(&self) -> Result<f64, Self::VarianceErr>;
+    fn std(&self) -> Result<f64, Self::VarianceErr> {
+        self.variance().map(|v| v.sqrt())
+    }
+
+    type EntropyErr;
+    fn entropy(&self) -> Result<f64, Self::EntropyErr>;
+}
