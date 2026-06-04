@@ -34,6 +34,14 @@ jobs:
           rustup default stable-x86_64-pc-windows-gnu
           rustup component add rustfmt clippy
 
+      - name: cache target
+        uses: actions/cache@v5
+        with:
+          path: target
+          key: ${{ runner.os }}-target-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-target-
+
       - name: run
         if: matrix.platform == 'windows-2022'
         shell: msys2 {0}
