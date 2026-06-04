@@ -2,6 +2,7 @@
 resolver = "3"
 members = [
 	"crates/core",
+	"crates/distributions",
 	"crates/special",
 	"crates/testing",
 ]
@@ -14,6 +15,7 @@ authors = ["Andrej Kolčin <self@kaathewise.net>"]
 
 [workspace.dependencies]
 computare-core = { version = "0.1.0-alpha.0", path = "crates/core" }
+computare-distributions = { version = "0.1.0-alpha.0", path = "crates/distributions" }
 computare-special = { version = "0.1.0-alpha.0", path = "crates/special" }
 computare-testing = { version = "0.1.0-alpha.0", path = "crates/testing" }
 

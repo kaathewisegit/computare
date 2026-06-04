@@ -28,6 +28,16 @@ name = "computare-core"
 version = "0.1.0-alpha.0"
 
 [[package]]
+name = "computare-distributions"
+version = "0.1.0-alpha.0"
+dependencies = [
+ "computare-core",
+ "computare-special",
+ "computare-testing",
+ "rug",
+]
+
+[[package]]
 name = "computare-special"
 version = "0.1.0-alpha.0"
 dependencies = [
