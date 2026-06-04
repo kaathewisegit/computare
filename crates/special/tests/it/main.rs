@@ -1,4 +1,5 @@
 mod digamma;
+mod erf;
 mod gamma;
 mod unity;
 mod zeta;
