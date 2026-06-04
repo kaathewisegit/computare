@@ -53,7 +53,7 @@ fn psi_asy(x: f64) -> f64 {
     x.ln() - (0.5 / x) - y
 }
 
-pub fn psi(mut x: f64) -> f64 {
+pub fn digamma(mut x: f64) -> f64 {
     let mut y = 0.0;
 
     if x.is_nan() || x == f64::INFINITY {

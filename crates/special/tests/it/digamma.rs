@@ -2,12 +2,12 @@ use rug::{Float, az::Az};
 
 use super::PREC;
 use computare_core::tolerance::assert_almost_eq;
-use computare_special::gamma::psi;
+use computare_special::gamma::digamma;
 use computare_testing::arbitrary::{Result, arbtest, f64_range, f64_unit};
 
 fn compare_psi(f: f64, relative: f64) -> Result<()> {
     let rug_psi = Float::with_val(PREC, f).digamma().az::<f64>();
-    let my_psi = psi(f);
+    let my_psi = digamma(f);
 
     assert_almost_eq!(my_psi, rug_psi, relative = relative);
     Ok(())
