@@ -22,7 +22,14 @@ impl Continuous for LogNormal {
         }
     }
 
-    // TODO: ln_pdf
+    fn ln_pdf(&self, x: f64) -> f64 {
+        if x <= 0.0 || x.is_infinite() {
+            f64::NEG_INFINITY
+        } else {
+            let z_score = (x.ln() - self.location) / self.scale;
+            -z_score.powi(2) / 2.0 - f64::LN_SQRT_2PI - (x * self.scale).ln()
+        }
+    }
 
     fn cdf(&self, x: f64) -> f64 {
         if x <= 0.0 {
