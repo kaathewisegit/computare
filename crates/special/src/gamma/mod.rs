@@ -1,6 +1,8 @@
+mod digamma;
 mod incomplete;
 mod incomplete_coefs;
 
+pub use digamma::psi;
 pub use incomplete::{regularized_lower_gamma, regularized_upper_gamma};
 
 use core::f64::consts::PI;
