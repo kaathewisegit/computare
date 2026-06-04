@@ -1,7 +1,9 @@
 mod exponential;
+mod gamma;
 mod log_normal;
 
 pub use exponential::Exponential;
+pub use gamma::Gamma;
 pub use log_normal::LogNormal;
 
 pub trait Continuous {
