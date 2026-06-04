@@ -2,7 +2,7 @@ use rug::{Float, az::Az};
 
 use super::PREC;
 use computare_core::tolerance::assert_almost_eq;
-use computare_special::unity::{cosm1, expm1, ln_gamma_1p, log1p, log1pmx};
+use computare_special::unity::{cosm1, ln_gamma_1p, log1p, log1pmx};
 use computare_testing::arbitrary::{Result, arbtest, f64_range, f64_unit};
 
 fn compare_log1p(f: f64, relative: f64) -> Result<()> {
@@ -60,35 +60,6 @@ fn log1pmx_half_2() {
 #[test]
 fn log1pmx_2_10() {
     arbtest(|u| compare_log1pmx(f64_range(u, 2.0, 10.0)?, 1e-13));
-}
-
-fn compare_expm1(f: f64, relative: f64) -> Result<()> {
-    let rug_res =
-        (Float::with_val(PREC, f).exp() - Float::with_val(PREC, 1)).az::<f64>();
-    let my_res = expm1(f);
-
-    assert_almost_eq!(my_res, rug_res, relative = relative);
-    Ok(())
-}
-
-#[test]
-fn expm1_unit() {
-    arbtest(|u| compare_expm1(f64_unit(u)?, 1e-15));
-}
-
-#[test]
-fn expm1_0_half() {
-    arbtest(|u| compare_expm1(f64_range(u, 0.0, 0.5)?, 1e-15));
-}
-
-#[test]
-fn expm1_half_2() {
-    arbtest(|u| compare_expm1(f64_range(u, 0.5, 2.0)?, 1e-14));
-}
-
-#[test]
-fn expm1_2_10() {
-    arbtest(|u| compare_expm1(f64_range(u, 2.0, 10.0)?, 1e-14));
 }
 
 fn compare_cosm1(f: f64, relative: f64) -> Result<()> {

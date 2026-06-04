@@ -6,9 +6,9 @@ use crate::{
     zeta::zeta,
 };
 
-pub const LOG1PMX_MAXITER: u32 = 500;
+const LOG1PMX_MAXITER: u32 = 500;
 
-pub const UNITY_LP: [f64; 7] = [
+const UNITY_LP: [f64; 7] = [
     4.52700008624452e-5,
     4.9854102823193375e-1,
     6.578732594206104,
@@ -18,7 +18,7 @@ pub const UNITY_LP: [f64; 7] = [
     2.0039553499201283e1,
 ];
 
-pub const UNITY_LQ: [f64; 6] = [
+const UNITY_LQ: [f64; 6] = [
     1.5062909083469192e1,
     8.304756596796722e1,
     2.2176239823732857e2,
@@ -27,17 +27,7 @@ pub const UNITY_LQ: [f64; 6] = [
     6.011866049760384e1,
 ];
 
-pub const UNITY_EP: [f64; 3] =
-    [1.2617719307481058e-4, 3.0299440770744195e-2, 1.0];
-
-pub const UNITY_EQ: [f64; 4] = [
-    3.0019850513866446e-6,
-    2.524483403496841e-3,
-    2.2726554820815503e-1,
-    2.0,
-];
-
-pub const UNITY_COSCOF: [f64; 7] = [
+const UNITY_COSCOF: [f64; 7] = [
     4.737750796424621e-14,
     -1.147028484342536e-11,
     2.087675428708152e-9,
@@ -92,23 +82,6 @@ pub fn log1pmx(x: f64) -> f64 {
     } else {
         log1p(x) - x
     }
-}
-
-pub fn expm1(x: f64) -> f64 {
-    if !x.is_finite() {
-        if x.is_nan() || x > 0.0 {
-            return x;
-        } else {
-            return -1.0;
-        }
-    }
-    if !(-0.5..=0.5).contains(&x) {
-        return x.exp() - 1.0;
-    }
-    let xx = x * x;
-    let mut r = x * polynomial(xx, &UNITY_EP);
-    r = r / (polynomial(xx, &UNITY_EQ) - r);
-    r + r
 }
 
 pub fn cosm1(x: f64) -> f64 {

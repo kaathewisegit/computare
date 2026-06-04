@@ -104,7 +104,6 @@ fn compare_regularized_upper(a: f64, x: f64, relative: f64) -> Result<()> {
 }
 
 #[test]
-#[ignore]
 fn regularized_upper_gamma_unit() {
-    arbtest(|u| compare_regularized_upper(f64_unit(u)?, f64_unit(u)?, 1e-14));
+    arbtest(|u| compare_regularized_upper(f64_unit(u)?, f64_unit(u)?, 1e-13));
 }

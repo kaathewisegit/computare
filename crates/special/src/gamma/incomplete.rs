@@ -9,17 +9,8 @@ use super::{
 use crate::{
     consts::MAX_LOG,
     lanczos::{LANCZOS_G, lanczos_sum_expg_scaled},
+    unity::{ln_gamma_1p, log1pmx},
 };
-
-fn log1pmx(_x: f64) -> f64 {
-    todo!()
-}
-fn expm1(_x: f64) -> f64 {
-    todo!()
-}
-fn lgam1p(_a: f64) -> f64 {
-    todo!()
-}
 
 const IGAM_MAXITER: i32 = 2000;
 const IGAM: i32 = 1;
@@ -142,7 +133,7 @@ fn igamc_series(a: f64, x: f64) -> f64 {
     }
 
     let logx = x.ln();
-    let term = -expm1(a * logx - lgam1p(a));
+    let term = -(a * logx - ln_gamma_1p(a)).exp_m1();
     term - (a * logx - ln_gamma(a)).exp() * sum
 }
 
