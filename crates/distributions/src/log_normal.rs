@@ -1,7 +1,7 @@
 use core::{convert::Infallible, f64::consts::SQRT_2};
 
 use computare_core::Float;
-use computare_special::erf::erfc;
+use computare_special::erf::{erfc, inverse_erfc};
 
 use crate::{Continuous, Statistics};
 
@@ -43,7 +43,8 @@ impl Continuous for LogNormal {
         } else if p == 1.0 {
             f64::INFINITY
         } else {
-            todo!("inverse erf")
+            let (location, scale) = (self.location, self.scale);
+            (location - (scale * SQRT_2 * inverse_erfc(2.0 * p))).exp()
         }
     }
 

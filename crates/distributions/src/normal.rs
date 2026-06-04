@@ -5,7 +5,7 @@ use core::{
 
 use crate::{Continuous, Statistics};
 use computare_core::Float;
-use computare_special::erf::erfc;
+use computare_special::erf::{erfc, inverse_erfc};
 
 pub struct Normal {
     mean: f64,
@@ -36,10 +36,9 @@ impl Continuous for Normal {
         0.5 * erfc((mean - x) / (std * SQRT_2))
     }
 
-    fn inverse_cdf(&self, _p: f64) -> f64 {
-        todo!("erfc_inv")
-        // let (mean, std) = (self.mean, self.std);
-        // mean - (std * SQRT_2 * erfc_inv(2.0 * p))
+    fn inverse_cdf(&self, p: f64) -> f64 {
+        let (mean, std) = (self.mean, self.std);
+        mean - (std * SQRT_2 * inverse_erfc(2.0 * p))
     }
 
     fn sf(&self, x: f64) -> f64 {
