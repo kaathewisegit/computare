@@ -1,0 +1,44 @@
+name: Check
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [ubuntu-24.04, macos-14, windows-2022]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: setup MSYS2
+        if: matrix.platform == 'windows-2022'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          path-type: inherit
+          install: >-
+            m4
+            make
+            mingw-w64-x86_64-gcc
+
+      - name: configure Rust
+        if: matrix.platform == 'windows-2022'
+        shell: bash
+        run: |
+          rustup target add x86_64-pc-windows-gnu
+          rustup default stable-x86_64-pc-windows-gnu
+          rustup component add rustfmt clippy
+
+      - name: run
+        if: matrix.platform == 'windows-2022'
+        shell: msys2 {0}
+        run: sh ./toolkit.sh check
+
+      - name: run
+        if: matrix.platform != 'windows-2022'
+        run: sh ./toolkit.sh check
