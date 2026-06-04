@@ -1,7 +1,6 @@
 use core::{convert::Infallible, f64::consts::LN_2};
 
-use super::Continuous;
-use crate::Statistics;
+use crate::{Continuous, Statistics};
 
 pub struct Exponential {
     rate: f64,
