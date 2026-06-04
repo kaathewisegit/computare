@@ -1,7 +1,7 @@
 use core::convert::Infallible;
 
 use computare_special::gamma::{
-    gamma, ln_gamma, regularized_lower_gamma, regularized_upper_gamma,
+    digamma, gamma, ln_gamma, regularized_lower_gamma, regularized_upper_gamma,
 };
 
 use crate::{Continuous, Statistics};
@@ -77,7 +77,8 @@ impl Continuous for Gamma {
 impl Statistics for Gamma {
     type MeanErr = Infallible;
     fn mean(&self) -> Result<f64, Infallible> {
-        Ok(self.shape * self.scale)
+        let (shape, scale) = (self.shape, self.scale);
+        Ok(shape * scale)
     }
 
     type MedianErr = &'static str;
@@ -87,8 +88,9 @@ impl Statistics for Gamma {
 
     type ModeErr = Infallible;
     fn mode(&self) -> Result<f64, Infallible> {
-        if self.shape >= 1.0 {
-            Ok((self.shape - 1.0) * self.scale)
+        let (shape, scale) = (self.shape, self.scale);
+        if shape >= 1.0 {
+            Ok((shape - 1.0) * scale)
         } else {
             Ok(0.0)
         }
@@ -96,18 +98,20 @@ impl Statistics for Gamma {
 
     type VarianceErr = Infallible;
     fn variance(&self) -> Result<f64, Infallible> {
-        Ok(self.shape * self.scale.powi(2))
+        let (shape, scale) = (self.shape, self.scale);
+        Ok(shape * scale.powi(2))
     }
     fn std(&self) -> Result<f64, Infallible> {
-        Ok(self.shape.sqrt() * self.scale)
+        let (shape, scale) = (self.shape, self.scale);
+        Ok(shape.sqrt() * scale)
     }
 
     type EntropyErr = Infallible;
     fn entropy(&self) -> Result<f64, Infallible> {
-        todo!("digamma")
-        // Ok(self.shape
-        //     + self.scale.ln()
-        //     + ln_gamma(self.shape)
-        //     + (1.0 - self.shape * digamma))
+        let (shape, scale) = (self.shape, self.scale);
+        Ok(shape
+            + scale.ln()
+            + ln_gamma(shape)
+            + (1.0 - shape) * digamma(shape))
     }
 }
