@@ -3,12 +3,14 @@ mod gamma;
 mod laplace;
 mod log_normal;
 mod normal;
+mod uniform;
 
 pub use exponential::Exponential;
 pub use gamma::Gamma;
 pub use laplace::Laplace;
 pub use log_normal::LogNormal;
 pub use normal::Normal;
+pub use uniform::Uniform;
 
 pub trait Continuous {
     fn pdf(&self, x: f64) -> f64;
