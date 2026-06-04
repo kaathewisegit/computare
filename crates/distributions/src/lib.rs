@@ -1,10 +1,12 @@
 mod exponential;
 mod gamma;
+mod laplace;
 mod log_normal;
 mod normal;
 
 pub use exponential::Exponential;
 pub use gamma::Gamma;
+pub use laplace::Laplace;
 pub use log_normal::LogNormal;
 pub use normal::Normal;
 
