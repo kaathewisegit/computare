@@ -26,6 +26,7 @@ pub trait Float:
     const PI: Self;
     const SQRT_2PI: Self;
     const LN_SQRT_2PI: Self;
+    const FRAC_1_SQRT_2PI: Self;
 
     fn is_nan(self) -> bool;
     fn is_infinite(self) -> bool;
@@ -75,6 +76,8 @@ macro_rules! impl_float {
             const SQRT_2PI: Self = 2.506628274631000502415765284811045253007;
             const LN_SQRT_2PI: Self =
                 0.9189385332046727417803297364056176398613896;
+            const FRAC_1_SQRT_2PI: Self =
+                0.3989422804014326779399460599343818684758643;
 
             #[inline]
             fn is_nan(self) -> bool {

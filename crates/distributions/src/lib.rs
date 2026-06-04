@@ -1,10 +1,12 @@
 mod exponential;
 mod gamma;
 mod log_normal;
+mod normal;
 
 pub use exponential::Exponential;
 pub use gamma::Gamma;
 pub use log_normal::LogNormal;
+pub use normal::Normal;
 
 pub trait Continuous {
     fn pdf(&self, x: f64) -> f64;
