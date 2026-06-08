@@ -26,6 +26,18 @@ impl Gamma {
             scale: rate.recip(),
         }
     }
+
+    pub fn shape(&self) -> f64 {
+        self.shape
+    }
+
+    pub fn scale(&self) -> f64 {
+        self.scale
+    }
+
+    pub fn rate(&self) -> f64 {
+        self.scale.recip()
+    }
 }
 
 impl Continuous for Gamma {

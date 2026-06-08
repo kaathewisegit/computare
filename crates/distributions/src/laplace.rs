@@ -15,6 +15,14 @@ impl Laplace {
         debug_assert!(scale > 0.0);
         Laplace { location, scale }
     }
+
+    pub fn location(&self) -> f64 {
+        self.location
+    }
+
+    pub fn scale(&self) -> f64 {
+        self.scale
+    }
 }
 
 impl Continuous for Laplace {

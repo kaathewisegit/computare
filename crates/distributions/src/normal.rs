@@ -16,6 +16,14 @@ impl Normal {
     pub fn new(mean: f64, scale: f64) -> Self {
         Normal { mean, std: scale }
     }
+
+    pub fn mean(&self) -> f64 {
+        self.mean
+    }
+
+    pub fn std(&self) -> f64 {
+        self.std
+    }
 }
 
 impl Continuous for Normal {

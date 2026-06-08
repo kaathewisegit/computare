@@ -18,6 +18,14 @@ impl Exponential {
             rate: scale.recip(),
         }
     }
+
+    pub fn rate(&self) -> f64 {
+        self.rate
+    }
+
+    pub fn scale(&self) -> f64 {
+        self.rate.recip()
+    }
 }
 
 impl Continuous for Exponential {

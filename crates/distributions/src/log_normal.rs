@@ -10,6 +10,21 @@ pub struct LogNormal {
     scale: f64,
 }
 
+impl LogNormal {
+    pub fn new(location: f64, scale: f64) -> Self {
+        debug_assert!(scale > 0.0);
+        LogNormal { location, scale }
+    }
+
+    pub fn location(&self) -> f64 {
+        self.location
+    }
+
+    pub fn scale(&self) -> f64 {
+        self.scale
+    }
+}
+
 impl Continuous for LogNormal {
     fn pdf(&self, x: f64) -> f64 {
         if x <= 0.0 || x == f64::INFINITY {

@@ -12,6 +12,14 @@ impl Uniform {
         debug_assert!(min <= max);
         Uniform { min, max }
     }
+
+    pub fn min(&self) -> f64 {
+        self.min
+    }
+
+    pub fn max(&self) -> f64 {
+        self.max
+    }
 }
 
 impl Continuous for Uniform {
