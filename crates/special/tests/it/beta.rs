@@ -5,19 +5,8 @@ use computare_core::tolerance::assert_almost_eq;
 use computare_special::beta::{beta, ln_beta};
 use computare_testing::arbitrary::{Result, arbtest, f64_range};
 
-fn rug_ln_beta(a: f64, b: f64) -> f64 {
-    let lga = Float::with_val(PREC, a).ln_gamma();
-    let lgb = Float::with_val(PREC, b).ln_gamma();
-    let lab = Float::with_val(
-        PREC,
-        Float::with_val(PREC, a) + Float::with_val(PREC, b),
-    )
-    .ln_gamma();
-    (lga + lgb - lab).az::<f64>()
-}
-
 fn compare_beta(a: f64, b: f64, relative: f64) -> Result<()> {
-    let rug_beta = {
+    let rug_res = {
         let ga = Float::with_val(PREC, a).gamma();
         let gb = Float::with_val(PREC, b).gamma();
         let gab = Float::with_val(
@@ -27,17 +16,26 @@ fn compare_beta(a: f64, b: f64, relative: f64) -> Result<()> {
         .gamma();
         (ga * gb / gab).az::<f64>()
     };
-    let my_beta = beta(a, b);
+    let my_res = beta(a, b);
 
-    assert_almost_eq!(my_beta, rug_beta, relative = relative);
+    assert_almost_eq!(my_res, rug_res, relative = relative);
     Ok(())
 }
 
 fn compare_ln_beta(a: f64, b: f64, relative: f64) -> Result<()> {
-    let rug_val = rug_ln_beta(a, b);
-    let my_val = ln_beta(a, b);
+    let rug_res = {
+        let lga = Float::with_val(PREC, a).ln_gamma();
+        let lgb = Float::with_val(PREC, b).ln_gamma();
+        let lab = Float::with_val(
+            PREC,
+            Float::with_val(PREC, a) + Float::with_val(PREC, b),
+        )
+        .ln_gamma();
+        (lga + lgb - lab).az::<f64>()
+    };
+    let my_res = ln_beta(a, b);
 
-    assert_almost_eq!(my_val, rug_val, relative = relative);
+    assert_almost_eq!(my_res, rug_res, relative = relative);
     Ok(())
 }
 
