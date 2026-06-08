@@ -3,7 +3,8 @@ use rug::{Float, az::Az};
 use super::PREC;
 use computare_core::tolerance::assert_almost_eq;
 use computare_special::gamma::{
-    gamma, ln_gamma, regularized_lower_gamma, regularized_upper_gamma,
+    gamma, ln_gamma, recip_gamma, regularized_lower_gamma,
+    regularized_upper_gamma,
 };
 use computare_testing::arbitrary::{Result, arbtest, f64_range, f64_unit};
 
@@ -106,4 +107,39 @@ fn compare_regularized_upper(a: f64, x: f64, relative: f64) -> Result<()> {
 #[test]
 fn regularized_upper_gamma_unit() {
     arbtest(|u| compare_regularized_upper(f64_unit(u)?, f64_unit(u)?, 1e-13));
+}
+
+fn compare_recip_gamma(f: f64, relative: f64) -> Result<()> {
+    let rug_res = (Float::with_val(PREC, 1.0)
+        / Float::with_val(PREC, f).gamma())
+    .az::<f64>();
+    let my_res = recip_gamma(f);
+
+    assert_almost_eq!(my_res, rug_res, relative = relative);
+    Ok(())
+}
+
+#[test]
+fn recip_gamma_unit() {
+    arbtest(|u| compare_recip_gamma(f64_unit(u)?, 1e-14));
+}
+
+#[test]
+fn recip_gamma_1_5() {
+    arbtest(|u| compare_recip_gamma(f64_range(u, 1.0, 5.0)?, 1e-14));
+}
+
+#[test]
+fn recip_gamma_5_10() {
+    arbtest(|u| compare_recip_gamma(f64_range(u, 5.0, 10.0)?, 1e-14));
+}
+
+#[test]
+fn recip_gamma_neg4_0() {
+    arbtest(|u| compare_recip_gamma(-f64_range(u, 0.0, 4.0)?, 1e-13));
+}
+
+#[test]
+fn recip_gamma_neg10_neg4() {
+    arbtest(|u| compare_recip_gamma(-f64_range(u, 4.0, 10.0)?, 1e-13));
 }

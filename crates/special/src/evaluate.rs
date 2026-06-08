@@ -76,3 +76,17 @@ pub fn rational_function(
         num_acc / denom_acc
     }
 }
+
+pub fn chebyshev(x: f64, array: &[f64]) -> f64 {
+    let mut b0 = array[0];
+    let mut b1 = 0.0;
+    let mut b2 = 0.0;
+
+    for &coef in &array[1..] {
+        b2 = b1;
+        b1 = b0;
+        b0 = x * b1 - b2 + coef;
+    }
+
+    0.5 * (b0 - b2)
+}
