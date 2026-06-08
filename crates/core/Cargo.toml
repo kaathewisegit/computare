@@ -7,3 +7,9 @@ license.workspace = true
 authors.workspace = true
 
 [dependencies]
+libm = { workspace = true, optional = true }
+
+[features]
+default = ["std"]
+std = []
+libm = ["dep:libm"]

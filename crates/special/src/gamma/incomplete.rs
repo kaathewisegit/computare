@@ -1,6 +1,6 @@
 use libm::erfc;
 
-use computare_core::debug_panic;
+use core::f64::consts::PI;
 
 use super::{
     incomplete_coefs::{IGAM_ASYMP_COEFF_D, IGAM_ASYMP_COEFF_N},
@@ -11,6 +11,7 @@ use crate::{
     lanczos::{LANCZOS_G, lanczos_sum_expg_scaled},
     unity::{ln_gamma_1p, log1pmx},
 };
+use computare_core::debug_panic;
 
 const IGAM_MAXITER: i32 = 2000;
 const IGAM: i32 = 1;
@@ -185,8 +186,7 @@ fn asymptotic_series(a: f64, x: f64, func: i32) -> f64 {
         afac /= a;
     }
 
-    res += sgn * (-0.5 * a * eta * eta).exp() * sum
-        / (2.0 * std::f64::consts::PI * a).sqrt();
+    res += sgn * (-0.5 * a * eta * eta).exp() * sum / (2.0 * PI * a).sqrt();
 
     res
 }

@@ -1,6 +1,6 @@
 use crate::{One, Zero};
 
-use std::ops::{
+use core::ops::{
     Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub,
     SubAssign,
 };

@@ -34,9 +34,9 @@ impl<T: Tolerance> Default for ToleranceConfig<T> {
 
 pub fn is_close<T>(a: &T, b: &T, config: ToleranceConfig<T>) -> bool
 where
-    T: Tolerance + std::fmt::Debug,
-    T::Absolute: std::fmt::Display,
-    T::Relative: std::fmt::Display,
+    T: Tolerance + core::fmt::Debug,
+    T::Absolute: core::fmt::Display,
+    T::Relative: core::fmt::Display,
 {
     a.absolute_diff(b) < config.absolute
         || a.relative_diff(b) < config.relative

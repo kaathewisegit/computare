@@ -15,3 +15,8 @@ libm = { workspace = true }
 computare-testing = { workspace = true }
 
 rug = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["computare-core/std"]
+libm = ["computare-core/libm"]

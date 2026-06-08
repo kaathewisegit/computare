@@ -11,3 +11,7 @@ arbitrary = { workspace = true }
 arbtest = { workspace = true }
 
 computare-core = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["computare-core/std"]

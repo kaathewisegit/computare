@@ -1,3 +1,5 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
 mod complex;
 mod float;
 mod identities;
@@ -7,7 +9,9 @@ pub mod ranged;
 pub mod tolerance;
 
 pub use complex::Complex;
-pub use float::{Float, FloatMath};
+pub use float::Float;
+#[cfg(any(feature = "std", feature = "libm"))]
+pub use float::FloatMath;
 pub use identities::{ConstOne, ConstZero, One, Zero};
 pub use integer::Integer;
 pub use num::{Num, NumAssignOps, NumOps};

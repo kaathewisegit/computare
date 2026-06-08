@@ -14,3 +14,7 @@ computare-special = { workspace = true }
 computare-testing = { workspace = true }
 
 rug = { workspace = true }
+
+[features]
+default = ["std"]
+std = ["computare-core/std", "computare-special/std"]
