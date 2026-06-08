@@ -1,5 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+pub mod beta;
 pub(crate) mod consts;
 pub mod erf;
 pub mod evaluate;
