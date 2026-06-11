@@ -3,6 +3,8 @@ mod gamma;
 mod laplace;
 mod log_normal;
 mod normal;
+#[cfg(feature = "rand")]
+mod sample;
 mod uniform;
 
 use computare_core::tolerance::assert_almost_eq;
