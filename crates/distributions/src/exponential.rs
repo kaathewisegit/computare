@@ -53,6 +53,10 @@ impl Continuous for Exponential {
         }
     }
 
+    fn inverse_cdf(&self, p: f64) -> f64 {
+        -(-p).ln_1p() / self.rate
+    }
+
     fn sf(&self, x: f64) -> f64 {
         if x < 0.0 { 1.0 } else { (-self.rate * x).exp() }
     }
