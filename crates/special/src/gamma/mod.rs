@@ -1,10 +1,12 @@
 mod digamma;
 mod incomplete;
 mod incomplete_coefs;
+mod inverse;
 mod recip;
 
 pub use digamma::digamma;
 pub use incomplete::{regularized_lower_gamma, regularized_upper_gamma};
+pub use inverse::{inverse_lower_gamma, inverse_upper_gamma};
 pub use recip::recip_gamma;
 
 use core::f64::consts::PI;
