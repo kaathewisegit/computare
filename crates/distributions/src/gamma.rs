@@ -140,3 +140,56 @@ impl Statistics for Gamma {
             + (1.0 - shape) * digamma(shape))
     }
 }
+
+#[cfg(feature = "rand")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
+impl rand::distr::Distribution<f64> for Gamma {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> f64 {
+        sample_unchecked(rng, self.shape, self.scale)
+    }
+}
+
+/// Implementation from:
+///
+/// _"A Simple Method for Generating Gamma Variables"_ - Marsaglia & Tsang
+///
+/// ACM Transactions on Mathematical Software, Vol. 26, No. 3, September 2000,
+/// Pages 363-372
+#[cfg(feature = "rand")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
+fn sample_unchecked<R: rand::Rng + ?Sized>(
+    rng: &mut R,
+    shape: f64,
+    scale: f64,
+) -> f64 {
+    use rand::RngExt;
+
+    let mut a = shape;
+    let mut afix = 1.0;
+    if shape < 1.0 {
+        a = shape + 1.0;
+        afix = rng.random::<f64>().powf(1.0 / shape);
+    }
+
+    let d = a - 1.0 / 3.0;
+    let c = 1.0 / (9.0 * d).sqrt();
+    loop {
+        let mut x;
+        let mut v;
+        loop {
+            x = super::normal::sample_unchecked(rng, 0.0, 1.0);
+            v = 1.0 + c * x;
+            if v > 0.0 {
+                break;
+            };
+        }
+
+        v = v * v * v;
+        x = x * x;
+        let u: f64 = rng.random();
+        if u < 1.0 - 0.0331 * x * x || u.ln() < 0.5 * x + d * (1.0 - v + v.ln())
+        {
+            return afix * d * v * scale;
+        }
+    }
+}

@@ -95,3 +95,11 @@ impl Statistics for Exponential {
         Ok(1.0 - self.rate.ln())
     }
 }
+
+#[cfg(feature = "rand")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
+impl rand::distr::Distribution<f64> for Exponential {
+    fn sample<R: rand::Rng + ?Sized>(&self, r: &mut R) -> f64 {
+        crate::ziggurat::sample_exp_1(r) / self.rate
+    }
+}

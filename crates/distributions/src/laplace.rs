@@ -89,3 +89,13 @@ impl Statistics for Laplace {
         Ok((2.0 * self.scale * E).ln())
     }
 }
+
+#[cfg(feature = "rand")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
+impl rand::distr::Distribution<f64> for Laplace {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> f64 {
+        use rand::RngExt;
+        let x: f64 = rng.random_range(-0.5..0.5);
+        self.location - self.scale * x.signum() * (1.0 - 2.0 * x.abs()).ln()
+    }
+}

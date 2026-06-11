@@ -88,3 +88,19 @@ impl Statistics for Normal {
         Ok((2.0 * PI * E * self.std.powi(2)).ln() / 2.0)
     }
 }
+
+#[cfg(feature = "rand")]
+#[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
+impl rand::distr::Distribution<f64> for Normal {
+    fn sample<R: rand::Rng + ?Sized>(&self, rng: &mut R) -> f64 {
+        self.mean + self.std * crate::ziggurat::sample_std_normal(rng)
+    }
+}
+
+#[cfg(feature = "rand")]
+pub(crate) fn sample_unchecked<R>(rng: &mut R, mean: f64, std_dev: f64) -> f64
+where
+    R: rand::Rng + ?Sized,
+{
+    mean + std_dev * crate::ziggurat::sample_std_normal(rng)
+}

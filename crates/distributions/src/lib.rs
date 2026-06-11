@@ -6,6 +6,10 @@ mod laplace;
 mod log_normal;
 mod normal;
 mod uniform;
+#[cfg(feature = "rand")]
+mod ziggurat;
+#[cfg(feature = "rand")]
+mod ziggurat_tables;
 
 pub use exponential::Exponential;
 pub use gamma::Gamma;

@@ -16,6 +16,8 @@ if [ "$1" = "check" ]; then
 	check "--no-default-features --features libm"
 	check "--no-default-features --features std"
 	check "--no-default-features --features libm,std"
+	check "--no-default-features --features rand"
+	check "--no-default-features --features rand,std"
 else
 	echo "Usage: $0 check" >&2
 	exit 1

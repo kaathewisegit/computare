@@ -10,12 +10,15 @@ authors.workspace = true
 computare-core = { workspace = true }
 computare-special = { workspace = true }
 
+rand = { workspace = true, optional = true }
+
 [dev-dependencies]
 computare-testing = { workspace = true }
 
 rug = { workspace = true }
 
 [features]
-default = ["std"]
+default = ["std", "rand"]
 std = ["computare-core/std", "computare-special/std"]
 libm = ["computare-core/libm", "computare-special/libm"]
+rand = ["dep:rand"]
