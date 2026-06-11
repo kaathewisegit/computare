@@ -1,1 +1,2 @@
 pub const MAX_LOG: f64 = 709.782712893384;
+pub const MIN_LOG: f64 = -708.3964185322641;
