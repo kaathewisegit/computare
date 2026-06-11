@@ -1,7 +1,8 @@
 use core::convert::Infallible;
 
 use computare_special::gamma::{
-    digamma, gamma, ln_gamma, regularized_lower_gamma, regularized_upper_gamma,
+    digamma, gamma, inverse_lower_gamma, ln_gamma, regularized_lower_gamma,
+    regularized_upper_gamma,
 };
 
 use crate::{Continuous, Statistics};
@@ -78,6 +79,18 @@ impl Continuous for Gamma {
             1.0
         } else {
             regularized_upper_gamma(self.shape, x / self.scale)
+        }
+    }
+
+    fn inverse_cdf(&self, p: f64) -> f64 {
+        if !(0.0..=1.0).contains(&p) {
+            f64::NAN
+        } else if p == 0.0 {
+            0.0
+        } else if p == 1.0 {
+            f64::INFINITY
+        } else {
+            self.scale * inverse_lower_gamma(self.shape, p)
         }
     }
 

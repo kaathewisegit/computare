@@ -18,3 +18,4 @@ rug = { workspace = true }
 [features]
 default = ["std"]
 std = ["computare-core/std", "computare-special/std"]
+libm = ["computare-core/libm", "computare-special/libm"]
