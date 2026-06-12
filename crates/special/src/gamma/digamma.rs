@@ -1,105 +1,45 @@
-use core::f64::consts::{EULER_GAMMA, PI};
+use core::f64::consts::PI;
 
-use crate::evaluate::polynomial;
-use computare_core::debug_panic;
+pub fn digamma(x: f64) -> f64 {
+    // The implementation is based on "Algorithm AS 103", Jose Bernardo, Applied
+    // Statistics, Volume 25, Number 3 1976, pages 315 - 317.
 
-const PSI_A: [f64; 7] = [
-    8.333333333333333e-2,
-    -2.1092796092796094e-2,
-    7.575757575757576e-3,
-    -4.166666666666667e-3,
-    3.968253968253968e-3,
-    -8.333333333333333e-3,
-    8.333333333333333e-2,
-];
+    let c = 12.0;
+    let d1 = -0.5772156649015329;
+    let d2 = 1.6449340668482264;
+    let s = 1e-6;
+    let s3 = 1.0 / 12.0;
+    let s4 = 1.0 / 120.0;
+    let s5 = 1.0 / 252.0;
+    let s6 = 1.0 / 240.0;
+    let s7 = 1.0 / 132.0;
 
-const PSI_Y: f64 = 0.9955816;
-const PSI_ROOT1: f64 = 1569415565.0 / 1073741824.0;
-const PSI_ROOT2: f64 = (381566830.0 / 1073741824.0) / 1073741824.0;
-const PSI_ROOT3: f64 = 0.9016312093258695918615325266959189453125e-19;
-
-const PSI_P: [f64; 6] = [
-    -0.002071332116774595,
-    -0.04525132144873906,
-    -0.28919126444774784,
-    -0.6503185377089651,
-    -0.3255503118680449,
-    0.25479851061131551,
-];
-
-const PSI_Q: [f64; 7] = [
-    -5.578984132167551e-7,
-    0.0021284987017821144,
-    0.054151797245674225,
-    0.43593529692665969,
-    1.4606242909763515,
-    2.076711702373047,
-    1.0,
-];
-
-fn digamma_imp_1_2(x: f64) -> f64 {
-    let g = x - PSI_ROOT1 - PSI_ROOT2 - PSI_ROOT3;
-    let r = polynomial(x - 1.0, &PSI_P) / polynomial(x - 1.0, &PSI_Q);
-    g * PSI_Y + g * r
-}
-
-fn psi_asy(x: f64) -> f64 {
-    let y = if x < 1.0e17 {
-        let z = 1.0 / (x * x);
-        z * polynomial(z, &PSI_A)
-    } else {
-        0.0
-    };
-    x.ln() - (0.5 / x) - y
-}
-
-pub fn digamma(mut x: f64) -> f64 {
-    let mut y = 0.0;
-
-    if x.is_nan() || x == f64::INFINITY {
-        return x;
-    } else if x == f64::NEG_INFINITY {
+    if x == f64::NEG_INFINITY || x.is_nan() {
         return f64::NAN;
-    } else if x == 0.0 {
-        debug_panic!("singular");
-        return f64::INFINITY.copysign(-x);
-    } else if x < 0.0 {
-        let r = x % 1.0;
-        if r == 0.0 {
-            debug_panic!("singular");
-            return f64::NAN;
-        }
-        y = -PI / (PI * r).tan();
-        x = 1.0 - x;
+    }
+    if x <= 0.0 && x.floor() == x {
+        return f64::NEG_INFINITY;
+    }
+    if x < 0.0 {
+        return digamma(1.0 - x) + PI / (-PI * x).tan();
+    }
+    if x <= s {
+        return d1 - 1.0 / x + d2 * x;
     }
 
-    // check for positive integer up to 10
-    if x <= 10.0 && x == x.floor() {
-        let n = x as i32;
-        for i in 1..n {
-            y += 1.0 / (i as f64);
-        }
-        y -= EULER_GAMMA;
-        return y;
+    let mut result = 0.0;
+    let mut z = x;
+    while z < c {
+        result -= 1.0 / z;
+        z += 1.0;
     }
 
-    // use the recurrence relation to move x into [1, 2]
-    if x < 1.0 {
-        y -= 1.0 / x;
-        x += 1.0;
-    } else if x < 10.0 {
-        while x > 2.0 {
-            x -= 1.0;
-            y += 1.0 / x;
-        }
-    }
+    if z >= c {
+        let mut r = 1.0 / z;
+        result += z.ln() - 0.5 * r;
+        r *= r;
 
-    if (1.0..=2.0).contains(&x) {
-        y += digamma_imp_1_2(x);
-        return y;
+        result -= r * (s3 - r * (s4 - r * (s5 - r * (s6 - r * s7))));
     }
-
-    // x is large, use the asymptotic series
-    y += psi_asy(x);
-    y
+    result
 }
