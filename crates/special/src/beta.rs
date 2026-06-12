@@ -117,13 +117,7 @@ pub fn ln_beta(a: f64, b: f64) -> f64 {
         return ln_beta_asymp(a, b, &mut sgn);
     }
 
-    let mut _sgn = 1;
-    let lga = ln_gamma_sgn(a, &mut _sgn);
-    let mut _sgn = 1;
-    let lgb = ln_gamma_sgn(b, &mut _sgn);
-    let mut _sgn = 1;
-    let lgab = ln_gamma_sgn(a + b, &mut _sgn);
-    lga + lgb - lgab
+    ln_gamma(a) + ln_gamma(b) - ln_gamma(a + b)
 }
 
 const INCBET_BIG: f64 = 4.503599627370496e15;
