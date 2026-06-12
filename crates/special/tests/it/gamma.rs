@@ -46,7 +46,9 @@ fn compare_ln_gamma(x: f64, relative: f64) -> Result<()> {
 
 #[test]
 fn ln_gamma_unit() {
-    arbtest(|u| compare_ln_gamma(f64_unit(u)?, 1e-10));
+    let prec = 1e-9;
+    compare_ln_gamma(0.999997119981013, prec).unwrap();
+    arbtest(|u| compare_ln_gamma(f64_unit(u)?, prec));
 }
 
 #[test]

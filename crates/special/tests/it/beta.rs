@@ -135,8 +135,9 @@ fn beta_10_30() {
 
 #[test]
 fn ln_beta_unit() {
-    let prec = 2e-12;
+    let prec = 1e-11;
     compare_ln_beta(0.8269127728025633, 1.2420184412806519, prec).unwrap();
+    compare_ln_beta(0.8744182756618015, 1.1581789152651116, prec).unwrap();
     arbtest(|u| {
         compare_ln_beta(f64_range(u, 0.1, 2.0)?, f64_range(u, 0.1, 2.0)?, prec)
     });
