@@ -65,13 +65,13 @@ fn ln_gamma_5_10() {
 }
 
 #[test]
-fn ln_gamma_10_35() {
-    arbtest(|u| compare_ln_gamma(f64_range(u, 5.0, 33.0)?, 1e-16));
+fn ln_gamma_10_33() {
+    arbtest(|u| compare_ln_gamma(f64_range(u, 10.0, 33.0)?, 1e-16));
 }
 
 #[test]
-fn ln_gamma_35_100() {
-    arbtest(|u| compare_ln_gamma(f64_range(u, 5.0, 33.0)?, 1e-16));
+fn ln_gamma_33_100() {
+    arbtest(|u| compare_ln_gamma(f64_range(u, 33.0, 100.0)?, 1e-16));
 }
 
 fn rug_regularized_upper(a: f64, x: f64) -> Float {
