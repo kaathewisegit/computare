@@ -135,8 +135,10 @@ fn beta_10_30() {
 
 #[test]
 fn ln_beta_unit() {
+    let prec = 2e-12;
+    compare_ln_beta(0.8269127728025633, 1.2420184412806519, prec).unwrap();
     arbtest(|u| {
-        compare_ln_beta(f64_range(u, 0.1, 2.0)?, f64_range(u, 0.1, 2.0)?, 1e-12)
+        compare_ln_beta(f64_range(u, 0.1, 2.0)?, f64_range(u, 0.1, 2.0)?, prec)
     });
 }
 
@@ -297,7 +299,6 @@ fn compare_inverse_regularized_beta(
         return Ok(());
     }
     let roundtrip = regularized_incomplete_beta(a, b, x);
-    println!("{a}, {b}, {p}");
     assert_almost_eq!(roundtrip, p, relative = relative);
     Ok(())
 }

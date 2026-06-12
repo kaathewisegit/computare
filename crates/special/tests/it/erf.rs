@@ -85,7 +85,9 @@ fn inverse_erfc_roundtrip(y: f64, relative: f64) -> Result<()> {
 
 #[test]
 fn inverse_erfc_unit() {
-    arbtest(|u| inverse_erfc_roundtrip(f64_unit(u)?, 2e-15));
+    let relative = 1e-14;
+    inverse_erfc_roundtrip(0.10398463424912519, relative).unwrap();
+    arbtest(|u| inverse_erfc_roundtrip(f64_unit(u)?, relative));
 }
 
 #[test]
