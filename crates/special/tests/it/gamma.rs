@@ -90,7 +90,7 @@ fn compare_regularized_lower(a: f64, x: f64, relative: f64) -> Result<()> {
         (Float::with_val(PREC, 1.0) - rug_regularized_upper(a, x)).az::<f64>();
     let my_res = regularized_lower_gamma(a, x);
 
-    assert_almost_eq!(my_res, rug_res, relative = relative);
+    assert_almost_eq!(my_res, rug_res, relative = relative; "a = {a}, x = {x}");
     Ok(())
 }
 

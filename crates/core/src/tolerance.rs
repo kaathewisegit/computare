@@ -56,6 +56,10 @@ macro_rules! almost_eq {
 #[macro_export]
 macro_rules! assert_almost_eq {
 	($a:expr, $b:expr $(, $opt:ident = $val:expr)* $(,)?) => {{
+		$crate::assert_almost_eq!($a, $b $(, $opt = $val)*; "");
+	}};
+
+	($a:expr, $b:expr $(, $opt:ident = $val:expr)*; $($arg:tt)+) => {{
 		if !$crate::almost_eq!($a, $b, $($opt = $val),*) {
 			use $crate::tolerance::Tolerance;
 			panic!(
@@ -65,14 +69,16 @@ expected: {:?}
  ---------
 abs diff: {}
 relative: {}
-    ulps: {}",
-    		stringify!($a),
-    		stringify!($b),
-		$a,
-		$b,
-		$a.absolute_diff(&$b),
-		$a.relative_diff(&$b),
-		$a.ulps_diff(&$b),
+    ulps: {}
+{}",
+    				stringify!($a),
+    				stringify!($b),
+				$a,
+				$b,
+				$a.absolute_diff(&$b),
+				$a.relative_diff(&$b),
+				$a.ulps_diff(&$b),
+				format_args!($($arg)+)
 			);
 		}
 	}};
