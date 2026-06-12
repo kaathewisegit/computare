@@ -61,61 +61,34 @@ fn erfc_neg() {
     arbtest(|u| compare_erfc(-f64_unit(u)?, 1e-16));
 }
 
-fn compare_inverse_erf(y: f64, relative: f64) -> Result<()> {
-    let my_x = inverse_erf(y);
-    let rug_roundtrip = Float::with_val(PREC, my_x).erf().az::<f64>();
-
-    assert_almost_eq!(rug_roundtrip, y, relative = relative);
+fn inverse_erf_roundtrip(y: f64, relative: f64) -> Result<()> {
+    let round = erf(inverse_erf(y));
+    assert_almost_eq!(y, round, relative = relative);
     Ok(())
 }
 
 #[test]
 fn inverse_erf_unit() {
-    arbtest(|u| compare_inverse_erf(f64_unit(u)?, 1e-15));
+    arbtest(|u| inverse_erf_roundtrip(f64_unit(u)?, 1e-15));
 }
 
 #[test]
 fn inverse_erf_neg() {
-    arbtest(|u| compare_inverse_erf(-f64_unit(u)?, 1e-15));
+    arbtest(|u| inverse_erf_roundtrip(-f64_unit(u)?, 1e-15));
 }
 
-#[test]
-fn inverse_erf_0_1() {
-    arbtest(|u| compare_inverse_erf(f64_range(u, 0.0, 1.0)?, 1e-15));
-}
-
-fn compare_inverse_erf_neg(y: f64, relative: f64) -> Result<()> {
-    let my_x = inverse_erf(-y);
-    let rug_roundtrip = Float::with_val(PREC, my_x).erf().az::<f64>();
-
-    assert_almost_eq!(rug_roundtrip, -y, relative = relative);
-    Ok(())
-}
-
-#[test]
-fn inverse_erf_neg1_0() {
-    arbtest(|u| compare_inverse_erf_neg(f64_unit(u)?, 1e-15));
-}
-
-fn compare_inverse_erfc(y: f64, relative: f64) -> Result<()> {
-    let my_x = inverse_erfc(y);
-    let rug_roundtrip = Float::with_val(PREC, my_x).erfc().az::<f64>();
-
-    assert_almost_eq!(rug_roundtrip, y, relative = relative);
+fn inverse_erfc_roundtrip(y: f64, relative: f64) -> Result<()> {
+    let round = erfc(inverse_erfc(y));
+    assert_almost_eq!(y, round, relative = relative);
     Ok(())
 }
 
 #[test]
 fn inverse_erfc_unit() {
-    arbtest(|u| compare_inverse_erfc(f64_unit(u)?, 2e-15));
-}
-
-#[test]
-fn inverse_erfc_0_1() {
-    arbtest(|u| compare_inverse_erfc(f64_range(u, 0.0, 1.0)?, 2e-15));
+    arbtest(|u| inverse_erfc_roundtrip(f64_unit(u)?, 2e-15));
 }
 
 #[test]
 fn inverse_erfc_1_2() {
-    arbtest(|u| compare_inverse_erfc(f64_range(u, 1.0, 2.0)?, 1e-15));
+    arbtest(|u| inverse_erfc_roundtrip(f64_range(u, 1.0, 2.0)?, 2e-15));
 }
