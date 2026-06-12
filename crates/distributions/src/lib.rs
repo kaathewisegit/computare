@@ -1,4 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
+// https://doc.rust-lang.org/unstable-book/language-features/doc-cfg.html
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod exponential;
 mod gamma;
