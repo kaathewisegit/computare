@@ -1,6 +1,7 @@
 use crate::{
     consts::{MAX_LOG, MIN_LOG},
-    gamma::{MAX_GAMMA, gamma, ln_gamma_sgn, recip_gamma},
+    gamma::{MAX_GAMMA, gamma, ln_gamma, ln_gamma_sgn, recip_gamma},
+    ndtri::ndtri,
 };
 
 const ASYMP_FACTOR: f64 = 1e6;
@@ -384,4 +385,260 @@ pub fn regularized_incomplete_beta(a: f64, b: f64, x: f64) -> f64 {
     };
 
     finish(t, swapped)
+}
+
+pub fn inverse_regularized_beta(aa: f64, bb: f64, yy0: f64) -> f64 {
+    fn finish(x: f64, rflg: bool) -> f64 {
+        if rflg {
+            if x <= f64::EPSILON {
+                1.0 - f64::EPSILON
+            } else {
+                1.0 - x
+            }
+        } else {
+            x
+        }
+    }
+
+    if aa.is_nan() || bb.is_nan() || yy0.is_nan() {
+        return f64::NAN;
+    }
+    if aa <= 0.0 || bb <= 0.0 || !(0.0..=1.0).contains(&yy0) {
+        return f64::NAN;
+    }
+    if yy0 == 0.0 {
+        return 0.0;
+    }
+    if yy0 == 1.0 {
+        return 1.0;
+    }
+
+    let mut x0 = 0.0;
+    let mut yl = 0.0;
+    let mut x1 = 1.0;
+    let mut yh = 1.0;
+    let mut nflg = false;
+
+    let mut a;
+    let mut b;
+    let mut y0;
+    let mut x;
+    let mut y;
+    let mut dithresh;
+    let mut rflg;
+    let mut skip_ihalve;
+
+    if aa <= 1.0 || bb <= 1.0 {
+        dithresh = 1.0e-6;
+        rflg = false;
+        a = aa;
+        b = bb;
+        y0 = yy0;
+        x = a / (a + b);
+        y = regularized_incomplete_beta(a, b, x);
+        skip_ihalve = false;
+    } else {
+        dithresh = 1.0e-4;
+        let mut yp = -ndtri(yy0);
+
+        if yy0 > 0.5 {
+            rflg = true;
+            a = bb;
+            b = aa;
+            y0 = 1.0 - yy0;
+            yp = -yp;
+        } else {
+            rflg = false;
+            a = aa;
+            b = bb;
+            y0 = yy0;
+        }
+
+        let lgm = (yp * yp - 3.0) / 6.0;
+        let xc = 2.0 / (1.0 / (2.0 * a - 1.0) + 1.0 / (2.0 * b - 1.0));
+        let mut d = yp * (xc + lgm).sqrt() / xc
+            - (1.0 / (2.0 * b - 1.0) - 1.0 / (2.0 * a - 1.0))
+                * (lgm + 5.0 / 6.0 - 2.0 / (3.0 * xc));
+        d *= 2.0;
+        if d < MIN_LOG {
+            return finish(0.0, rflg);
+        }
+        x = a / (a + b * d.exp());
+        y = regularized_incomplete_beta(a, b, x);
+        let yp_ratio = (y - y0) / y0;
+        skip_ihalve = yp_ratio.abs() < 0.2;
+    }
+
+    'outer: loop {
+        if skip_ihalve {
+            skip_ihalve = false;
+        } else {
+            'ihalve: loop {
+                let mut dir = 0;
+                let mut di = 0.5;
+                let mut converged = false;
+
+                for i in 0..100 {
+                    if i != 0 {
+                        x = x0 + di * (x1 - x0);
+                        if x == 1.0 {
+                            x = 1.0 - f64::EPSILON;
+                        }
+                        if x == 0.0 {
+                            di = 0.5;
+                            x = x0 + di * (x1 - x0);
+                            if x == 0.0 {
+                                return finish(0.0, rflg);
+                            }
+                        }
+                        y = regularized_incomplete_beta(a, b, x);
+                        let yp_x = (x1 - x0) / (x1 + x0);
+                        if yp_x.abs() < dithresh {
+                            converged = true;
+                            break;
+                        }
+                        let yp_y = (y - y0) / y0;
+                        if yp_y.abs() < dithresh {
+                            converged = true;
+                            break;
+                        }
+                    }
+
+                    if y < y0 {
+                        x0 = x;
+                        yl = y;
+                        if dir < 0 {
+                            dir = 0;
+                            di = 0.5;
+                        } else if dir > 3 {
+                            di = 1.0 - (1.0 - di) * (1.0 - di);
+                        } else if dir > 1 {
+                            di = 0.5 * di + 0.5;
+                        } else {
+                            di = (y0 - y) / (yh - yl);
+                        }
+                        dir += 1;
+                        if x0 > 0.75 {
+                            if rflg {
+                                rflg = false;
+                                a = aa;
+                                b = bb;
+                                y0 = yy0;
+                            } else {
+                                rflg = true;
+                                a = bb;
+                                b = aa;
+                                y0 = 1.0 - yy0;
+                            }
+                            x = 1.0 - x;
+                            y = regularized_incomplete_beta(a, b, x);
+                            x0 = 0.0;
+                            yl = 0.0;
+                            x1 = 1.0;
+                            yh = 1.0;
+                            continue 'ihalve;
+                        }
+                    } else {
+                        x1 = x;
+                        if rflg && x1 < f64::EPSILON {
+                            return finish(0.0, rflg);
+                        }
+                        yh = y;
+                        if dir > 0 {
+                            dir = 0;
+                            di = 0.5;
+                        } else if dir < -3 {
+                            di = di * di;
+                        } else if dir < -1 {
+                            di *= 0.5;
+                        } else {
+                            di = (y - y0) / (yh - yl);
+                        }
+                        dir -= 1;
+                    }
+                }
+
+                if converged {
+                    break 'ihalve;
+                }
+
+                if x0 >= 1.0 {
+                    return finish(1.0 - f64::EPSILON, rflg);
+                }
+                if x <= 0.0 {
+                    return finish(0.0, rflg);
+                }
+
+                break 'ihalve;
+            }
+        }
+
+        // Newton refinement
+        if nflg {
+            return finish(x, rflg);
+        }
+        nflg = true;
+        let lgm = ln_gamma(a + b) - ln_gamma(a) - ln_gamma(b);
+
+        let mut newton_done = false;
+        for i in 0..8 {
+            if i != 0 {
+                y = regularized_incomplete_beta(a, b, x);
+            }
+            if y < yl {
+                x = x0;
+                y = yl;
+            } else if y > yh {
+                x = x1;
+                y = yh;
+            } else if y < y0 {
+                x0 = x;
+                yl = y;
+            } else {
+                x1 = x;
+                yh = y;
+            }
+            if x == 1.0 || x == 0.0 {
+                break;
+            }
+            let d = (a - 1.0) * x.ln() + (b - 1.0) * (1.0 - x).ln() + lgm;
+            if d < MIN_LOG {
+                newton_done = true;
+                break;
+            }
+            if d > MAX_LOG {
+                break;
+            }
+            let d = d.exp();
+            let d = (y - y0) / d;
+            let mut xt = x - d;
+            if xt <= x0 {
+                let yy = (x - x0) / (x1 - x0);
+                xt = x0 + 0.5 * yy * (x - x0);
+                if xt <= 0.0 {
+                    break;
+                }
+            }
+            if xt >= x1 {
+                let yy = (x1 - x) / (x1 - x0);
+                xt = x1 - 0.5 * yy * (x1 - x);
+                if xt >= 1.0 {
+                    break;
+                }
+            }
+            x = xt;
+            if (d / x).abs() < 128.0 * f64::EPSILON {
+                newton_done = true;
+                break;
+            }
+        }
+
+        if newton_done {
+            return finish(x, rflg);
+        }
+
+        // Did not converge, retry with tighter threshold
+        dithresh = 256.0 * f64::EPSILON;
+        continue 'outer;
+    }
 }

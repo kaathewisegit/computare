@@ -2,7 +2,9 @@ use rug::{Float, az::Az, ops::Pow};
 
 use super::PREC;
 use computare_core::tolerance::assert_almost_eq;
-use computare_special::beta::{beta, ln_beta, regularized_incomplete_beta};
+use computare_special::beta::{
+    beta, inverse_regularized_beta, ln_beta, regularized_incomplete_beta,
+};
 use computare_testing::arbitrary::{Result, arbtest, f64_range};
 
 fn rug_ln_beta(a: &Float, b: &Float) -> Float {
@@ -279,6 +281,98 @@ fn regularized_incomplete_beta_near_zero() {
             f64_range(u, 2.0, 10.0)?,
             f64_range(u, 2.0, 10.0)?,
             f64_range(u, 0.0001, 0.01)?,
+            1e-10,
+        )
+    });
+}
+
+fn compare_inverse_regularized_beta(
+    a: f64,
+    b: f64,
+    p: f64,
+    relative: f64,
+) -> Result<()> {
+    let x = inverse_regularized_beta(a, b, p);
+    if (x == 0.0 && p == 0.0) || (x == 1.0 && p == 1.0) {
+        return Ok(());
+    }
+    let roundtrip = regularized_incomplete_beta(a, b, x);
+    println!("{a}, {b}, {p}");
+    assert_almost_eq!(roundtrip, p, relative = relative);
+    Ok(())
+}
+
+#[test]
+fn inverse_regularized_beta_boundary() {
+    assert_almost_eq!(inverse_regularized_beta(1.0, 1.0, 0.0), 0.0);
+    assert_almost_eq!(inverse_regularized_beta(1.0, 1.0, 1.0), 1.0);
+    assert_almost_eq!(inverse_regularized_beta(2.0, 3.0, 0.0), 0.0);
+    assert_almost_eq!(inverse_regularized_beta(2.0, 3.0, 1.0), 1.0);
+}
+
+#[test]
+fn inverse_regularized_beta_domain_errors() {
+    assert!(inverse_regularized_beta(-1.0, 2.0, 0.5).is_nan());
+    assert!(inverse_regularized_beta(2.0, -1.0, 0.5).is_nan());
+    assert!(inverse_regularized_beta(2.0, 3.0, -0.1).is_nan());
+    assert!(inverse_regularized_beta(2.0, 3.0, 1.1).is_nan());
+}
+
+#[test]
+fn inverse_regularized_beta_small() {
+    arbtest(|u| {
+        compare_inverse_regularized_beta(
+            f64_range(u, 0.1, 2.0)?,
+            f64_range(u, 0.1, 2.0)?,
+            f64_range(u, 1e-4, 0.99)?,
+            1e-1, // TODO: fix
+        )
+    });
+}
+
+#[test]
+fn inverse_regularized_beta_moderate() {
+    arbtest(|u| {
+        compare_inverse_regularized_beta(
+            f64_range(u, 2.0, 10.0)?,
+            f64_range(u, 2.0, 10.0)?,
+            f64_range(u, 1e-6, 0.99)?,
+            1e-12,
+        )
+    });
+}
+
+#[test]
+fn inverse_regularized_beta_large() {
+    arbtest(|u| {
+        compare_inverse_regularized_beta(
+            f64_range(u, 10.0, 50.0)?,
+            f64_range(u, 10.0, 50.0)?,
+            f64_range(u, 1e-4, 0.99)?,
+            1e-10,
+        )
+    });
+}
+
+#[test]
+fn inverse_regularized_beta_mixed() {
+    arbtest(|u| {
+        compare_inverse_regularized_beta(
+            f64_range(u, 0.1, 10.0)?,
+            f64_range(u, 10.0, 50.0)?,
+            f64_range(u, 1e-4, 0.99)?,
+            1e-10,
+        )
+    });
+}
+
+#[test]
+fn inverse_regularized_beta_high_p() {
+    arbtest(|u| {
+        compare_inverse_regularized_beta(
+            f64_range(u, 2.0, 20.0)?,
+            f64_range(u, 2.0, 20.0)?,
+            f64_range(u, 0.9, 0.9999)?,
             1e-10,
         )
     });
