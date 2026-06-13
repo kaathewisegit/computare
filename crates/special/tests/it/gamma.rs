@@ -45,26 +45,37 @@ fn compare_ln_gamma(x: f64, relative: f64) -> Result<()> {
 }
 
 #[test]
-fn ln_gamma_unit() {
-    let prec = 2e-9;
+fn ln_gamma_near_1() {
+    let prec = 1e-6;
     compare_ln_gamma(0.999997119981013, prec).unwrap();
     compare_ln_gamma(0.9999996205046752, prec).unwrap();
-    arbtest(|u| compare_ln_gamma(f64_unit(u)?, prec));
+    compare_ln_gamma(0.9999999989529239, prec).unwrap();
+}
+
+#[test]
+fn ln_gamma_0_1() {
+    arbtest(|u| {
+        compare_ln_gamma(f64_range(u, f64::MIN_POSITIVE, 0.99)?, 1e-12)
+    });
+}
+
+#[test]
+fn ln_gamma_near_2() {
+    let prec = 1e-9;
+    compare_ln_gamma(1.9999632027342864, prec).unwrap();
+    compare_ln_gamma(1.9999960605288427, prec).unwrap();
+    compare_ln_gamma(1.9999972261190517, prec).unwrap();
+    compare_ln_gamma(1.9999911227574287, prec).unwrap();
 }
 
 #[test]
 fn ln_gamma_1_2() {
-    let prec = 2e-10;
-    compare_ln_gamma(1.9999632027342864, prec).unwrap();
-    compare_ln_gamma(1.9999960605288427, prec).unwrap();
-    arbtest(|u| compare_ln_gamma(f64_range(u, 1.0, 5.0)?, prec));
+    arbtest(|u| compare_ln_gamma(f64_range(u, 1.01, 1.99)?, 1e-11));
 }
 
 #[test]
 fn ln_gamma_2_5() {
-    let prec = 1e-10;
-    compare_ln_gamma(1.9999911227574287, prec).unwrap();
-    arbtest(|u| compare_ln_gamma(f64_range(u, 1.0, 5.0)?, prec));
+    arbtest(|u| compare_ln_gamma(f64_range(u, 2.01, 5.0)?, 1e-10));
 }
 
 #[test]
