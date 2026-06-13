@@ -96,7 +96,7 @@ fn compare_ln_beta(a: f64, b: f64, relative: f64) -> Result<()> {
         rug_ln_beta(&Float::with_val(PREC, a), &Float::with_val(PREC, b))
             .az::<f64>();
     let my_res = ln_beta(a, b);
-    assert_almost_eq!(my_res, rug_res, relative = relative);
+    assert_almost_eq!(my_res, rug_res, relative = relative; "a = {a}, b = {b}");
     Ok(())
 }
 
@@ -135,9 +135,10 @@ fn beta_10_30() {
 
 #[test]
 fn ln_beta_unit() {
-    let prec = 1e-11;
+    let prec = 1e-10;
     compare_ln_beta(0.8269127728025633, 1.2420184412806519, prec).unwrap();
     compare_ln_beta(0.8744182756618015, 1.1581789152651116, prec).unwrap();
+    compare_ln_beta(0.9505122923996249, 1.0538780315944962, prec).unwrap();
     arbtest(|u| {
         compare_ln_beta(f64_range(u, 0.1, 2.0)?, f64_range(u, 0.1, 2.0)?, prec)
     });

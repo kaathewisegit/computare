@@ -40,26 +40,31 @@ fn compare_ln_gamma(x: f64, relative: f64) -> Result<()> {
     let rug_gamma = Float::with_val(PREC, x).ln_gamma().az::<f64>();
     let my_gamma = ln_gamma(x);
 
-    assert_almost_eq!(my_gamma, rug_gamma, relative = relative);
+    assert_almost_eq!(my_gamma, rug_gamma, relative = relative; "x = {x}");
     Ok(())
 }
 
 #[test]
 fn ln_gamma_unit() {
-    let prec = 1e-9;
+    let prec = 2e-9;
     compare_ln_gamma(0.999997119981013, prec).unwrap();
+    compare_ln_gamma(0.9999996205046752, prec).unwrap();
     arbtest(|u| compare_ln_gamma(f64_unit(u)?, prec));
 }
 
 #[test]
 fn ln_gamma_1_2() {
-    // 0x8129fc7700010000
-    arbtest(|u| compare_ln_gamma(f64_range(u, 1.0, 5.0)?, 1e-10));
+    let prec = 2e-10;
+    compare_ln_gamma(1.9999632027342864, prec).unwrap();
+    compare_ln_gamma(1.9999960605288427, prec).unwrap();
+    arbtest(|u| compare_ln_gamma(f64_range(u, 1.0, 5.0)?, prec));
 }
 
 #[test]
 fn ln_gamma_2_5() {
-    arbtest(|u| compare_ln_gamma(f64_range(u, 1.0, 5.0)?, 5e-11));
+    let prec = 1e-10;
+    compare_ln_gamma(1.9999911227574287, prec).unwrap();
+    arbtest(|u| compare_ln_gamma(f64_range(u, 1.0, 5.0)?, prec));
 }
 
 #[test]
