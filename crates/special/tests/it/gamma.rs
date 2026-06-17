@@ -33,7 +33,7 @@ fn gamma_5_10() {
 
 #[test]
 fn gamma_10_33() {
-    arbtest(|u| compare_gamma(f64_range(u, 5.0, 33.0)?, 1e-14));
+    arbtest(|u| compare_gamma(f64_range(u, 10.0, 33.0)?, 1e-14));
 }
 
 fn compare_ln_gamma(x: f64, relative: f64) -> Result<()> {
