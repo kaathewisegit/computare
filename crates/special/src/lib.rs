@@ -4,6 +4,7 @@ pub mod beta;
 pub(crate) mod consts;
 pub mod erf;
 pub mod evaluate;
+pub mod factorial;
 pub mod gamma;
 pub mod lanczos;
 pub(crate) mod ndtri;
