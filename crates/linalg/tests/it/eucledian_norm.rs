@@ -1,6 +1,6 @@
 use approx::assert_ulps_eq;
 
-use linalg::ops::eucledian_norm;
+use computare_linalg::ops::eucledian_norm;
 
 // TODO: arbitrary tests (needs a precise baseline impl to compare to)
 

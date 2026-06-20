@@ -1,8 +1,8 @@
 use crate::{
     int_utils::{div_ceil, div_floor},
-    num::{Float, NumAssign},
     vector::Vector,
 };
+use computare_core::{Float, FloatMath, NumAssign};
 
 fn threshold_small<const P: u8, T: Float>() -> T {
     T::RADIX.powi(div_ceil(T::MIN_EXP - 1, P as i32))
@@ -26,7 +26,7 @@ fn scale_big<const P: u8, T: Float>() -> T {
     ))
 }
 
-fn accumulate<const P: u8, T: Float + NumAssign>(
+fn accumulate<const P: u8, T: FloatMath + NumAssign>(
     acc_small: T,
     acc_mid: T,
     acc_big: T,
@@ -78,7 +78,7 @@ fn accumulate<const P: u8, T: Float + NumAssign>(
 /// [p1]: https://doi.org/10.1145/355769.355771
 pub fn p_norm<const P: u8, T, V>(v: &V) -> T
 where
-    T: Float + NumAssign,
+    T: FloatMath + NumAssign,
     V: Vector<T> + ?Sized,
 {
     let p = P as i32;
@@ -118,7 +118,7 @@ where
 /// This function is a wrapper over [`p_norm`].
 pub fn eucledian_norm<T, V>(v: &V) -> T
 where
-    T: Float + NumAssign,
+    T: FloatMath + NumAssign,
     V: Vector<T> + ?Sized,
 {
     p_norm::<2, T, V>(v)

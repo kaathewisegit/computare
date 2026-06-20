@@ -2,7 +2,7 @@ use arbtest::arbtest;
 
 use std::cmp::Ordering;
 
-use linalg::ops::vec_max_abs_idx;
+use computare_linalg::ops::vec_max_abs_idx;
 
 #[test]
 fn max_abs_idx_basic() {

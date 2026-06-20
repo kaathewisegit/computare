@@ -1,4 +1,5 @@
-use crate::{matrix::Matrix, num::Float};
+use crate::matrix::Matrix;
+use computare_core::Float;
 
 pub fn mat_max_abs<T, M>(m: &M) -> T
 where

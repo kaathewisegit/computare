@@ -1,4 +1,5 @@
-use crate::{num::Float, vector::Vector};
+use crate::vector::Vector;
+use computare_core::Float;
 
 pub fn vec_max_abs_idx<T, V>(v: &V) -> usize
 where

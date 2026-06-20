@@ -14,7 +14,7 @@ pub use float::Float;
 pub use float::FloatMath;
 pub use identities::{ConstOne, ConstZero, One, Zero};
 pub use integer::Integer;
-pub use num::{Num, NumAssignOps, NumOps};
+pub use num::{Num, NumAssign, NumAssignOps, NumOps};
 
 #[macro_export]
 macro_rules! debug_panic {

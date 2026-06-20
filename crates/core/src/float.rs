@@ -196,7 +196,6 @@ pub trait FloatMath: Float {
     fn acosh(self) -> Self;
     fn atanh(self) -> Self;
 
-    #[cfg(any(feature = "std", feature = "libm"))]
     fn sinpi(self) -> Self {
         if !self.is_finite() {
             return self;
@@ -205,6 +204,8 @@ pub trait FloatMath: Float {
         let rem = self % (Self::one() + Self::one());
         (rem * Self::PI).sin()
     }
+
+    fn nth_root(self, n: u8) -> Self;
 }
 
 macro_rules! impl_float_math {
@@ -318,6 +319,10 @@ macro_rules! impl_float_math {
             #[inline]
             fn atanh(self) -> Self {
                 self.atanh()
+            }
+            #[inline]
+            fn nth_root(self, n: u8) -> Self {
+                <$t>::powf(self, 1.0 / <$t>::from(n))
             }
         }
     };
@@ -436,6 +441,10 @@ impl FloatMath for f32 {
     fn atanh(self) -> Self {
         libm::atanhf(self)
     }
+    #[inline]
+    fn nth_root(self, n: u8) -> Self {
+        f32::powf(self, 1.0 / f32::from(n))
+    }
 }
 
 #[cfg(all(not(feature = "std"), feature = "libm"))]
@@ -547,5 +556,9 @@ impl FloatMath for f64 {
     #[inline]
     fn atanh(self) -> Self {
         libm::atanh(self)
+    }
+    #[inline]
+    fn nth_root(self, n: u8) -> Self {
+        f64::powf(self, 1.0 / f64::from(n))
     }
 }

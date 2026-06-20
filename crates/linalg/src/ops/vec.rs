@@ -1,9 +1,7 @@
 use core::ptr;
 
-use crate::{
-    num::{Num, NumAssign},
-    vector::Vector,
-};
+use crate::vector::Vector;
+use computare_core::{Num, NumAssign};
 
 pub fn swap_u<T, A, B>(a: &mut A, b: &mut B)
 where

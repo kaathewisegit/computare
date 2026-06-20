@@ -2,14 +2,14 @@
 
 use crate::{
     matrix::Matrix,
-    num::{Float, NumAssign},
     ops::{eucledian_norm, scale_vec},
     vector::Vector,
 };
+use computare_core::{Float, FloatMath, NumAssign};
 
 pub unsafe fn householder_reflector_u<T, V>(alpha: T, v: &mut V) -> T
 where
-    T: Float + NumAssign,
+    T: FloatMath + NumAssign,
     V: Vector<T> + ?Sized,
 {
     if v.length() == 0 {

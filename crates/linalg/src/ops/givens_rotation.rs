@@ -1,7 +1,5 @@
-use crate::{
-    num::{Float, NumAssign},
-    vector::Vector,
-};
+use crate::vector::Vector;
+use computare_core::{Float, NumAssign};
 
 pub unsafe fn givens_rotation_u<T, A, B>(a: &mut A, b: &mut B, c: T, s: T)
 where

@@ -1,6 +1,7 @@
 #![allow(unused)]
 
-use crate::{matrix::Matrix, num::Float, vector::Vector};
+use crate::{matrix::Matrix, vector::Vector};
+use computare_core::Float;
 
 pub unsafe fn hessenberg_upper_u<T, M, VT>(
     m: &mut M,

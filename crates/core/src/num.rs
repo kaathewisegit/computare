@@ -1,4 +1,4 @@
-use crate::{One, Zero};
+use crate::{ConstOne, ConstZero, One, Zero};
 
 use core::ops::{
     Add, AddAssign, Div, DivAssign, Mul, MulAssign, Rem, RemAssign, Sub,
@@ -44,3 +44,6 @@ impl<T, Rhs> NumAssignOps<Rhs> for T where
 pub trait Num: PartialEq + Zero + One + NumOps + NumAssignOps {}
 
 impl<T> Num for T where T: PartialEq + Zero + One + NumOps + NumAssignOps {}
+
+pub trait NumAssign: Num + ConstZero + ConstOne {}
+impl<T> NumAssign for T where T: Num + ConstZero + ConstOne {}

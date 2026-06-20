@@ -2,7 +2,7 @@ use approx::assert_ulps_eq;
 
 use std::f64::consts::PI;
 
-use linalg::ops::givens_rotation;
+use computare_linalg::ops::givens_rotation;
 
 #[test]
 fn basic() {

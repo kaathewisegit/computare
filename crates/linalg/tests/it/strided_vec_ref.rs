@@ -1,6 +1,6 @@
 use arbtest::arbtest;
 
-use linalg::vector::{StridedVectorRef, Vector};
+use computare_linalg::vector::{StridedVectorRef, Vector};
 
 #[test]
 fn basic() {

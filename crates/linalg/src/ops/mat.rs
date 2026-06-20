@@ -1,4 +1,4 @@
-use crate::num::NumAssign;
+use computare_core::NumAssign;
 
 use crate::matrix::Matrix;
 
