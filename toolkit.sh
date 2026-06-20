@@ -6,19 +6,29 @@ check() {
 
 	cargo check --tests ${flags}
 	cargo clippy --tests ${flags}
-	cargo test ${flags}
+	cargo test --no-default-features ${flags}
 }
 
-if [ "$1" = "check" ]; then
-	cargo fmt --check
+case "$1" in
+	"check")
+		cargo fmt --check
 
-	check "--no-default-features"
-	check "--no-default-features --features libm"
-	check "--no-default-features --features std"
-	check "--no-default-features --features libm,std"
-	check "--no-default-features --features rand"
-	check "--no-default-features --features rand,std"
-else
-	echo "Usage: $0 check" >&2
-	exit 1
-fi
+		check ""
+		check " --features libm"
+		check " --features std"
+		check " --features libm,std"
+		check " --features rand"
+		check " --features rand,std"
+		;;
+	"fuzz")
+		if [ -n "$2" ]; then
+			export ARBTEST_BUDGET_MS="$2"
+		fi
+
+		cargo test --release
+		;;
+	*)
+		echo "Usage: $0 {check|fuzz}" >&2
+		exit 1
+		;;
+esac
