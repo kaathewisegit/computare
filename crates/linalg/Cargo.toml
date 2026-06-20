@@ -1,0 +1,11 @@
+[package]
+name = "linalg"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+[dev-dependencies]
+approx = "0.5.1"
+arbitrary = "1.4.2"
+arbtest = "0.3.2"
