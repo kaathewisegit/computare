@@ -1,4 +1,4 @@
-use approx::assert_ulps_eq;
+use computare_core::assert_almost_eq;
 
 use computare_linalg::ops::eucledian_norm;
 
@@ -6,9 +6,9 @@ use computare_linalg::ops::eucledian_norm;
 
 #[test]
 fn stable() {
-    assert_ulps_eq!(eucledian_norm(&[3.0, 4.0]), 5.0);
-    assert_ulps_eq!(eucledian_norm(&[1.0, 1.0, 1.0]), 3f64.sqrt());
-    assert_ulps_eq!(eucledian_norm(&[0.0, 0.0, 0.0, 0.0]), 0.0);
+    assert_almost_eq!(eucledian_norm(&[3.0, 4.0]), 5.0);
+    assert_almost_eq!(eucledian_norm(&[1.0, 1.0, 1.0]), 3f64.sqrt());
+    assert_almost_eq!(eucledian_norm(&[0.0, 0.0, 0.0, 0.0]), 0.0);
 }
 
 #[test]
@@ -17,7 +17,7 @@ fn scaling_uniform() {
         for i in 2..20 {
             let values = vec![value; i];
             let norm = eucledian_norm(&values[..]);
-            assert_ulps_eq!(norm, value * (i as f64).sqrt());
+            assert_almost_eq!(norm, value * (i as f64).sqrt());
         }
     }
 
@@ -28,14 +28,14 @@ fn scaling_uniform() {
 
 #[test]
 fn scaling_varied() {
-    assert_ulps_eq!(eucledian_norm(&[1e200, 1.0]), 1e200);
-    assert_ulps_eq!(eucledian_norm(&[1.0, 1e200]), 1e200);
+    assert_almost_eq!(eucledian_norm(&[1e200, 1.0]), 1e200);
+    assert_almost_eq!(eucledian_norm(&[1.0, 1e200]), 1e200);
 }
 
 #[test]
 fn many() {
     let values = vec![1e-200; 10_000];
-    assert_ulps_eq!(eucledian_norm(&values[..]), 1e-198);
+    assert_almost_eq!(eucledian_norm(&values[..]), 1e-198);
 }
 
 #[test]

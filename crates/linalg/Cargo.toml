@@ -10,6 +10,4 @@ authors.workspace = true
 computare-core = { workspace = true }
 
 [dev-dependencies]
-approx = "0.5"
-arbitrary = "1.4.2"
-arbtest = "0.3.2"
+computare-testing = { workspace = true }

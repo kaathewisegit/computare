@@ -1,4 +1,4 @@
-use approx::assert_ulps_eq;
+use computare_core::assert_almost_eq;
 
 use std::f64::consts::PI;
 
@@ -18,7 +18,7 @@ fn basic() {
     givens_rotation(&mut a_new, &mut b_new, c, s);
 
     for i in 0..3 {
-        assert_ulps_eq!(a_new[i], c * (a[i] + b[i]));
-        assert_ulps_eq!(b_new[i], c * (-a[i] + b[i]));
+        assert_almost_eq!(a_new[i], c * (a[i] + b[i]));
+        assert_almost_eq!(b_new[i], c * (-a[i] + b[i]));
     }
 }

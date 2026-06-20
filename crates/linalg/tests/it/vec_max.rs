@@ -1,4 +1,4 @@
-use arbtest::arbtest;
+use computare_testing::arbitrary::arbtest;
 
 use std::cmp::Ordering;
 
