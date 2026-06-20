@@ -28,6 +28,11 @@ fn compare_cdf_roundtrip(
         return Ok(());
     }
     let roundtrip = dist.cdf(x);
-    assert_almost_eq!(roundtrip, p, relative = relative);
+    assert_almost_eq!(
+        roundtrip,
+        p,
+        relative = relative;
+        "p = {p}, roundtrip = {roundtrip}"
+    );
     Ok(())
 }

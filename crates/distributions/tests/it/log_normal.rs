@@ -16,6 +16,8 @@ fn log_normal_cdf_roundtrip() {
 
 #[test]
 fn log_normal_cdf_roundtrip_small_scale() {
+    // 0xc16c291700000d22 failed in Github Actions on Windows withs `std`, but I
+    // couldn't reproduce it on Linux.  Might an issue with the system libm
     arbtest(|u| {
         compare_cdf_roundtrip(
             &LogNormal::new(f64_range(u, 0.1, 2.0)?, f64_range(u, 1e-3, 0.1)?),
