@@ -2,6 +2,7 @@
 // https://doc.rust-lang.org/unstable-book/language-features/doc-cfg.html
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
+mod beta;
 mod exponential;
 mod gamma;
 mod laplace;
@@ -13,6 +14,7 @@ mod ziggurat;
 #[cfg(feature = "rand")]
 mod ziggurat_tables;
 
+pub use beta::Beta;
 pub use exponential::Exponential;
 pub use gamma::Gamma;
 pub use laplace::Laplace;
