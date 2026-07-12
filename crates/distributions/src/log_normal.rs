@@ -41,7 +41,7 @@ impl Continuous for LogNormal {
             let norm = (x * self.scale * f64::SQRT_2PI).recip();
             let z_score = (x.ln() - self.location) / self.scale;
 
-            norm * (z_score.powi(2) / 2.0).exp()
+            norm * (-z_score.powi(2) / 2.0).exp()
         }
     }
 
@@ -96,7 +96,7 @@ impl Statistics for LogNormal {
 
     type ModeErr = Infallible;
     fn mode(&self) -> Result<f64, Infallible> {
-        Ok(self.location - self.scale.powi(2))
+        Ok((self.location - self.scale.powi(2)).exp())
     }
 
     type VarianceErr = Infallible;

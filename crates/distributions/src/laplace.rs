@@ -54,6 +54,16 @@ impl Continuous for Laplace {
         }
     }
 
+    fn sf(&self, x: f64) -> f64 {
+        let (location, scale) = (self.location, self.scale);
+        let z_score = (x - location) / scale;
+        if x <= location {
+            1.0 - z_score.exp() / 2.0
+        } else {
+            (-z_score).exp() / 2.0
+        }
+    }
+
     fn inverse_cdf(&self, p: f64) -> f64 {
         let (location, scale) = (self.location, self.scale);
         if p <= 0.5 {
