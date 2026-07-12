@@ -7,6 +7,7 @@ use computare_testing::arbitrary::Result;
 mod beta;
 mod exponential;
 mod gamma;
+mod inverse_gamma;
 mod laplace;
 mod log_normal;
 mod normal;

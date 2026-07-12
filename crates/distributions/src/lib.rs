@@ -5,6 +5,7 @@
 mod beta;
 mod exponential;
 mod gamma;
+mod inverse_gamma;
 mod laplace;
 mod log_normal;
 mod normal;
@@ -17,6 +18,7 @@ mod ziggurat_tables;
 pub use beta::Beta;
 pub use exponential::Exponential;
 pub use gamma::Gamma;
+pub use inverse_gamma::InverseGamma;
 pub use laplace::Laplace;
 pub use log_normal::LogNormal;
 pub use normal::Normal;
