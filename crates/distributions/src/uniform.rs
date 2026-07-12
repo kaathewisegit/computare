@@ -9,9 +9,16 @@ pub struct Uniform {
 }
 
 impl Uniform {
+    pub fn try_new(min: f64, max: f64) -> Option<Self> {
+        if min <= max {
+            Some(Uniform { min, max })
+        } else {
+            None
+        }
+    }
+
     pub fn new(min: f64, max: f64) -> Self {
-        debug_assert!(min <= max);
-        Uniform { min, max }
+        Self::try_new(min, max).unwrap()
     }
 
     pub fn min(&self) -> f64 {

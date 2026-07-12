@@ -8,16 +8,30 @@ pub struct Exponential {
 }
 
 impl Exponential {
+    pub fn try_new(rate: f64) -> Option<Self> {
+        if rate > 0.0 {
+            Some(Exponential { rate })
+        } else {
+            None
+        }
+    }
+
     pub fn new(rate: f64) -> Self {
-        debug_assert!(rate > 0.0);
-        Exponential { rate }
+        Self::try_new(rate).unwrap()
+    }
+
+    pub fn try_new_with_scale(scale: f64) -> Option<Self> {
+        if scale > 0.0 {
+            Some(Exponential {
+                rate: scale.recip(),
+            })
+        } else {
+            None
+        }
     }
 
     pub fn new_with_scale(scale: f64) -> Self {
-        debug_assert!(scale > 0.0);
-        Exponential {
-            rate: scale.recip(),
-        }
+        Self::try_new_with_scale(scale).unwrap()
     }
 
     pub fn rate(&self) -> f64 {

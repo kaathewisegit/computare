@@ -12,9 +12,16 @@ pub struct LogNormal {
 }
 
 impl LogNormal {
+    pub fn try_new(location: f64, scale: f64) -> Option<Self> {
+        if scale > 0.0 {
+            Some(LogNormal { location, scale })
+        } else {
+            None
+        }
+    }
+
     pub fn new(location: f64, scale: f64) -> Self {
-        debug_assert!(scale > 0.0);
-        LogNormal { location, scale }
+        Self::try_new(location, scale).unwrap()
     }
 
     pub fn location(&self) -> f64 {

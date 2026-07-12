@@ -14,19 +14,31 @@ pub struct Gamma {
 }
 
 impl Gamma {
+    pub fn try_new(shape: f64, scale: f64) -> Option<Self> {
+        if shape > 0.0 && scale > 0.0 {
+            Some(Gamma { shape, scale })
+        } else {
+            None
+        }
+    }
+
     pub fn new(shape: f64, scale: f64) -> Self {
-        debug_assert!(shape > 0.0);
-        debug_assert!(scale > 0.0);
-        Gamma { shape, scale }
+        Self::try_new(shape, scale).unwrap()
+    }
+
+    pub fn try_new_with_rate(shape: f64, rate: f64) -> Option<Self> {
+        if shape > 0.0 && rate > 0.0 {
+            Some(Gamma {
+                shape,
+                scale: rate.recip(),
+            })
+        } else {
+            None
+        }
     }
 
     pub fn new_with_rate(shape: f64, rate: f64) -> Self {
-        debug_assert!(shape > 0.0);
-        debug_assert!(rate > 0.0);
-        Gamma {
-            shape,
-            scale: rate.recip(),
-        }
+        Self::try_new_with_rate(shape, rate).unwrap()
     }
 
     pub fn shape(&self) -> f64 {

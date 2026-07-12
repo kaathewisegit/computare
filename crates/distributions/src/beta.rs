@@ -14,10 +14,16 @@ pub struct Beta {
 }
 
 impl Beta {
+    pub fn try_new(shape_a: f64, shape_b: f64) -> Option<Self> {
+        if shape_a > 0.0 && shape_b > 0.0 {
+            Some(Beta { shape_a, shape_b })
+        } else {
+            None
+        }
+    }
+
     pub fn new(shape_a: f64, shape_b: f64) -> Self {
-        debug_assert!(shape_a > 0.0);
-        debug_assert!(shape_b > 0.0);
-        Beta { shape_a, shape_b }
+        Self::try_new(shape_a, shape_b).unwrap()
     }
 
     pub fn shape_a(&self) -> f64 {

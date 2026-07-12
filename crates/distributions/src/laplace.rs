@@ -12,9 +12,16 @@ pub struct Laplace {
 }
 
 impl Laplace {
+    pub fn try_new(location: f64, scale: f64) -> Option<Self> {
+        if scale > 0.0 {
+            Some(Laplace { location, scale })
+        } else {
+            None
+        }
+    }
+
     pub fn new(location: f64, scale: f64) -> Self {
-        debug_assert!(scale > 0.0);
-        Laplace { location, scale }
+        Self::try_new(location, scale).unwrap()
     }
 
     pub fn location(&self) -> f64 {
