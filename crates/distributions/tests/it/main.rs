@@ -5,6 +5,7 @@ use computare_distributions::Continuous;
 use computare_testing::arbitrary::Result;
 
 mod beta;
+mod chi;
 mod exponential;
 mod gamma;
 mod inverse_gamma;

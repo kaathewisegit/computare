@@ -3,6 +3,7 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod beta;
+mod chi;
 mod exponential;
 mod gamma;
 mod inverse_gamma;
@@ -16,6 +17,7 @@ mod ziggurat;
 mod ziggurat_tables;
 
 pub use beta::Beta;
+pub use chi::Chi;
 pub use exponential::Exponential;
 pub use gamma::Gamma;
 pub use inverse_gamma::InverseGamma;
