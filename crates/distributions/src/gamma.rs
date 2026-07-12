@@ -7,6 +7,7 @@ use computare_special::gamma::{
 
 use crate::{Continuous, Statistics};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Gamma {
     shape: f64,
     scale: f64,
@@ -157,7 +158,7 @@ impl rand::distr::Distribution<f64> for Gamma {
 /// Pages 363-372
 #[cfg(feature = "rand")]
 #[cfg_attr(docsrs, doc(cfg(feature = "rand")))]
-fn sample_unchecked<R: rand::Rng + ?Sized>(
+pub(crate) fn sample_unchecked<R: rand::Rng + ?Sized>(
     rng: &mut R,
     shape: f64,
     scale: f64,

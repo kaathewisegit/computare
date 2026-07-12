@@ -7,6 +7,7 @@ use computare_special::{
 
 use crate::{Continuous, Statistics};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Beta {
     shape_a: f64,
     shape_b: f64,

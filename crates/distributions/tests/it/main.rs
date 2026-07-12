@@ -1,3 +1,10 @@
+use core::fmt::Debug;
+
+use computare_core::tolerance::assert_almost_eq;
+use computare_distributions::Continuous;
+use computare_testing::arbitrary::Result;
+
+mod beta;
 mod exponential;
 mod gamma;
 mod laplace;
@@ -7,13 +14,9 @@ mod normal;
 mod sample;
 mod uniform;
 
-use computare_core::tolerance::assert_almost_eq;
-use computare_distributions::Continuous;
-use computare_testing::arbitrary::Result;
-
 #[track_caller]
 fn compare_cdf_roundtrip(
-    dist: &dyn Continuous,
+    dist: &(impl Continuous + Debug),
     p: f64,
     relative: f64,
 ) -> Result<()> {
@@ -32,7 +35,7 @@ fn compare_cdf_roundtrip(
         roundtrip,
         p,
         relative = relative;
-        "p = {p}, roundtrip = {roundtrip}"
+        "d = {dist:?}, p = {p}, roundtrip = {roundtrip}"
     );
     Ok(())
 }

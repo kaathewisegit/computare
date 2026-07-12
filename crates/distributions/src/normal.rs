@@ -7,6 +7,7 @@ use crate::{Continuous, Statistics};
 use computare_core::Float;
 use computare_special::erf::{erfc, inverse_erfc};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Normal {
     mean: f64,
     std: f64,

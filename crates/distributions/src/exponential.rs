@@ -2,6 +2,7 @@ use core::{convert::Infallible, f64::consts::LN_2};
 
 use crate::{Continuous, Statistics};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Exponential {
     rate: f64,
 }

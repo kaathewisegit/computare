@@ -5,6 +5,7 @@ use computare_special::erf::{erfc, inverse_erfc};
 
 use crate::{Continuous, Statistics};
 
+#[derive(Clone, Copy, Debug)]
 pub struct LogNormal {
     location: f64,
     scale: f64,

@@ -2,6 +2,7 @@ use core::convert::Infallible;
 
 use crate::{Continuous, Statistics};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Uniform {
     min: f64,
     max: f64,

@@ -5,6 +5,7 @@ use core::{
 
 use crate::{Continuous, Statistics};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Laplace {
     location: f64,
     scale: f64,
