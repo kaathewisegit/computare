@@ -4,7 +4,7 @@ use computare_testing::arbitrary::{arbtest, f64_range};
 use super::compare_cdf_roundtrip;
 
 #[test]
-fn inverse_gamma_cdf_roundtrip_small_shape() {
+fn cdf_roundtrip_small_shape() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &InverseGamma::new(
@@ -18,7 +18,7 @@ fn inverse_gamma_cdf_roundtrip_small_shape() {
 }
 
 #[test]
-fn inverse_gamma_cdf_roundtrip_shape_1_10() {
+fn cdf_roundtrip_shape_1_10() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &InverseGamma::new(
@@ -32,7 +32,7 @@ fn inverse_gamma_cdf_roundtrip_shape_1_10() {
 }
 
 #[test]
-fn inverse_gamma_cdf_roundtrip_shape_10_100() {
+fn cdf_roundtrip_shape_10_100() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &InverseGamma::new(
@@ -46,7 +46,7 @@ fn inverse_gamma_cdf_roundtrip_shape_10_100() {
 }
 
 #[test]
-fn inverse_gamma_cdf_roundtrip_high_p() {
+fn cdf_roundtrip_high_p() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &InverseGamma::new(
@@ -60,7 +60,7 @@ fn inverse_gamma_cdf_roundtrip_high_p() {
 }
 
 #[test]
-fn inverse_gamma_cdf_roundtrip_small_scale() {
+fn cdf_roundtrip_small_scale() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &InverseGamma::new(
@@ -74,7 +74,7 @@ fn inverse_gamma_cdf_roundtrip_small_scale() {
 }
 
 #[test]
-fn inverse_gamma_cdf_roundtrip_small_shape_recip_scale() {
+fn cdf_roundtrip_small_shape_recip_scale() {
     arbtest(|u| {
         let shape = f64_range(u, 0.05, 0.1)?;
         let scale = shape.recip();

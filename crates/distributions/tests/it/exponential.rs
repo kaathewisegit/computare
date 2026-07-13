@@ -6,7 +6,7 @@ use computare_testing::arbitrary::{arbtest, f64_range};
 use super::{assert_almost_eq, compare_cdf_roundtrip};
 
 #[test]
-fn exponential_mean() {
+fn mean() {
     let cases = [(0.1, 10.0), (1.0, 1.0), (10.0, 0.1)];
     for (rate, expected) in cases {
         let d = Exponential::new(rate);
@@ -15,7 +15,7 @@ fn exponential_mean() {
 }
 
 #[test]
-fn exponential_variance() {
+fn variance() {
     let cases = [(0.1, 100.0), (1.0, 1.0), (10.0, 0.01)];
     for (rate, expected) in cases {
         let d = Exponential::new(rate);
@@ -24,7 +24,7 @@ fn exponential_variance() {
 }
 
 #[test]
-fn exponential_entropy() {
+fn entropy() {
     let cases = [
         (0.1, 3.302585092994046),
         (1.0, 1.0),
@@ -37,7 +37,7 @@ fn exponential_entropy() {
 }
 
 #[test]
-fn exponential_median() {
+fn median() {
     let cases = [
         (0.1, 6.931471805599453),
         (1.0, LN_2),
@@ -50,7 +50,7 @@ fn exponential_median() {
 }
 
 #[test]
-fn exponential_mode() {
+fn mode() {
     let cases = [(0.1, 0.0), (1.0, 0.0), (10.0, 0.0)];
     for (rate, expected) in cases {
         let d = Exponential::new(rate);
@@ -59,7 +59,7 @@ fn exponential_mode() {
 }
 
 #[test]
-fn exponential_lower() {
+fn lower() {
     let cases = [(0.1, 0.0), (1.0, 0.0), (10.0, 0.0)];
     for (rate, expected) in cases {
         assert_almost_eq!(Exponential::new(rate).lower(), expected);
@@ -67,7 +67,7 @@ fn exponential_lower() {
 }
 
 #[test]
-fn exponential_upper() {
+fn upper() {
     let cases = [
         (0.1, f64::INFINITY),
         (1.0, f64::INFINITY),
@@ -79,7 +79,7 @@ fn exponential_upper() {
 }
 
 #[test]
-fn exponential_pdf() {
+fn pdf() {
     let cases = [
         (0.1, 0.0, 0.1),
         (1.0, 0.0, 1.0),
@@ -103,7 +103,7 @@ fn exponential_pdf() {
 }
 
 #[test]
-fn exponential_pdf_nan() {
+fn pdf_nan() {
     let cases = [
         (f64::INFINITY, 0.0),
         (f64::INFINITY, 0.1),
@@ -116,7 +116,7 @@ fn exponential_pdf_nan() {
 }
 
 #[test]
-fn exponential_ln_pdf() {
+fn ln_pdf() {
     let cases = [
         (0.1, 0.0, -LN_10),
         (1.0, 0.0, 0.0),
@@ -140,7 +140,7 @@ fn exponential_ln_pdf() {
 }
 
 #[test]
-fn exponential_ln_pdf_nan() {
+fn ln_pdf_nan() {
     let cases = [
         (f64::INFINITY, 0.0),
         (f64::INFINITY, 0.1),
@@ -153,7 +153,7 @@ fn exponential_ln_pdf_nan() {
 }
 
 #[test]
-fn exponential_cdf() {
+fn cdf() {
     let cases = [
         (0.1, 0.0, 0.0),
         (1.0, 0.0, 0.0),
@@ -182,7 +182,7 @@ fn exponential_cdf() {
 }
 
 #[test]
-fn exponential_inverse_cdf_identity() {
+fn inverse_cdf_identity() {
     let rates = [0.42, 0.042, 0.0042, 0.33, 0.033, 0.0033];
     for rate in rates {
         let dist = Exponential::new(rate);
@@ -195,7 +195,7 @@ fn exponential_inverse_cdf_identity() {
 }
 
 #[test]
-fn exponential_sf() {
+fn sf() {
     let cases = [
         (0.1, 0.0, 1.0),
         (1.0, 0.0, 1.0),
@@ -216,7 +216,7 @@ fn exponential_sf() {
 }
 
 #[test]
-fn exponential_cdf_roundtrip() {
+fn cdf_roundtrip() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Exponential::new(f64_range(u, 0.5, 5.0)?),
@@ -227,7 +227,7 @@ fn exponential_cdf_roundtrip() {
 }
 
 #[test]
-fn exponential_cdf_roundtrip_small_rate() {
+fn cdf_roundtrip_small_rate() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Exponential::new(f64_range(u, 0.1, 0.5)?),
@@ -238,7 +238,7 @@ fn exponential_cdf_roundtrip_small_rate() {
 }
 
 #[test]
-fn exponential_cdf_roundtrip_large_rate() {
+fn cdf_roundtrip_large_rate() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Exponential::new(f64_range(u, 5.0, 20.0)?),

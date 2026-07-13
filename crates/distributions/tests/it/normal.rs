@@ -4,7 +4,7 @@ use computare_testing::arbitrary::{arbtest, f64_range};
 use super::{assert_almost_eq, compare_cdf_roundtrip};
 
 #[test]
-fn normal_variance() {
+fn variance() {
     let cases = [
         ((0.0, 0.1), 0.1 * 0.1),
         ((0.0, 1.0), 1.0),
@@ -18,7 +18,7 @@ fn normal_variance() {
 }
 
 #[test]
-fn normal_entropy() {
+fn entropy() {
     let cases = [
         ((0.0, 0.1), -0.8836465597893729),
         ((0.0, 1.0), 1.4189385332046727),
@@ -32,7 +32,7 @@ fn normal_entropy() {
 }
 
 #[test]
-fn normal_mode() {
+fn mode() {
     let cases = [
         ((-0.0, 1.0), 0.0),
         ((0.0, 1.0), 0.0),
@@ -48,7 +48,7 @@ fn normal_mode() {
 }
 
 #[test]
-fn normal_median() {
+fn median() {
     let cases = [
         ((-0.0, 1.0), 0.0),
         ((0.0, 1.0), 0.0),
@@ -64,7 +64,7 @@ fn normal_median() {
 }
 
 #[test]
-fn normal_lower() {
+fn lower() {
     let cases = [
         ((0.0, 0.1), f64::NEG_INFINITY),
         ((-3.0, 10.0), f64::NEG_INFINITY),
@@ -75,7 +75,7 @@ fn normal_lower() {
 }
 
 #[test]
-fn normal_upper() {
+fn upper() {
     let cases = [((0.0, 0.1), f64::INFINITY), ((-3.0, 10.0), f64::INFINITY)];
     for ((mean, std), expected) in cases {
         assert_almost_eq!(Normal::new(mean, std).upper(), expected);
@@ -83,7 +83,7 @@ fn normal_upper() {
 }
 
 #[test]
-fn normal_pdf() {
+fn pdf() {
     let cases = [
         ((10.0, 0.1), 8.5, 5.530709549844416E-49),
         ((10.0, 0.1), 9.8, 0.5399096651318805),
@@ -116,7 +116,7 @@ fn normal_pdf() {
 }
 
 #[test]
-fn normal_ln_pdf() {
+fn ln_pdf() {
     let cases = [
         ((10.0, 0.1), 8.5, 5.530709549844416E-49_f64.ln()),
         ((10.0, 0.1), 9.8, 0.5399096651318805_f64.ln()),
@@ -149,7 +149,7 @@ fn normal_ln_pdf() {
 }
 
 #[test]
-fn normal_cdf() {
+fn cdf() {
     let cases = [
         ((5.0, 2.0), f64::NEG_INFINITY, 0.0),
         ((5.0, 2.0), -5.0, 0.0000002866515718),
@@ -167,7 +167,7 @@ fn normal_cdf() {
 }
 
 #[test]
-fn normal_sf() {
+fn sf() {
     let cases = [
         ((5.0, 2.0), f64::NEG_INFINITY, 1.0),
         ((5.0, 2.0), -5.0, 0.9999997133484281),
@@ -185,7 +185,7 @@ fn normal_sf() {
 }
 
 #[test]
-fn normal_inverse_cdf() {
+fn inverse_cdf() {
     let cases = [
         ((5.0, 2.0), 0.0, f64::NEG_INFINITY),
         ((5.0, 2.0), 0.0000002866515718791939, -5.0),
@@ -206,7 +206,7 @@ fn normal_inverse_cdf() {
 }
 
 #[test]
-fn normal_cdf_roundtrip() {
+fn cdf_roundtrip() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Normal::new(f64_range(u, 0.1, 10.0)?, f64_range(u, 0.1, 10.0)?),
@@ -217,7 +217,7 @@ fn normal_cdf_roundtrip() {
 }
 
 #[test]
-fn normal_cdf_roundtrip_wide() {
+fn cdf_roundtrip_wide() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Normal::new(
@@ -231,7 +231,7 @@ fn normal_cdf_roundtrip_wide() {
 }
 
 #[test]
-fn normal_cdf_roundtrip_small_std() {
+fn cdf_roundtrip_small_std() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Normal::new(f64_range(u, 0.1, 1.0)?, f64_range(u, 1e-3, 0.1)?),
@@ -242,7 +242,7 @@ fn normal_cdf_roundtrip_small_std() {
 }
 
 #[test]
-fn normal_cdf_roundtrip_tails() {
+fn cdf_roundtrip_tails() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Normal::new(f64_range(u, 0.1, 5.0)?, f64_range(u, 0.1, 5.0)?),

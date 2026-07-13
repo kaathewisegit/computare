@@ -4,7 +4,7 @@ use computare_testing::arbitrary::{arbtest, f64_range};
 use super::{assert_almost_eq, compare_cdf_roundtrip};
 
 #[test]
-fn log_normal_mean() {
+fn mean() {
     let cases = [
         ((-1.0, 0.1), 0.369723444544059),
         ((-1.0, 1.5), 1.1331484530668263),
@@ -38,7 +38,7 @@ fn log_normal_mean() {
 }
 
 #[test]
-fn log_normal_variance() {
+fn variance() {
     let cases = [
         ((-1.0, 1.5), 10.898468544015731),
         ((-1.0, 2.5), 36245.39726189995),
@@ -72,7 +72,7 @@ fn log_normal_variance() {
 }
 
 #[test]
-fn log_normal_entropy() {
+fn entropy() {
     let cases = [
         ((-1.0, 0.1), -1.8836465597893728),
         ((-1.0, 1.5), 0.8244036413128372),
@@ -106,7 +106,7 @@ fn log_normal_entropy() {
 }
 
 #[test]
-fn log_normal_mode() {
+fn mode() {
     let cases = [
         ((-1.0, 0.1), 0.3642189795715233),
         ((-1.0, 1.5), 0.03877420783172201),
@@ -140,7 +140,7 @@ fn log_normal_mode() {
 }
 
 #[test]
-fn log_normal_median() {
+fn median() {
     let cases = [
         ((-1.0, 0.1), 0.36787944117144233),
         ((-1.0, 1.5), 0.36787944117144233),
@@ -174,7 +174,7 @@ fn log_normal_median() {
 }
 
 #[test]
-fn log_normal_lower() {
+fn lower() {
     let cases = [((0.0, 0.1), 0.0), ((-3.0, 10.0), 0.0)];
     for ((location, scale), expected) in cases {
         assert_almost_eq!(LogNormal::new(location, scale).lower(), expected);
@@ -182,7 +182,7 @@ fn log_normal_lower() {
 }
 
 #[test]
-fn log_normal_upper() {
+fn upper() {
     let cases = [((0.0, 0.1), f64::INFINITY), ((-3.0, 10.0), f64::INFINITY)];
     for ((location, scale), expected) in cases {
         assert_almost_eq!(LogNormal::new(location, scale).upper(), expected);
@@ -190,7 +190,7 @@ fn log_normal_upper() {
 }
 
 #[test]
-fn log_normal_pdf() {
+fn pdf() {
     let cases = [
         ((-0.1, 0.1), 0.8, 2.3363114904470415),
         ((-0.1, 1.5), 0.8, 0.3313334721434323),
@@ -234,7 +234,7 @@ fn log_normal_pdf() {
 }
 
 #[test]
-fn log_normal_ln_pdf() {
+fn ln_pdf() {
     let cases = [
         ((-0.1, 0.1), 0.1, -238.88282294119597),
         ((-0.1, 0.1), 0.8, 0.8485733995898128),
@@ -279,7 +279,7 @@ fn log_normal_ln_pdf() {
 }
 
 #[test]
-fn log_normal_cdf() {
+fn cdf() {
     let cases = [
         ((-0.1, 1.5), 0.5, 0.3462622499288809),
         ((-0.1, 1.5), 0.8, 0.467285305894877),
@@ -322,7 +322,7 @@ fn log_normal_cdf() {
 }
 
 #[test]
-fn log_normal_sf() {
+fn sf() {
     let cases = [((0.0, 1.0), 0.0, 1.0)];
     for ((location, scale), x, expected) in cases {
         let n = LogNormal::new(location, scale);
@@ -342,7 +342,7 @@ fn log_normal_sf() {
 }
 
 #[test]
-fn log_normal_inverse_cdf() {
+fn inverse_cdf() {
     let cases = [((-0.1, 0.1), 0.0, 0.0)];
     for ((location, scale), p, expected) in cases {
         let n = LogNormal::new(location, scale);
@@ -372,7 +372,7 @@ fn log_normal_inverse_cdf() {
 }
 
 #[test]
-fn log_normal_cdf_roundtrip() {
+fn cdf_roundtrip() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &LogNormal::new(f64_range(u, 0.1, 5.0)?, f64_range(u, 0.1, 5.0)?),
@@ -383,7 +383,7 @@ fn log_normal_cdf_roundtrip() {
 }
 
 #[test]
-fn log_normal_cdf_roundtrip_small_scale() {
+fn cdf_roundtrip_small_scale() {
     // 0xc16c291700000d22 failed in Github Actions on Windows withs `std`, but I
     // couldn't reproduce it on Linux.  Might an issue with the system libm
     arbtest(|u| {
@@ -396,7 +396,7 @@ fn log_normal_cdf_roundtrip_small_scale() {
 }
 
 #[test]
-fn log_normal_cdf_roundtrip_wide_scale() {
+fn cdf_roundtrip_wide_scale() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &LogNormal::new(f64_range(u, 0.1, 2.0)?, f64_range(u, 0.1, 10.0)?),
@@ -407,7 +407,7 @@ fn log_normal_cdf_roundtrip_wide_scale() {
 }
 
 #[test]
-fn log_normal_cdf_roundtrip_tails() {
+fn cdf_roundtrip_tails() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &LogNormal::new(f64_range(u, 0.1, 5.0)?, f64_range(u, 0.1, 5.0)?),

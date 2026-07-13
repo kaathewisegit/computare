@@ -10,7 +10,7 @@ fn nz(n: u32) -> NonZeroU32 {
 }
 
 #[test]
-fn chi_mean() {
+fn mean() {
     let cases = [
         (1u32, 0.7978845608028654),
         (2, 1.2533141373155003),
@@ -24,7 +24,7 @@ fn chi_mean() {
 }
 
 #[test]
-fn chi_large_dof_mean_not_nan() {
+fn large_dof_mean_not_nan() {
     for i in 1u32..2000 {
         let mean = Chi::new(nz(i)).mean().unwrap();
         assert!(!mean.is_nan(), "Chi mean for {i} dof was {mean}");
@@ -32,7 +32,7 @@ fn chi_large_dof_mean_not_nan() {
 }
 
 #[test]
-fn chi_variance() {
+fn variance() {
     let cases = [
         (1u32, 0.3633802276324187),
         (2, 0.4292036732051034),
@@ -45,7 +45,7 @@ fn chi_variance() {
 }
 
 #[test]
-fn chi_entropy() {
+fn entropy() {
     let cases = [
         (1u32, 0.7257913526447274),
         (2, 0.9420342421707938),
@@ -58,7 +58,7 @@ fn chi_entropy() {
 }
 
 #[test]
-fn chi_mode() {
+fn mode() {
     let cases = [(1u32, 0.0), (2, 1.0), (3, core::f64::consts::SQRT_2)];
     for (freedom, expected) in cases {
         let chi = Chi::new(nz(freedom));
@@ -67,7 +67,7 @@ fn chi_mode() {
 }
 
 #[test]
-fn chi_lower() {
+fn lower() {
     let cases = [(1u32, 0.0), (2, 0.0), (3, 0.0)];
     for (freedom, expected) in cases {
         assert_almost_eq!(Chi::new(nz(freedom)).lower(), expected);
@@ -75,14 +75,14 @@ fn chi_lower() {
 }
 
 #[test]
-fn chi_upper() {
+fn upper() {
     for freedom in 1..100 {
         assert_almost_eq!(Chi::new(nz(freedom)).upper(), f64::INFINITY);
     }
 }
 
 #[test]
-fn chi_pdf() {
+fn pdf() {
     let cases = [
         (1u32, 0.0, 0.0),
         (1, 0.1, 0.7939050949540235),
@@ -103,7 +103,7 @@ fn chi_pdf() {
 }
 
 #[test]
-fn chi_neg_pdf() {
+fn neg_pdf() {
     let cases = [(1u32, -1.0, 0.0)];
     for (freedom, x, expected) in cases {
         assert_almost_eq!(Chi::new(nz(freedom)).pdf(x), expected);
@@ -111,7 +111,7 @@ fn chi_neg_pdf() {
 }
 
 #[test]
-fn chi_ln_pdf() {
+fn ln_pdf() {
     let cases = [
         (1u32, 0.0, f64::NEG_INFINITY),
         (1, 0.1, -0.23079135264472744),
@@ -132,7 +132,7 @@ fn chi_ln_pdf() {
 }
 
 #[test]
-fn chi_neg_ln_pdf() {
+fn neg_ln_pdf() {
     let cases = [(1u32, -1.0, f64::NEG_INFINITY)];
     for (freedom, x, expected) in cases {
         assert_almost_eq!(Chi::new(nz(freedom)).ln_pdf(x), expected);
@@ -140,7 +140,7 @@ fn chi_neg_ln_pdf() {
 }
 
 #[test]
-fn chi_cdf() {
+fn cdf() {
     let cases = [
         (1u32, 0.0, 0.0),
         (1, 0.1, 0.07965567455405796),
@@ -158,7 +158,7 @@ fn chi_cdf() {
 }
 
 #[test]
-fn chi_sf() {
+fn sf() {
     let cases = [
         (1u32, 0.0, 1.0),
         (1, 0.1, 0.920344325445942),
@@ -178,7 +178,7 @@ fn chi_sf() {
 }
 
 #[test]
-fn chi_neg_cdf() {
+fn neg_cdf() {
     let cases = [(1u32, -1.0, 0.0)];
     for (freedom, x, expected) in cases {
         assert_almost_eq!(Chi::new(nz(freedom)).cdf(x), expected);
@@ -186,7 +186,7 @@ fn chi_neg_cdf() {
 }
 
 #[test]
-fn chi_neg_sf() {
+fn neg_sf() {
     let cases = [(1u32, -1.0, 1.0)];
     for (freedom, x, expected) in cases {
         assert_almost_eq!(Chi::new(nz(freedom)).sf(x), expected);
@@ -194,7 +194,7 @@ fn chi_neg_sf() {
 }
 
 #[test]
-fn chi_cdf_roundtrip_freedom_1() {
+fn cdf_roundtrip_freedom_1() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Chi::try_new(f64_range(u, 1.0, 2.0)?).unwrap(),
@@ -205,7 +205,7 @@ fn chi_cdf_roundtrip_freedom_1() {
 }
 
 #[test]
-fn chi_cdf_roundtrip_small_freedom() {
+fn cdf_roundtrip_small_freedom() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Chi::try_new(f64_range(u, 1.0, 5.0)?).unwrap(),
@@ -216,7 +216,7 @@ fn chi_cdf_roundtrip_small_freedom() {
 }
 
 #[test]
-fn chi_cdf_roundtrip_freedom_2_20() {
+fn cdf_roundtrip_freedom_2_20() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Chi::try_new(f64_range(u, 2.0, 20.0)?).unwrap(),
@@ -227,7 +227,7 @@ fn chi_cdf_roundtrip_freedom_2_20() {
 }
 
 #[test]
-fn chi_cdf_roundtrip_freedom_20_200() {
+fn cdf_roundtrip_freedom_20_200() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Chi::try_new(f64_range(u, 20.0, 200.0)?).unwrap(),
@@ -238,7 +238,7 @@ fn chi_cdf_roundtrip_freedom_20_200() {
 }
 
 #[test]
-fn chi_cdf_roundtrip_high_p() {
+fn cdf_roundtrip_high_p() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Chi::try_new(f64_range(u, 2.0, 40.0)?).unwrap(),

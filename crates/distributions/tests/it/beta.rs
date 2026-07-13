@@ -4,7 +4,7 @@ use computare_testing::arbitrary::{arbtest, f64_range};
 use super::{assert_almost_eq, compare_cdf_roundtrip};
 
 #[test]
-fn beta_mean() {
+fn mean() {
     let cases = [
         ((1.0, 1.0), 0.5),
         ((9.0, 1.0), 0.9),
@@ -17,7 +17,7 @@ fn beta_mean() {
 }
 
 #[test]
-fn beta_variance() {
+fn variance() {
     let cases = [
         ((1.0, 1.0), 1.0 / 12.0),
         ((9.0, 1.0), 9.0 / 1100.0),
@@ -30,7 +30,7 @@ fn beta_variance() {
 }
 
 #[test]
-fn beta_entropy() {
+fn entropy() {
     let cases = [
         ((9.0, 1.0), -1.3083356884473305),
         ((5.0, 100.0), -2.520162318760274),
@@ -48,7 +48,7 @@ fn beta_entropy() {
 }
 
 #[test]
-fn beta_mode() {
+fn mode() {
     let cases = [((5.0, 100.0), 0.038834951456310676)];
     for ((a, b), expected) in cases {
         let d = Beta::new(a, b);
@@ -57,7 +57,7 @@ fn beta_mode() {
 }
 
 #[test]
-fn beta_mode_none() {
+fn mode_none() {
     let cases = [(1.0, 5.0), (5.0, 1.0)];
     for (a, b) in cases {
         assert!(Beta::new(a, b).mode().is_err());
@@ -65,7 +65,7 @@ fn beta_mode_none() {
 }
 
 #[test]
-fn beta_lower() {
+fn lower() {
     let cases = [((1.0, 1.0), 0.0), ((1e10, 1e-10), 0.0)];
     for ((a, b), expected) in cases {
         assert_almost_eq!(Beta::new(a, b).lower(), expected);
@@ -73,7 +73,7 @@ fn beta_lower() {
 }
 
 #[test]
-fn beta_upper() {
+fn upper() {
     let cases = [((1.0, 1.0), 1.0), ((1e10, 1e-10), 1.0)];
     for ((a, b), expected) in cases {
         assert_almost_eq!(Beta::new(a, b).upper(), expected);
@@ -81,7 +81,7 @@ fn beta_upper() {
 }
 
 #[test]
-fn beta_pdf() {
+fn pdf() {
     let cases = [
         ((1.0, 1.0), 0.0, 1.0),
         ((1.0, 1.0), 0.5, 1.0),
@@ -105,7 +105,7 @@ fn beta_pdf() {
 }
 
 #[test]
-fn beta_ln_pdf() {
+fn ln_pdf() {
     let cases = [
         ((1.0, 1.0), 0.0, 0.0),
         ((1.0, 1.0), 0.5, 0.0),
@@ -128,7 +128,7 @@ fn beta_ln_pdf() {
 }
 
 #[test]
-fn beta_cdf() {
+fn cdf() {
     let cases = [
         ((1.0, 1.0), 0.0, 0.0),
         ((1.0, 1.0), 0.5, 0.5),
@@ -147,7 +147,7 @@ fn beta_cdf() {
 }
 
 #[test]
-fn beta_sf() {
+fn sf() {
     let cases = [
         ((1.0, 1.0), 0.0, 1.0),
         ((1.0, 1.0), 0.5, 0.5),
@@ -170,7 +170,7 @@ fn beta_sf() {
 }
 
 #[test]
-fn beta_inverse_cdf() {
+fn inverse_cdf() {
     let cases = [
         ((1.0, 1.0), 0.0, 0.0),
         ((1.0, 1.0), 0.5, 0.5),
@@ -194,7 +194,7 @@ fn beta_inverse_cdf() {
 }
 
 #[test]
-fn beta_cdf_roundtrip_small_shape() {
+fn cdf_roundtrip_small_shape() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Beta::new(f64_range(u, 0.1, 0.95)?, f64_range(u, 0.1, 0.95)?),
@@ -206,7 +206,7 @@ fn beta_cdf_roundtrip_small_shape() {
 }
 
 #[test]
-fn beta_cdf_roundtrip_shape_1_10() {
+fn cdf_roundtrip_shape_1_10() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Beta::new(f64_range(u, 1.0, 10.0)?, f64_range(u, 1.0, 10.0)?),
@@ -217,7 +217,7 @@ fn beta_cdf_roundtrip_shape_1_10() {
 }
 
 #[test]
-fn beta_cdf_roundtrip_shape_10_100() {
+fn cdf_roundtrip_shape_10_100() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Beta::new(f64_range(u, 10.0, 100.0)?, f64_range(u, 10.0, 100.0)?),
@@ -228,7 +228,7 @@ fn beta_cdf_roundtrip_shape_10_100() {
 }
 
 #[test]
-fn beta_cdf_roundtrip_high_p() {
+fn cdf_roundtrip_high_p() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Beta::new(f64_range(u, 1.0, 20.0)?, f64_range(u, 1.0, 20.0)?),
@@ -239,7 +239,7 @@ fn beta_cdf_roundtrip_high_p() {
 }
 
 #[test]
-fn beta_cdf_roundtrip_asymmetric() {
+fn cdf_roundtrip_asymmetric() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Beta::new(f64_range(u, 0.1, 1.0)?, f64_range(u, 10.0, 100.0)?),
@@ -250,7 +250,7 @@ fn beta_cdf_roundtrip_asymmetric() {
 }
 
 #[test]
-fn beta_cdf_roundtrip_symmetric() {
+fn cdf_roundtrip_symmetric() {
     arbtest(|u| {
         let shape = f64_range(u, 0.5, 10.0)?;
         compare_cdf_roundtrip(

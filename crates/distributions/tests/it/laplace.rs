@@ -6,7 +6,7 @@ use computare_testing::arbitrary::{arbtest, f64_range};
 use super::{assert_almost_eq, compare_cdf_roundtrip};
 
 #[test]
-fn laplace_mean() {
+fn mean() {
     let cases = [
         ((f64::NEG_INFINITY, 0.1), f64::NEG_INFINITY),
         ((-6.0, 1.0), -6.0),
@@ -21,7 +21,7 @@ fn laplace_mean() {
 }
 
 #[test]
-fn laplace_variance() {
+fn variance() {
     let cases = [
         ((f64::NEG_INFINITY, 0.1), 0.02),
         ((-6.0, 1.0), 2.0),
@@ -37,7 +37,7 @@ fn laplace_variance() {
 }
 
 #[test]
-fn laplace_entropy() {
+fn entropy() {
     let cases = [
         ((f64::NEG_INFINITY, 0.1), (2.0 * E * 0.1).ln()),
         ((-6.0, 1.0), (2.0 * E).ln()),
@@ -52,7 +52,7 @@ fn laplace_entropy() {
 }
 
 #[test]
-fn laplace_mode() {
+fn mode() {
     let cases = [
         ((f64::NEG_INFINITY, 0.1), f64::NEG_INFINITY),
         ((-6.0, 1.0), -6.0),
@@ -67,7 +67,7 @@ fn laplace_mode() {
 }
 
 #[test]
-fn laplace_median() {
+fn median() {
     let cases = [
         ((f64::NEG_INFINITY, 0.1), f64::NEG_INFINITY),
         ((-6.0, 1.0), -6.0),
@@ -82,7 +82,7 @@ fn laplace_median() {
 }
 
 #[test]
-fn laplace_lower() {
+fn lower() {
     let cases = [((0.0, 1.0), f64::NEG_INFINITY)];
     for ((location, scale), expected) in cases {
         assert_almost_eq!(Laplace::new(location, scale).lower(), expected);
@@ -90,7 +90,7 @@ fn laplace_lower() {
 }
 
 #[test]
-fn laplace_upper() {
+fn upper() {
     let cases = [((0.0, 1.0), f64::INFINITY)];
     for ((location, scale), expected) in cases {
         assert_almost_eq!(Laplace::new(location, scale).upper(), expected);
@@ -98,7 +98,7 @@ fn laplace_upper() {
 }
 
 #[test]
-fn laplace_pdf() {
+fn pdf() {
     let cases = [
         ((0.0, 0.1), 1.5, 1.529511602509129e-6),
         ((1.0, 0.1), 2.8, 7.614989872356341e-8),
@@ -132,7 +132,7 @@ fn laplace_pdf() {
 }
 
 #[test]
-fn laplace_ln_pdf() {
+fn ln_pdf() {
     let cases = [
         ((0.0, 0.1), 1.5, -13.3905620875659),
         ((1.0, 0.1), 2.8, -16.390562087565897),
@@ -166,7 +166,7 @@ fn laplace_ln_pdf() {
 }
 
 #[test]
-fn laplace_cdf() {
+fn cdf() {
     let cases = [
         ((0.0, 1.0), 0.5, 0.6967346701436833),
         ((0.0, 1.0), -0.5, 0.3032653298563167),
@@ -179,7 +179,7 @@ fn laplace_cdf() {
 }
 
 #[test]
-fn laplace_sf() {
+fn sf() {
     let cases = [
         ((0.0, 1.0), 0.5, 0.3032653298563167),
         ((0.0, 1.0), -0.5, 0.6967346701436833),
@@ -192,7 +192,7 @@ fn laplace_sf() {
 }
 
 #[test]
-fn laplace_inverse_cdf() {
+fn inverse_cdf() {
     let cases = [
         ((0.0, 1.0), 1e-10, -22.33270374938051),
         ((0.0, 1.0), 0.001, -6.214608098422191),
@@ -205,7 +205,7 @@ fn laplace_inverse_cdf() {
 }
 
 #[test]
-fn laplace_cdf_roundtrip() {
+fn cdf_roundtrip() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Laplace::new(f64_range(u, 0.1, 10.0)?, f64_range(u, 0.1, 10.0)?),
@@ -216,7 +216,7 @@ fn laplace_cdf_roundtrip() {
 }
 
 #[test]
-fn laplace_cdf_roundtrip_small_scale() {
+fn cdf_roundtrip_small_scale() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Laplace::new(f64_range(u, 0.1, 1.0)?, f64_range(u, 1e-3, 0.1)?),
@@ -227,7 +227,7 @@ fn laplace_cdf_roundtrip_small_scale() {
 }
 
 #[test]
-fn laplace_cdf_roundtrip_wide() {
+fn cdf_roundtrip_wide() {
     arbtest(|u| {
         compare_cdf_roundtrip(
             &Laplace::new(f64_range(u, 0.01, 50.0)?, f64_range(u, 0.01, 50.0)?),
