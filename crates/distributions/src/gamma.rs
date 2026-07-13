@@ -26,21 +26,6 @@ impl Gamma {
         Self::try_new(shape, scale).unwrap()
     }
 
-    pub fn try_new_with_rate(shape: f64, rate: f64) -> Option<Self> {
-        if shape > 0.0 && rate > 0.0 {
-            Some(Gamma {
-                shape,
-                scale: rate.recip(),
-            })
-        } else {
-            None
-        }
-    }
-
-    pub fn new_with_rate(shape: f64, rate: f64) -> Self {
-        Self::try_new_with_rate(shape, rate).unwrap()
-    }
-
     pub fn shape(&self) -> f64 {
         self.shape
     }
@@ -69,10 +54,11 @@ impl Continuous for Gamma {
     fn ln_pdf(&self, x: f64) -> f64 {
         if x < 0.0 || x == f64::INFINITY {
             f64::NEG_INFINITY
+        } else if self.shape == 1.0 {
+            -self.scale.ln() - x / self.scale
         } else {
-            (self.shape - 1.0) * x.ln()
-                - x / self.scale
-                - self.shape * self.scale.ln()
+            -self.shape * self.scale.ln() + (self.shape - 1.0) * x.ln()
+                - (x / self.scale)
                 - ln_gamma(self.shape)
         }
     }
