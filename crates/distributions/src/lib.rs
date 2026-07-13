@@ -4,6 +4,7 @@
 
 mod beta;
 mod chi;
+mod chi_squared;
 mod exponential;
 mod gamma;
 mod inverse_gamma;
@@ -18,6 +19,7 @@ mod ziggurat_tables;
 
 pub use beta::Beta;
 pub use chi::Chi;
+pub use chi_squared::ChiSquared;
 pub use exponential::Exponential;
 pub use gamma::Gamma;
 pub use inverse_gamma::InverseGamma;

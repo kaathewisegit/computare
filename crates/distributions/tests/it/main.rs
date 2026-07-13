@@ -6,6 +6,7 @@ use computare_testing::arbitrary::Result;
 
 mod beta;
 mod chi;
+mod chi_squared;
 mod exponential;
 mod gamma;
 mod inverse_gamma;
