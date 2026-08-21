@@ -142,7 +142,6 @@ fn asymptotic_series(a: f64, x: f64, func: i32) -> f64 {
     let mut maxpow = 0;
     let lambda = x / a;
     let sigma = (x - a) / a;
-    let eta;
     let mut absoldterm = f64::INFINITY;
     let mut etapow = [1.0; IGAM_ASYMP_COEFF_N];
     let mut sum = 0.0;
@@ -150,13 +149,13 @@ fn asymptotic_series(a: f64, x: f64, func: i32) -> f64 {
 
     let sgn = if func == IGAM { -1.0 } else { 1.0 };
 
-    if lambda > 1.0 {
-        eta = (-2.0 * log1pmx(sigma)).sqrt();
+    let eta = if lambda > 1.0 {
+        (-2.0 * log1pmx(sigma)).sqrt()
     } else if lambda < 1.0 {
-        eta = -(-2.0 * log1pmx(sigma)).sqrt();
+        -(-2.0 * log1pmx(sigma)).sqrt()
     } else {
-        eta = 0.0;
-    }
+        0.0
+    };
 
     let mut res = 0.5 * erfc(sgn * eta * (a / 2.0).sqrt());
 
