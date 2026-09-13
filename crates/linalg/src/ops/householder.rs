@@ -10,7 +10,7 @@ use computare_core::{Float, FloatMath, NumAssign};
 pub unsafe fn householder_reflector_u<T, V>(alpha: T, v: &mut V) -> T
 where
     T: FloatMath + NumAssign,
-    V: Vector<T> + ?Sized,
+    V: Vector<Item = T> + ?Sized,
 {
     if v.length() == 0 {
         return T::ZERO;
@@ -33,7 +33,7 @@ where
 
 pub unsafe fn householder_apply_left<T, V, M>(c: &M, v: &V)
 where
-    V: Vector<T> + ?Sized,
-    M: Matrix<T> + ?Sized,
+    V: Vector<Item = T> + ?Sized,
+    M: Matrix<Item = T> + ?Sized,
 {
 }

@@ -4,7 +4,7 @@ use computare_core::Float;
 pub fn vec_max_abs_idx<T, V>(v: &V) -> usize
 where
     T: Float,
-    V: Vector<T> + ?Sized,
+    V: Vector<Item = T> + ?Sized,
 {
     if v.length() == 0 {
         return 0;

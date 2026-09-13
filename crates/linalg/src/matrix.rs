@@ -2,24 +2,25 @@ use core::ptr;
 
 use crate::{StridedVectorRef, Vector};
 
-pub trait Matrix<T> {
-    type Row: Vector<T> + ?Sized;
-    type Column: Vector<T> + ?Sized;
+pub trait Matrix {
+    type Item;
+    type Row: Vector<Item = Self::Item> + ?Sized;
+    type Column: Vector<Item = Self::Item> + ?Sized;
 
     fn num_rows(&self) -> usize;
     fn num_cols(&self) -> usize;
     fn row_stride(&self) -> usize;
 
-    unsafe fn at_u(&self, row: usize, col: usize) -> &T;
+    unsafe fn at_u(&self, row: usize, col: usize) -> &Self::Item;
 
-    fn at(&self, row: usize, col: usize) -> &T {
+    fn at(&self, row: usize, col: usize) -> &Self::Item {
         assert!(row < self.num_rows() && col < self.num_rows());
         unsafe { self.at_u(row, col) }
     }
 
-    unsafe fn at_mut_u(&mut self, row: usize, col: usize) -> &mut T;
+    unsafe fn at_mut_u(&mut self, row: usize, col: usize) -> &mut Self::Item;
 
-    fn at_mut(&mut self, row: usize, col: usize) -> &mut T {
+    fn at_mut(&mut self, row: usize, col: usize) -> &mut Self::Item {
         assert!(row < self.num_rows() && col < self.num_rows());
         unsafe { self.at_mut_u(row, col) }
     }
@@ -49,12 +50,13 @@ pub trait Matrix<T> {
         }
     }
 
-    fn for_each(&self, f: impl FnMut(&T));
+    fn for_each(&self, f: impl FnMut(&Self::Item));
 
-    fn for_each_mut(&mut self, f: impl FnMut(&mut T));
+    fn for_each_mut(&mut self, f: impl FnMut(&mut Self::Item));
 }
 
-impl<T, const N: usize, const M: usize> Matrix<T> for [[T; M]; N] {
+impl<T, const N: usize, const M: usize> Matrix for [[T; M]; N] {
+    type Item = T;
     type Row = [T; M];
     type Column = StridedVectorRef<T>;
 

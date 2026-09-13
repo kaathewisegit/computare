@@ -79,7 +79,7 @@ fn accumulate<const P: u8, T: FloatMath + NumAssign>(
 pub fn p_norm<const P: u8, T, V>(v: &V) -> T
 where
     T: FloatMath + NumAssign,
-    V: Vector<T> + ?Sized,
+    V: Vector<Item = T> + ?Sized,
 {
     let p = P as i32;
     let threshold_small = threshold_small::<P, T>();
@@ -119,7 +119,7 @@ where
 pub fn eucledian_norm<T, V>(v: &V) -> T
 where
     T: FloatMath + NumAssign,
-    V: Vector<T> + ?Sized,
+    V: Vector<Item = T> + ?Sized,
 {
     p_norm::<2, T, V>(v)
 }

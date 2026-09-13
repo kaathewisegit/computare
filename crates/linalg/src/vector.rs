@@ -1,20 +1,21 @@
-pub trait Vector<T> {
-    type Slice: Vector<T> + ?Sized;
+pub trait Vector {
+    type Item;
+    type Slice: Vector<Item = Self::Item> + ?Sized;
 
     fn length(&self) -> usize;
 
     fn stride(&self) -> usize;
 
-    unsafe fn at_u(&self, index: usize) -> &T;
+    unsafe fn at_u(&self, index: usize) -> &Self::Item;
 
-    fn at(&self, index: usize) -> &T {
+    fn at(&self, index: usize) -> &Self::Item {
         assert!(index < self.length());
         unsafe { self.at_u(index) }
     }
 
-    unsafe fn at_mut_u(&mut self, index: usize) -> &mut T;
+    unsafe fn at_mut_u(&mut self, index: usize) -> &mut Self::Item;
 
-    fn at_mut(&mut self, index: usize) -> &mut T {
+    fn at_mut(&mut self, index: usize) -> &mut Self::Item {
         assert!(index < self.length());
         unsafe { self.at_mut_u(index) }
     }
@@ -40,7 +41,8 @@ pub trait Vector<T> {
     }
 }
 
-impl<T, const N: usize> Vector<T> for [T; N] {
+impl<T, const N: usize> Vector for [T; N] {
+    type Item = T;
     type Slice = [T];
 
     fn length(&self) -> usize {
@@ -68,7 +70,8 @@ impl<T, const N: usize> Vector<T> for [T; N] {
     }
 }
 
-impl<T> Vector<T> for [T] {
+impl<T> Vector for [T] {
+    type Item = T;
     type Slice = [T];
 
     fn length(&self) -> usize {

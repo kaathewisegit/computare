@@ -11,8 +11,8 @@ pub unsafe fn hessenberg_upper_u<T, M, VT>(
     scratch: &mut Vec<T>,
 ) where
     T: Float,
-    M: Matrix<T> + ?Sized,
-    VT: Vector<T> + ?Sized,
+    M: Matrix<Item = T> + ?Sized,
+    VT: Vector<Item = T> + ?Sized,
 {
     let n = m.num_cols();
     if n <= 1 {
@@ -43,8 +43,8 @@ unsafe fn unblocked<T, M, VT>(
     #[expect(clippy::ptr_arg)] scratch: &mut Vec<T>,
 ) where
     T: Float,
-    M: Matrix<T> + ?Sized,
-    VT: Vector<T> + ?Sized,
+    M: Matrix<Item = T> + ?Sized,
+    VT: Vector<Item = T> + ?Sized,
 {
     for i in low..high {
         // get reflector

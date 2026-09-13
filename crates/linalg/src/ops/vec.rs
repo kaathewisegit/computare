@@ -4,9 +4,9 @@ use computare_core::{Num, NumAssign};
 pub unsafe fn hadamard_u<T, A, B, C>(a: &A, b: &B, c: &mut C)
 where
     T: Copy + Num,
-    A: Vector<T> + ?Sized,
-    B: Vector<T> + ?Sized,
-    C: Vector<T> + ?Sized,
+    A: Vector<Item = T> + ?Sized,
+    B: Vector<Item = T> + ?Sized,
+    C: Vector<Item = T> + ?Sized,
 {
     debug_assert_eq!(a.length(), b.length());
     debug_assert_eq!(a.length(), c.length());
@@ -19,8 +19,8 @@ where
 pub unsafe fn dot_u<T, A, B>(a: &A, b: &B) -> T
 where
     T: Copy + NumAssign,
-    A: Vector<T> + ?Sized,
-    B: Vector<T> + ?Sized,
+    A: Vector<Item = T> + ?Sized,
+    B: Vector<Item = T> + ?Sized,
 {
     debug_assert_eq!(a.length(), b.length());
 

@@ -7,9 +7,9 @@ use super::dot_u;
 pub unsafe fn apply_left<T, M, V, Dst>(m: &M, v: &V, dst: &mut Dst)
 where
     T: Copy + NumAssign,
-    M: Matrix<T> + ?Sized,
-    V: Vector<T> + ?Sized,
-    Dst: Vector<T> + ?Sized,
+    M: Matrix<Item = T> + ?Sized,
+    V: Vector<Item = T> + ?Sized,
+    Dst: Vector<Item = T> + ?Sized,
 {
     debug_assert!(m.is_square());
     debug_assert_eq!(m.num_cols(), v.length());

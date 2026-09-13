@@ -29,7 +29,8 @@ pub struct MatrixRef<T> {
     ptr: [()],
 }
 
-impl<T> Matrix<T> for MatrixRef<T> {
+impl<T> Matrix for MatrixRef<T> {
+    type Item = T;
     type Row = [T];
     type Column = StridedVectorRef<T>;
 

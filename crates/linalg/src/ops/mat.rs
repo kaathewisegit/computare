@@ -5,9 +5,9 @@ use crate::matrix::Matrix;
 pub unsafe fn mm_u<T, A, B, Dst>(a: &A, b: &B, dst: &mut Dst)
 where
     T: NumAssign + Copy,
-    A: Matrix<T> + ?Sized,
-    B: Matrix<T> + ?Sized,
-    Dst: Matrix<T> + ?Sized,
+    A: Matrix<Item = T> + ?Sized,
+    B: Matrix<Item = T> + ?Sized,
+    Dst: Matrix<Item = T> + ?Sized,
 {
     let n = a.num_rows();
     let m = a.num_cols();

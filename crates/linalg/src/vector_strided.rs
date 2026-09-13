@@ -19,7 +19,8 @@ pub struct StridedVectorRef<T> {
     ptr: [()],
 }
 
-impl<T> Vector<T> for StridedVectorRef<T> {
+impl<T> Vector for StridedVectorRef<T> {
+    type Item = T;
     type Slice = StridedVectorRef<T>;
 
     fn length(&self) -> usize {
@@ -30,11 +31,11 @@ impl<T> Vector<T> for StridedVectorRef<T> {
         self.ptr.len().upper()
     }
 
-    unsafe fn at_u(&self, index: usize) -> &T {
+    unsafe fn at_u(&self, index: usize) -> &Self::Item {
         unsafe { &*self.as_ptr().add(self.stride() * index) }
     }
 
-    unsafe fn at_mut_u(&mut self, index: usize) -> &mut T {
+    unsafe fn at_mut_u(&mut self, index: usize) -> &mut Self::Item {
         unsafe { &mut *self.as_mut_ptr().add(self.stride() * index) }
     }
 
