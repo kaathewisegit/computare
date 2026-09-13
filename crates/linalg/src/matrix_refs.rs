@@ -5,7 +5,7 @@ use core::{
 };
 
 use super::Matrix;
-use crate::{packing::Packed, vector::StridedVectorRef};
+use crate::{StridedVectorRef, packing::Packed};
 
 // This is a hack I came up with after several iterations.  The issue is that in
 // Rust only `&` and `&mut` are first class references.  The previous design

@@ -1,6 +1,4 @@
-use computare_linalg::{
-    matrix::Matrix, matrix::MatrixRef, ops::mm_u, vector::Vector,
-};
+use computare_linalg::{Matrix, MatrixRef, Vector, ops::mm_u};
 
 #[test]
 fn basic_array() {

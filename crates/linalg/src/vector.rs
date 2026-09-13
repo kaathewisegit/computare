@@ -1,7 +1,3 @@
-mod strided;
-
-pub use strided::StridedVectorRef;
-
 pub trait Vector<T> {
     type Slice: Vector<T> + ?Sized;
 

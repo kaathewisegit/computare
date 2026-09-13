@@ -1,10 +1,6 @@
-mod refs;
-
 use core::ptr;
 
-pub use refs::MatrixRef;
-
-use crate::vector::{StridedVectorRef, Vector};
+use crate::{StridedVectorRef, Vector};
 
 pub trait Matrix<T> {
     type Row: Vector<T> + ?Sized;

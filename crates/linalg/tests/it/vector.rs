@@ -1,7 +1,6 @@
 use core::hint::black_box as bb;
 
-use computare_linalg::ops::dot_u;
-use computare_linalg::vector::{StridedVectorRef, Vector};
+use computare_linalg::{StridedVectorRef, Vector, ops::dot_u};
 
 #[test]
 fn dot_array() {

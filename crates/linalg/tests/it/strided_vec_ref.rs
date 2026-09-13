@@ -1,6 +1,6 @@
 use computare_testing::arbitrary::arbtest;
 
-use computare_linalg::vector::{StridedVectorRef, Vector};
+use computare_linalg::{StridedVectorRef, Vector};
 
 #[test]
 fn basic() {
