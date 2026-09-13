@@ -28,10 +28,10 @@ case "$1" in
 		cargo test --release
 		;;
 	"miri")
-		MIRIFLAGS="-Zmiri-tree-borrows" cargo +nightly miri test --package computare-linalg
+		MIRIFLAGS="-Zmiri-tree-borrows" cargo +nightly miri test --package computare-linalg -- "$2"
 		;;
 	*)
-		echo "Usage: $0 {check|fuzz}" >&2
+		echo "Usage: $0 {check|fuzz|miri}" >&2
 		exit 1
 		;;
 esac
