@@ -2,7 +2,10 @@
 // explicit +1
 #![expect(clippy::int_plus_one)]
 
-use core::ptr::{slice_from_raw_parts, slice_from_raw_parts_mut};
+use core::{
+    marker::PhantomData,
+    ptr::{slice_from_raw_parts, slice_from_raw_parts_mut},
+};
 
 use super::Vector;
 use crate::packing::Packed;
@@ -11,17 +14,20 @@ use crate::packing::Packed;
 ///
 /// See [`MatrixRef`] for details on how this type is implemented.
 #[repr(transparent)]
-pub struct StridedVectorRef<T>([T]);
+pub struct StridedVectorRef<T> {
+    marker: PhantomData<T>,
+    ptr: [()],
+}
 
 impl<T> Vector<T> for StridedVectorRef<T> {
     type Slice = StridedVectorRef<T>;
 
     fn length(&self) -> usize {
-        self.0.len().lower()
+        self.ptr.len().lower()
     }
 
     fn stride(&self) -> usize {
-        self.0.len().upper()
+        self.ptr.len().upper()
     }
 
     unsafe fn at_u(&self, index: usize) -> &T {
@@ -59,11 +65,11 @@ impl<T> Vector<T> for StridedVectorRef<T> {
 
 impl<T> StridedVectorRef<T> {
     pub fn as_ptr(&self) -> *const T {
-        self.0.as_ptr()
+        self.ptr.as_ptr() as *const T
     }
 
     pub fn as_mut_ptr(&mut self) -> *mut T {
-        self.0.as_mut_ptr()
+        self.ptr.as_mut_ptr() as *mut T
     }
 
     #[cfg(target_pointer_width = "64")]

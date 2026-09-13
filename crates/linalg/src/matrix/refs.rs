@@ -1,4 +1,5 @@
 use core::{
+    marker::PhantomData,
     ptr::{self, slice_from_raw_parts, slice_from_raw_parts_mut},
     slice::{from_raw_parts, from_raw_parts_mut},
 };
@@ -15,20 +16,18 @@ use crate::{packing::Packed, vector::StridedVectorRef};
 // with other objects or taking it by reference, meaning it'd be a double
 // pointer.
 //
-// Now, `[T]` does have a single `usize` of metadata.  Now, the slice docs
-// heavily emphasise the dangers of an invalid reference.  Even creating one is
-// instant UB.  The main reason, however, as I understand it, is that Rust
-// annotates pointer with `nonnull` and `dereferenceable`.  That doesn't apply
-// to the length, though.
-//
-// Hence the design of `MatrixRef`.  It's an unsized wrapper around `[T]`.  The
-// pointer part of the reference always points to the start of a valid
-// allocation, so it shouldn't cause UB.  But the length/metadata has been
-// repurposed to store number of rows in the high bits and number of columns in
-// the low ones.  This means one can create `&MatrixRef` and `&mut MatrixRef`
-// with all the ergonomics of a regular reference.
+// The original implementation used `[T]` with a packed length field, which was
+// nominally unsound, because it was constructing an invalid slice.  Now, I
+// never used it, so in practice the unsoundness never showed itself, but it was
+// still a suboptimal solution (and it tripped up Miri).  I stumbled upon a
+// better solution with `bitvec`'s `BitSlice`.  `[()]` is also unsized with two
+// words of metadata, but because it's a ZST the pointer and length can be
+// arbitrary.  And it works with Miri under tree borrows.
 #[repr(transparent)]
-pub struct MatrixRef<T>([T]);
+pub struct MatrixRef<T> {
+    marker: PhantomData<T>,
+    ptr: [()],
+}
 
 impl<T> Matrix<T> for MatrixRef<T> {
     type Row = [T];
@@ -36,12 +35,12 @@ impl<T> Matrix<T> for MatrixRef<T> {
 
     #[cfg(target_pointer_width = "64")]
     fn num_rows(&self) -> usize {
-        self.0.len().lower()
+        self.ptr.len().lower()
     }
 
     #[cfg(target_pointer_width = "64")]
     fn num_cols(&self) -> usize {
-        self.0.len().upper()
+        self.ptr.len().upper()
     }
 
     fn row_stride(&self) -> usize {
@@ -115,11 +114,11 @@ impl<T> Matrix<T> for MatrixRef<T> {
 
 impl<T> MatrixRef<T> {
     pub fn as_ptr(&self) -> *const T {
-        self.0.as_ptr()
+        self.ptr.as_ptr() as *const T
     }
 
     pub fn as_mut_ptr(&mut self) -> *mut T {
-        self.0.as_mut_ptr()
+        self.ptr.as_mut_ptr() as *mut T
     }
 
     pub fn num_elements(&self) -> usize {
