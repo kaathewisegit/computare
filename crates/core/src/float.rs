@@ -48,6 +48,12 @@ pub trait Float:
     fn recip(self) -> Self;
     fn powi(self, exp: i32) -> Self;
     fn copysign(self, sign: Self) -> Self;
+
+    fn algebraic_add(self, rhs: Self) -> Self;
+    fn algebraic_sub(self, rhs: Self) -> Self;
+    fn algebraic_mul(self, rhs: Self) -> Self;
+    fn algebraic_div(self, rhs: Self) -> Self;
+    fn algebraic_rem(self, rhs: Self) -> Self;
 }
 
 macro_rules! impl_float {
@@ -158,6 +164,27 @@ macro_rules! impl_float {
             #[inline]
             fn copysign(self, sign: Self) -> Self {
                 self.copysign(sign)
+            }
+
+            #[inline]
+            fn algebraic_add(self, rhs: Self) -> Self {
+                self.algebraic_add(rhs)
+            }
+            #[inline]
+            fn algebraic_sub(self, rhs: Self) -> Self {
+                self.algebraic_sub(rhs)
+            }
+            #[inline]
+            fn algebraic_mul(self, rhs: Self) -> Self {
+                self.algebraic_mul(rhs)
+            }
+            #[inline]
+            fn algebraic_div(self, rhs: Self) -> Self {
+                self.algebraic_div(rhs)
+            }
+            #[inline]
+            fn algebraic_rem(self, rhs: Self) -> Self {
+                self.algebraic_rem(rhs)
             }
         }
     };
