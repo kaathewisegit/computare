@@ -1,6 +1,27 @@
 use crate::vector::Vector;
 use computare_core::Float;
 
+pub fn vec_max<T, V>(v: &V) -> T
+where
+    T: Float,
+    V: Vector<Item = T> + ?Sized,
+{
+    if v.length() == 0 {
+        return T::NAN;
+    }
+
+    // SAFETY: we checked above that the vector isn't empty
+    let mut max_value = unsafe { *v.at_u(0) }.abs();
+
+    for i in 1..v.length() {
+        let value = unsafe { *v.at_u(i) }.abs();
+        if value > max_value {
+            max_value = value;
+        }
+    }
+    max_value
+}
+
 pub fn vec_max_abs_idx<T, V>(v: &V) -> usize
 where
     T: Float,
