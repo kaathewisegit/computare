@@ -1,3 +1,5 @@
+use core::ops::{AddAssign, SubAssign};
+
 use crate::{Num, Zero};
 
 pub trait Integer: Sized + Num + PartialOrd + Ord + Eq {
@@ -14,14 +16,14 @@ pub trait Integer: Sized + Num + PartialOrd + Ord + Eq {
 
     fn dec(&mut self)
     where
-        Self: Clone,
+        Self: SubAssign,
     {
         *self -= Self::one();
     }
 
     fn inc(&mut self)
     where
-        Self: Clone,
+        Self: AddAssign,
     {
         *self += Self::one();
     }

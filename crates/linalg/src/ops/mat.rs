@@ -1,10 +1,10 @@
-use computare_core::NumAssign;
+use computare_core::{ConstZero, NumAssign};
 
 use crate::matrix::Matrix;
 
 pub unsafe fn mm_u<T, A, B, Dst>(a: &A, b: &B, dst: &mut Dst)
 where
-    T: NumAssign + Copy,
+    T: NumAssign + ConstZero + Copy,
     A: Matrix<Item = T> + ?Sized,
     B: Matrix<Item = T> + ?Sized,
     Dst: Matrix<Item = T> + ?Sized,

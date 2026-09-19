@@ -1,4 +1,4 @@
-use computare_core::NumAssign;
+use computare_core::{ConstZero, NumAssign};
 
 use crate::{matrix::Matrix, vector::Vector};
 
@@ -6,7 +6,7 @@ use super::vec_dot_u;
 
 pub unsafe fn apply_left<T, M, V, Dst>(m: &M, v: &V, dst: &mut Dst)
 where
-    T: Copy + NumAssign,
+    T: Copy + NumAssign + ConstZero,
     M: Matrix<Item = T> + ?Sized,
     V: Vector<Item = T> + ?Sized,
     Dst: Vector<Item = T> + ?Sized,
