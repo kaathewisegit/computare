@@ -6,6 +6,8 @@ mod givens_rotation;
 mod matrix;
 mod strided_vec_ref;
 mod swap;
+mod vec_dot;
+mod vec_hadamard;
 mod vec_max;
 mod vector;
 
@@ -15,6 +17,19 @@ pub fn generate_f64_vec(u: &mut Unstructured, len: usize) -> Result<Vec<f64>> {
     let mut out = vec![0.0; len];
     for item in &mut out {
         *item = u.arbitrary()?;
+    }
+    Ok(out)
+}
+
+pub fn generate_f64_vec_nonnan(
+    u: &mut Unstructured,
+    len: usize,
+) -> Result<Vec<f64>> {
+    let mut out = vec![f64::NAN; len];
+    for item in &mut out {
+        while item.is_nan() {
+            *item = u.arbitrary()?;
+        }
     }
     Ok(out)
 }

@@ -1,7 +1,7 @@
 use crate::vector::Vector;
 use computare_core::{Num, NumAssign};
 
-pub unsafe fn hadamard_u<T, A, B, C>(a: &A, b: &B, c: &mut C)
+pub unsafe fn vec_hadamard_u<T, A, B, C>(a: &A, b: &B, c: &mut C)
 where
     T: Copy + Num,
     A: Vector<Item = T> + ?Sized,
@@ -16,7 +16,7 @@ where
     }
 }
 
-pub unsafe fn dot_u<T, A, B>(a: &A, b: &B) -> T
+pub unsafe fn vec_dot_u<T, A, B>(a: &A, b: &B) -> T
 where
     T: Copy + NumAssign,
     A: Vector<Item = T> + ?Sized,

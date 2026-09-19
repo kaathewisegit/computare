@@ -2,7 +2,7 @@ use computare_core::NumAssign;
 
 use crate::{matrix::Matrix, vector::Vector};
 
-use super::dot_u;
+use super::vec_dot_u;
 
 pub unsafe fn apply_left<T, M, V, Dst>(m: &M, v: &V, dst: &mut Dst)
 where
@@ -18,6 +18,6 @@ where
     let n = v.length();
 
     for i in 0..n {
-        unsafe { *dst.at_mut_u(i) = dot_u(m.row_u(i), v) }
+        unsafe { *dst.at_mut_u(i) = vec_dot_u(m.row_u(i), v) }
     }
 }
