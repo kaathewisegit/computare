@@ -13,8 +13,8 @@ use computare_testing::arbitrary::{Result, Unstructured};
 
 pub fn generate_f64_vec(u: &mut Unstructured, len: usize) -> Result<Vec<f64>> {
     let mut out = vec![0.0; len];
-    for i in 0..len {
-        out[i] = u.arbitrary()?;
+    for item in &mut out {
+        *item = u.arbitrary()?;
     }
     Ok(out)
 }

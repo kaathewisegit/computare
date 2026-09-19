@@ -40,20 +40,20 @@ fn swap_array<const N: usize>(u: &mut Unstructured<'_>) -> Result<()> {
 
 #[test]
 fn swap_array_low() {
-    arbtest(|u| swap_array::<0>(u)).size_min(2u32.pow(10));
-    arbtest(|u| swap_array::<1>(u)).size_min(2u32.pow(10));
-    arbtest(|u| swap_array::<2>(u)).size_min(2u32.pow(10));
-    arbtest(|u| swap_array::<3>(u)).size_min(2u32.pow(10));
+    arbtest(swap_array::<0>).size_min(2u32.pow(10));
+    arbtest(swap_array::<1>).size_min(2u32.pow(10));
+    arbtest(swap_array::<2>).size_min(2u32.pow(10));
+    arbtest(swap_array::<3>).size_min(2u32.pow(10));
 }
 
 #[test]
 fn swap_array_10() {
-    arbtest(|u| swap_array::<10>(u)).size_min(2u32.pow(10));
+    arbtest(swap_array::<10>).size_min(2u32.pow(10));
 }
 
 #[test]
 fn swap_array_100() {
-    arbtest(|u| swap_array::<100>(u)).size_min(2u32.pow(10));
+    arbtest(swap_array::<100>).size_min(2u32.pow(10));
 }
 
 #[test]
