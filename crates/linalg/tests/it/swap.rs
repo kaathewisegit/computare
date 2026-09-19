@@ -1,4 +1,4 @@
-use computare_linalg::{StridedVectorRef, ops::swap_u};
+use computare_linalg::{StridedVectorRef, ops::vec_swap_u};
 use computare_testing::arbitrary::{Result, Unstructured, arbtest};
 
 use crate::{assert_eq_f64_slices, generate_f64_vec};
@@ -13,7 +13,7 @@ fn swap_slices() {
         let mut a_new = a_old.clone();
         let mut b_new = b_old.clone();
 
-        unsafe { swap_u(&mut a_new[..], &mut b_new[..]) };
+        unsafe { vec_swap_u(&mut a_new[..], &mut b_new[..]) };
 
         assert_eq_f64_slices(&a_old, &b_new);
         assert_eq_f64_slices(&a_new, &b_old);
@@ -30,7 +30,7 @@ fn swap_array<const N: usize>(u: &mut Unstructured<'_>) -> Result<()> {
     let mut a_new = a_old;
     let mut b_new = b_old;
 
-    unsafe { swap_u(&mut a_new[..], &mut b_new[..]) };
+    unsafe { vec_swap_u(&mut a_new[..], &mut b_new[..]) };
 
     assert_eq_f64_slices(&a_old, &b_new);
     assert_eq_f64_slices(&b_old, &a_new);
@@ -78,7 +78,7 @@ fn swap_strided() {
         let b_strided =
             StridedVectorRef::from_slice_mut(&mut b_new, strided_len, stride);
 
-        unsafe { swap_u(a_strided, b_strided) };
+        unsafe { vec_swap_u(a_strided, b_strided) };
 
         println!("a_new = {a_new:?}");
         println!("b_new = {b_new:?}");

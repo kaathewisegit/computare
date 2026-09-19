@@ -7,8 +7,8 @@ mod max_vec;
 mod mix;
 mod norm;
 mod scale_vec;
-mod swap_vec;
 mod vec;
+mod vec_mem;
 
 pub use givens_rotation::{givens_rotation, givens_rotation_u};
 pub use mat::mm_u;
@@ -17,5 +17,5 @@ pub use max_vec::{vec_max, vec_max_abs_idx};
 pub use mix::apply_left;
 pub use norm::{eucledian_norm, p_norm};
 pub use scale_vec::scale_vec;
-pub use swap_vec::swap_u;
 pub use vec::{dot_u, hadamard_u};
+pub use vec_mem::{vec_copy_u, vec_swap_u};
