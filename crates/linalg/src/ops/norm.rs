@@ -1,8 +1,13 @@
-use crate::{
-    int_utils::{div_ceil, div_floor},
-    vector::Vector,
-};
-use computare_core::{Float, FloatMath, NumAssign};
+use crate::vector::Vector;
+use computare_core::{Float, FloatMath, Integer, NumAssign};
+
+fn div_ceil(a: i32, b: i32) -> i32 {
+    <i32 as Integer>::div_ceil(&a, &b)
+}
+
+fn div_floor(a: i32, b: i32) -> i32 {
+    <i32 as Integer>::div_floor(&a, &b)
+}
 
 fn threshold_small<const P: u8, T: Float>() -> T {
     T::RADIX.powi(div_ceil(T::MIN_EXP - 1, P as i32))

@@ -42,7 +42,7 @@ macro_rules! impl_unsinged_integer {
 
             #[inline]
             fn div_ceil(&self, other: &Self) -> Self {
-                *self / *other + (0 != *self % *other) as Self
+                Self::div_ceil(*self, *other)
             }
 
             #[inline]

@@ -1,7 +1,6 @@
 #![allow(clippy::missing_safety_doc)]
 
 mod display;
-pub(crate) mod int_utils;
 mod matrix;
 mod matrix_refs;
 pub mod ops;
