@@ -1,6 +1,7 @@
 [workspace]
 resolver = "3"
 members = [
+	"crates/buffer",
 	"crates/core",
 	"crates/distributions",
 	"crates/linalg",
@@ -15,6 +16,7 @@ license = "MPL-2.0"
 authors = ["Andrej Kolčin <self@kaathewise.net>"]
 
 [workspace.dependencies]
+computare-buffer = { version = "0.1.0-alpha.0", path = "crates/buffer" }
 computare-core = { version = "0.1.0-alpha.0", path = "crates/core" }
 computare-distributions = { version = "0.1.0-alpha.0", path = "crates/distributions" }
 computare-special = { version = "0.1.0-alpha.0", path = "crates/special" }
@@ -22,6 +24,7 @@ computare-testing = { version = "0.1.0-alpha.0", path = "crates/testing" }
 
 arbitrary = "1.4.2"
 arbtest = "0.3.2"
+bytemuck = "1.25"
 libm = "0.2.16"
 rand = { version = "0.10.1", default-features = false }
 rug = { version = "1.30.0", default-features = false, features = ["float", "std"] }
