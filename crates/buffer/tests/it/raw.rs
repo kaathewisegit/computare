@@ -7,7 +7,7 @@ use computare_buffer::RawBuffer;
 #[test]
 fn ptr() {
     let len: usize = 10;
-    let mut buf = unsafe { RawBuffer::<i32>::uninit(len) };
+    let mut buf = RawBuffer::<i32>::uninit(len);
     let start = buf.ptr().as_ptr();
     for i in 0..len {
         let expected = unsafe { start.add(i) };

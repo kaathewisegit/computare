@@ -25,8 +25,7 @@ impl<T, const ALIGN: usize> SliceBuffer<T, ALIGN> {
         let capacity = size * len;
         assert_ne!(capacity, 0, "SliceBuffer size/length must not be zero");
         // SAFETY: `T` is `Zeroable`, so all of the elements are initialized.
-        // `capacity` is checked to not be zero.
-        let buffer = unsafe { RawBuffer::zeroed(capacity) };
+        let buffer = RawBuffer::zeroed(capacity);
         Self { buffer, size, len }
     }
 

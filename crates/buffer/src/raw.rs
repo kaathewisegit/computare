@@ -45,6 +45,7 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
     const _NON_ZST: () = assert!(size_of::<T>() != 0, "T must not be a ZST");
 
     fn layout(capacity: usize) -> Layout {
+        assert_ne!(capacity, 0);
         Layout::from_size_align(capacity * size_of::<T>(), Self::ALIGNMENT)
             .expect("`capacity` too big")
     }
@@ -62,11 +63,7 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
     }
 
     /// Allocate a new uninitialized buffer of size `capacity`.
-    ///
-    /// # Safety
-    ///
-    /// - `capacity` must not be zero.
-    pub unsafe fn uninit(capacity: usize) -> Self {
+    pub fn uninit(capacity: usize) -> Self {
         #[expect(unused)]
         {
             Self::_CHECK_ALIGN_POW2;
@@ -74,7 +71,10 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
             Self::_NON_ZST;
         }
 
-        debug_assert_ne!(capacity, 0);
+        if capacity == 0 {
+            return Self::dangling();
+        }
+
         let layout = Self::layout(capacity);
 
         // SAFETY: we've checked above that capacity/size isn't 0 and
@@ -88,12 +88,7 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
     }
 
     /// Allocates a new buffer of size `capacity` with all bits set to 0
-    ///
-    ///
-    /// # Safety
-    ///
-    /// - `capacity` must not be zero.
-    pub unsafe fn zeroed(capacity: usize) -> Self {
+    pub fn zeroed(capacity: usize) -> Self {
         #[expect(unused)]
         {
             Self::_CHECK_ALIGN_POW2;
@@ -101,7 +96,10 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
             Self::_NON_ZST;
         }
 
-        debug_assert_ne!(capacity, 0);
+        if capacity == 0 {
+            return Self::dangling();
+        }
+
         let layout = Self::layout(capacity);
 
         // SAFETY: we've checked above that capacity/size isn't 0 and
@@ -131,17 +129,19 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
         new_capacity: usize,
     ) {
         // SAFETY: `new_capacity` is not zero per the function invariant
-        let new_buf = unsafe { Self::uninit(new_capacity) };
+        let new_buf = Self::uninit(new_capacity);
         let count = cmp::min(old_capacity, new_capacity);
         // SAFETY: `count` fits inside both buffers, the old buffer is
         // discarded right after.
-        unsafe {
-            copy_nonoverlapping::<T>(
-                self.ptr.as_ptr(),
-                new_buf.ptr.as_ptr(),
-                count,
-            );
-            self.deallocate(old_capacity);
+        if old_capacity != 0 {
+            unsafe {
+                copy_nonoverlapping::<T>(
+                    self.ptr.as_ptr(),
+                    new_buf.ptr.as_ptr(),
+                    count,
+                );
+                self.deallocate(old_capacity);
+            }
         }
         *self = new_buf;
     }
@@ -157,17 +157,19 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
         new_capacity: usize,
     ) {
         // SAFETY: `new_capacity` is not zero per the function invariant
-        let new_buf = unsafe { Self::zeroed(new_capacity) };
+        let new_buf = Self::zeroed(new_capacity);
         let count = cmp::min(old_capacity, new_capacity);
         // SAFETY: `count` fits inside both buffers, the old buffer is
         // discarded right after.
-        unsafe {
-            copy_nonoverlapping::<T>(
-                self.ptr.as_ptr(),
-                new_buf.ptr.as_ptr(),
-                count,
-            );
-            self.deallocate(old_capacity);
+        if old_capacity != 0 {
+            unsafe {
+                copy_nonoverlapping::<T>(
+                    self.ptr.as_ptr(),
+                    new_buf.ptr.as_ptr(),
+                    count,
+                );
+                self.deallocate(old_capacity);
+            }
         }
         *self = new_buf;
     }
@@ -178,7 +180,7 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
             return Self::dangling();
         }
         // SAFETY: we'll overwrite them
-        let out = unsafe { Self::uninit(len) };
+        let out = Self::uninit(len);
         // SAFETY: both `slice` and `out` have the length of `len`,
         // `out` is writeable
         unsafe {
@@ -258,6 +260,9 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
     /// The `capacity` must be correct.  The slice **must not be used** after
     /// this method is called.
     pub unsafe fn deallocate(&mut self, capacity: usize) {
+        if capacity == 0 {
+            return;
+        }
         let layout = Self::layout(capacity);
         // SAFETY: capacity (and thus layout) should be valid by the
         // function invariant.
