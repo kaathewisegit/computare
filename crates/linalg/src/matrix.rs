@@ -9,7 +9,8 @@ pub trait Matrix {
 
     fn num_rows(&self) -> usize;
     fn num_cols(&self) -> usize;
-    fn row_stride(&self) -> usize;
+    fn stride_col(&self) -> usize;
+    fn stride_row(&self) -> usize;
 
     unsafe fn at_u(&self, row: usize, col: usize) -> &Self::Item;
 
@@ -68,7 +69,11 @@ impl<T, const N: usize, const M: usize> Matrix for [[T; M]; N] {
         M
     }
 
-    fn row_stride(&self) -> usize {
+    fn stride_col(&self) -> usize {
+        1
+    }
+
+    fn stride_row(&self) -> usize {
         M
     }
 
@@ -93,7 +98,7 @@ impl<T, const N: usize, const M: usize> Matrix for [[T; M]; N] {
             StridedVectorRef::from_raw_parts(
                 Matrix::at_u(self, 0, index) as *const T,
                 self.num_rows() as u32,
-                self.row_stride() as u32,
+                self.stride_row() as u32,
             )
         }
     }
@@ -103,7 +108,7 @@ impl<T, const N: usize, const M: usize> Matrix for [[T; M]; N] {
             StridedVectorRef::from_raw_parts_mut(
                 Matrix::at_mut_u(self, 0, index) as *mut T,
                 self.num_rows() as u32,
-                self.row_stride() as u32,
+                self.stride_row() as u32,
             )
         }
     }

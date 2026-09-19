@@ -1,4 +1,6 @@
-use computare_linalg::{DisplayMatrix, Matrix, MatrixRef, Vector, ops::mm_u};
+use computare_linalg::{
+    ColMatrixRef, DisplayMatrix, Matrix, MatrixRef, Vector, ops::mm_u,
+};
 
 #[test]
 fn basic_array() {
@@ -17,15 +19,30 @@ fn basic_ref() {
     let a = vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
     let b = vec![0.0, 1.0, 2.0, 3.0];
 
-    let a_ref = unsafe { MatrixRef::from_raw_parts(a.as_ptr(), 3, 2) };
-    let b_ref = unsafe { MatrixRef::from_raw_parts(b.as_ptr(), 2, 2) };
+    let a_ref = MatrixRef::from_slice(&a, 3, 2);
+    let b_ref = MatrixRef::from_slice(&b, 2, 2);
 
     let mut dst = vec![0.0; 6];
-    let dst_ref =
-        unsafe { MatrixRef::from_raw_parts_mut(dst.as_mut_ptr(), 3, 2) };
+    let dst_ref = MatrixRef::from_slice_mut(&mut dst, 3, 2);
     unsafe { mm_u(a_ref, b_ref, dst_ref) };
 
     let expected = vec![4.0, 7.0, 8.0, 15.0, 12.0, 23.0];
+    assert_eq!(dst, expected);
+}
+
+#[test]
+fn basic_col_ref() {
+    let a = vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
+    let b = vec![0.0, 1.0, 2.0, 3.0];
+
+    let a_ref = ColMatrixRef::from_slice(&a, 3, 2);
+    let b_ref = ColMatrixRef::from_slice(&b, 2, 2);
+
+    let mut dst = vec![0.0; 6];
+    let dst_ref = ColMatrixRef::from_slice_mut(&mut dst, 3, 2);
+    unsafe { mm_u(a_ref, b_ref, dst_ref) };
+
+    let expected = vec![4.0, 5.0, 6.0, 14.0, 19.0, 24.0];
     assert_eq!(dst, expected);
 }
 
