@@ -8,14 +8,14 @@ use crate::generate_f64_vec;
 fn basic() {
     arbtest(|u| {
         let len = u.int_in_range(0..=1000usize)?;
-        let a: Vec<f64> = generate_f64_vec(u, len)?;
-        let b: Vec<f64> = generate_f64_vec(u, len)?;
+        let x: Vec<f64> = generate_f64_vec(u, len)?;
+        let y: Vec<f64> = generate_f64_vec(u, len)?;
         let mut out = vec![0.0; len];
 
-        unsafe { vec_hadamard_u(&a[..], &b[..], &mut out[..]) };
+        unsafe { vec_hadamard_u(&x[..], &y[..], &mut out[..]) };
 
         for i in 0..len {
-            assert_almost_eq!(a[i] * b[i], out[i]);
+            assert_almost_eq!(x[i] * y[i], out[i]);
         }
 
         Ok(())
@@ -30,18 +30,18 @@ fn strided() {
         let stride = u.int_in_range(1..=9usize)?;
         let len = total_len / stride;
 
-        let a: Vec<f64> = generate_f64_vec(u, total_len)?;
-        let a = StridedVectorRef::from_slice(&a, len, stride);
-        let b: Vec<f64> = generate_f64_vec(u, total_len)?;
-        let b = StridedVectorRef::from_slice(&b, len, stride);
+        let x: Vec<f64> = generate_f64_vec(u, total_len)?;
+        let x = StridedVectorRef::from_slice(&x, len, stride);
+        let y: Vec<f64> = generate_f64_vec(u, total_len)?;
+        let y = StridedVectorRef::from_slice(&y, len, stride);
 
         let mut out = vec![0.0; len];
 
-        unsafe { vec_hadamard_u(a, b, &mut out[..]) };
+        unsafe { vec_hadamard_u(x, y, &mut out[..]) };
 
         #[expect(clippy::needless_range_loop)]
         for i in 0..len {
-            assert_almost_eq!(a.at(i) * b.at(i), out[i]);
+            assert_almost_eq!(x.at(i) * y.at(i), out[i]);
         }
 
         Ok(())

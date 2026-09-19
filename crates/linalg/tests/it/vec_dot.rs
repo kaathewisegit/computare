@@ -8,12 +8,12 @@ use crate::generate_f64_vec_nonnan;
 fn basic() {
     arbtest(|u| {
         let len = u.int_in_range(0..=1000usize)?;
-        let a: Vec<f64> = generate_f64_vec_nonnan(u, len)?;
-        let b: Vec<f64> = generate_f64_vec_nonnan(u, len)?;
+        let x: Vec<f64> = generate_f64_vec_nonnan(u, len)?;
+        let y: Vec<f64> = generate_f64_vec_nonnan(u, len)?;
 
-        let out = unsafe { vec_dot_u(&a[..], &b[..]) };
+        let out = unsafe { vec_dot_u(&x[..], &y[..]) };
 
-        let expected: f64 = a.iter().zip(b.iter()).map(|(x, y)| x * y).sum();
+        let expected: f64 = x.iter().zip(y.iter()).map(|(x, y)| x * y).sum();
         assert_almost_eq!(expected, out);
 
         Ok(())
@@ -28,14 +28,14 @@ fn strided() {
         let stride = u.int_in_range(1..=9usize)?;
         let len = total_len / stride;
 
-        let a: Vec<f64> = generate_f64_vec_nonnan(u, total_len)?;
-        let a = StridedVectorRef::from_slice(&a, len, stride);
-        let b: Vec<f64> = generate_f64_vec_nonnan(u, total_len)?;
-        let b = StridedVectorRef::from_slice(&b, len, stride);
+        let x: Vec<f64> = generate_f64_vec_nonnan(u, total_len)?;
+        let x = StridedVectorRef::from_slice(&x, len, stride);
+        let y: Vec<f64> = generate_f64_vec_nonnan(u, total_len)?;
+        let y = StridedVectorRef::from_slice(&y, len, stride);
 
-        let out = unsafe { vec_dot_u(a, b) };
+        let out = unsafe { vec_dot_u(x, y) };
 
-        let expected: f64 = (0..len).map(|i| a.at(i) * b.at(i)).sum();
+        let expected: f64 = (0..len).map(|i| x.at(i) * y.at(i)).sum();
         assert_almost_eq!(expected, out);
 
         Ok(())

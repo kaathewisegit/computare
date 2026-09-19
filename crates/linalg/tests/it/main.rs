@@ -6,6 +6,7 @@ mod givens_rotation;
 mod matrix;
 mod strided_vec_ref;
 mod swap;
+mod vec_add_scaled;
 mod vec_dot;
 mod vec_hadamard;
 mod vec_max;

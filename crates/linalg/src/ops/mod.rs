@@ -18,4 +18,4 @@ pub use mix::apply_left;
 pub use scale_vec::scale_vec;
 pub use vec_mem::{vec_copy_u, vec_swap_u};
 pub use vec_norm::{eucledian_norm, p_norm};
-pub use vec_prod::{vec_dot_u, vec_hadamard_u};
+pub use vec_prod::{vec_add_scaled, vec_dot_u, vec_hadamard_u};
