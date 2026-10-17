@@ -9,7 +9,7 @@ pub use incomplete::{regularized_lower_gamma, regularized_upper_gamma};
 pub use inverse::{inverse_lower_gamma, inverse_upper_gamma};
 pub use recip::recip_gamma;
 
-use core::f64::consts::PI;
+use core::f64::consts::{EULER_GAMMA, PI};
 
 use crate::evaluate::{polynomial, polynomial1};
 use computare_core::{Float, FloatMath, debug_panic};
@@ -115,7 +115,7 @@ pub fn gamma(mut x: f64) -> f64 {
             debug_panic!("pole: {x}");
             f64::NAN
         } else {
-            z / ((1.0 + 0.5772156649015329 * x) * x)
+            z / ((1.0 + EULER_GAMMA * x) * x)
         }
     }
 

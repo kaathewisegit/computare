@@ -1,11 +1,11 @@
-use core::f64::consts::PI;
+use core::f64::consts::{EULER_GAMMA, PI};
 
 pub fn digamma(x: f64) -> f64 {
     // The implementation is based on "Algorithm AS 103", Jose Bernardo, Applied
     // Statistics, Volume 25, Number 3 1976, pages 315 - 317.
 
     let c = 12.0;
-    let d1 = -0.5772156649015329;
+    let d1 = -EULER_GAMMA;
     let d2 = 1.6449340668482264;
     let s = 1e-6;
     let s3 = 1.0 / 12.0;
