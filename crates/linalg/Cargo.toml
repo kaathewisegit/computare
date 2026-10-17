@@ -10,5 +10,7 @@ authors.workspace = true
 computare-buffer = { workspace = true }
 computare-core = { workspace = true }
 
+bytemuck = { workspace = true }
+
 [dev-dependencies]
 computare-testing = { workspace = true }

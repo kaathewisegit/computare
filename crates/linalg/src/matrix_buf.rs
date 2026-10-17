@@ -1,3 +1,5 @@
+use bytemuck::Zeroable;
+
 use core::{
     ops::{Deref, DerefMut},
     ptr,
@@ -19,7 +21,7 @@ impl<T: Copy> RowMatrixBuf<T> {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.len() != 0
+        self.len() == 0
     }
 
     pub fn as_slice_ptr(&self) -> *mut [T] {
@@ -33,6 +35,22 @@ impl<T: Copy> RowMatrixBuf<T> {
 
         Self {
             values: RawBuffer::from_slice(slice),
+            num_rows: u32::try_from(num_rows).unwrap(),
+            num_cols: u32::try_from(num_cols).unwrap(),
+        }
+    }
+
+    pub fn zeroed(num_cols: usize, num_rows: usize) -> Self
+    where
+        T: Zeroable,
+    {
+        if num_rows == 0 || num_cols == 0 {
+            return Self::empty();
+        }
+
+        let values = RawBuffer::zeroed(num_rows * num_cols);
+        Self {
+            values,
             num_rows: u32::try_from(num_rows).unwrap(),
             num_cols: u32::try_from(num_cols).unwrap(),
         }
