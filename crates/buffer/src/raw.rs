@@ -19,7 +19,7 @@ unsafe impl<T, const ALIGN: usize> Send for RawBuffer<T, ALIGN> where T: Send {}
 // SAFETY: same as above
 unsafe impl<T, const ALIGN: usize> Sync for RawBuffer<T, ALIGN> where T: Sync {}
 
-impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
+impl<T: Copy, const ALIGN: usize> RawBuffer<T, ALIGN> {
     pub const ALIGNMENT: usize =
         { if ALIGN == 0 { align_of::<T>() } else { ALIGN } };
 
@@ -39,11 +39,6 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
         "ALIGN be equal to or bigger than `T`'s required alignment"
     );
 
-    /// ```compile_fail
-    /// buffer::Buffer::<(), 3>::new(10);
-    /// ```
-    const _NON_ZST: () = assert!(size_of::<T>() != 0, "T must not be a ZST");
-
     fn layout(capacity: usize) -> Layout {
         assert_ne!(capacity, 0);
         Layout::from_size_align(capacity * size_of::<T>(), Self::ALIGNMENT)
@@ -55,7 +50,6 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
         {
             Self::_CHECK_ALIGN_POW2;
             Self::_CHECK_ALIGN_SIZE;
-            Self::_NON_ZST;
         }
         Self {
             ptr: NonNull::dangling(),
@@ -68,10 +62,9 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
         {
             Self::_CHECK_ALIGN_POW2;
             Self::_CHECK_ALIGN_SIZE;
-            Self::_NON_ZST;
         }
 
-        if capacity == 0 {
+        if capacity == 0 || size_of::<T>() == 0 {
             return Self::dangling();
         }
 
@@ -93,10 +86,9 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
         {
             Self::_CHECK_ALIGN_POW2;
             Self::_CHECK_ALIGN_SIZE;
-            Self::_NON_ZST;
         }
 
-        if capacity == 0 {
+        if capacity == 0 || size_of::<T>() == 0 {
             return Self::dangling();
         }
 
@@ -252,17 +244,15 @@ impl<T, const ALIGN: usize> RawBuffer<T, ALIGN> {
 
     /// Deallocate the buffer
     ///
-    /// Note that the caller is responsible for dropping the elements of the
-    /// buffer if they require that.
-    ///
     /// # Safety
     ///
     /// The `capacity` must be correct.  The slice **must not be used** after
     /// this method is called.
     pub unsafe fn deallocate(&mut self, capacity: usize) {
-        if capacity == 0 {
+        if capacity == 0 || size_of::<T>() == 0 {
             return;
         }
+
         let layout = Self::layout(capacity);
         // SAFETY: capacity (and thus layout) should be valid by the
         // function invariant.

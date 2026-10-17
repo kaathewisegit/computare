@@ -8,7 +8,7 @@ use core::{
 
 use crate::RawBuffer;
 
-pub struct SliceBuffer<T, const ALIGN: usize = 0> {
+pub struct SliceBuffer<T: Copy, const ALIGN: usize = 0> {
     buffer: RawBuffer<T, ALIGN>,
     /// Size of each slice segment
     size: usize,
@@ -16,7 +16,7 @@ pub struct SliceBuffer<T, const ALIGN: usize = 0> {
     len: usize,
 }
 
-impl<T, const ALIGN: usize> SliceBuffer<T, ALIGN> {
+impl<T: Copy, const ALIGN: usize> SliceBuffer<T, ALIGN> {
     /// Creates a buffer capable of holding `len` slices of `size`
     pub fn new(size: usize, len: usize) -> Self
     where
@@ -79,7 +79,7 @@ impl<T, const ALIGN: usize> SliceBuffer<T, ALIGN> {
     }
 }
 
-impl<T, const ALIGN: usize> Drop for SliceBuffer<T, ALIGN> {
+impl<T: Copy, const ALIGN: usize> Drop for SliceBuffer<T, ALIGN> {
     fn drop(&mut self) {
         let capacity = self.len * self.size;
         if const { mem::needs_drop::<T>() } {
@@ -93,7 +93,7 @@ impl<T, const ALIGN: usize> Drop for SliceBuffer<T, ALIGN> {
     }
 }
 
-impl<T, const ALIGN: usize> Index<usize> for SliceBuffer<T, ALIGN> {
+impl<T: Copy, const ALIGN: usize> Index<usize> for SliceBuffer<T, ALIGN> {
     type Output = [T];
 
     fn index(&self, index: usize) -> &[T] {
@@ -103,7 +103,7 @@ impl<T, const ALIGN: usize> Index<usize> for SliceBuffer<T, ALIGN> {
     }
 }
 
-impl<T, const ALIGN: usize> IndexMut<usize> for SliceBuffer<T, ALIGN> {
+impl<T: Copy, const ALIGN: usize> IndexMut<usize> for SliceBuffer<T, ALIGN> {
     fn index_mut(&mut self, index: usize) -> &mut [T] {
         self.check_index(index);
         // SAFETY: the index is checked above

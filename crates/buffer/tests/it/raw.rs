@@ -89,4 +89,30 @@ fn test_from_slice_16() {
     from_slice::<16>();
 }
 
+#[test]
+fn zst() {
+    fn check_zst(mut buf: RawBuffer<(), 0>, len: usize) {
+        unsafe {
+            assert_eq!(&*buf.get_raw_slice(0, len), &vec![(); len]);
+            assert_eq!(
+                &*buf.get_raw_slice(len / 2, len / 2),
+                &vec![(); len / 2]
+            );
+
+            buf.reallocate(len, len * 2);
+            assert_eq!(&*buf.get_raw_slice(0, len), &vec![(); len]);
+
+            buf.reallocate(len * 2, len / 2);
+            assert_eq!(&*buf.get_raw_slice(0, len / 2), &vec![(); len / 2]);
+
+            buf.deallocate(len);
+        }
+    }
+
+    let slice = &[(); 5];
+    check_zst(RawBuffer::from_slice(slice), slice.len());
+    check_zst(RawBuffer::uninit(6), 6);
+    check_zst(RawBuffer::zeroed(7), 7);
+}
+
 // TODO: simulation testing
