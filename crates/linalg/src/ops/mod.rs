@@ -11,7 +11,7 @@ mod vec_norm;
 mod vec_prod;
 
 pub use givens_rotation::{givens_rotation, givens_rotation_u};
-pub use mat::mm_u;
+pub use mat::mat_mul_u;
 pub use max_mat::mat_max_abs;
 pub use max_vec::{vec_max, vec_max_abs_idx};
 pub use mix::apply_left;

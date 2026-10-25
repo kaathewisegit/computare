@@ -2,7 +2,7 @@ use computare_core::{ConstZero, NumAssign};
 
 use crate::matrix::Matrix;
 
-pub unsafe fn mm_u<T, A, B, Dst>(a: &A, b: &B, dst: &mut Dst)
+pub unsafe fn mat_mul_u<T, A, B, Dst>(a: &A, b: &B, dst: &mut Dst)
 where
     T: NumAssign + ConstZero + Copy,
     A: Matrix<Item = T> + ?Sized,
