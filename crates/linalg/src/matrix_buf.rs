@@ -1,11 +1,13 @@
 use bytemuck::Zeroable;
 
 use core::{
+    fmt::{self, Debug, Formatter},
     ops::{Deref, DerefMut},
     ptr,
 };
 
 use super::MatrixRef;
+use crate::DisplayMatrix;
 use computare_buffer::RawBuffer;
 
 /// Owned row-major matrix
@@ -95,6 +97,20 @@ impl<T: Copy> Clone for RowMatrix<T> {
             num_rows: self.num_rows,
             num_cols: self.num_cols,
         }
+    }
+}
+
+impl<T: Copy + PartialEq> PartialEq for RowMatrix<T> {
+    fn eq(&self, other: &Self) -> bool {
+        self.num_rows == other.num_rows
+            && self.num_cols == other.num_cols
+            && self.as_slice() == other.as_slice()
+    }
+}
+
+impl<T: Copy + Debug> Debug for RowMatrix<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Debug::fmt(&DisplayMatrix(self.deref()), f)
     }
 }
 

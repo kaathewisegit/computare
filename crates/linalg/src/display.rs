@@ -74,7 +74,7 @@ where
     M::Row: Debug,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-        f.debug_struct("Vector")
+        f.debug_struct("Matrix")
             .field("num_rows", &self.0.num_rows())
             .field("num_cols", &self.0.num_cols())
             .field("values", &MatrixHelper(self.0))

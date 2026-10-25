@@ -77,17 +77,13 @@ fn clone_copies_values_and_shape() {
 
     assert_eq!(cloned.num_rows(), 2);
     assert_eq!(cloned.num_cols(), 3);
-    assert_eq!(cloned.as_slice(), matrix.as_slice());
-    unsafe {
-        assert_eq!(cloned.row_u(0), &[1, 2, 3]);
-        assert_eq!(cloned.row_u(1), &[4, 5, 6]);
-    }
+    assert_eq!(matrix, cloned);
 }
 
 #[test]
 fn clone_is_deep() {
     let source = [1, 2, 3, 4];
-    let mut matrix = RowMatrix::from_slice(&source, 2, 2);
+    let matrix = RowMatrix::from_slice(&source, 2, 2);
     let mut cloned = matrix.clone();
 
     unsafe { *cloned.at_mut_u(0, 0) = 10 };
@@ -104,5 +100,24 @@ fn clone_empty() {
     assert!(cloned.is_empty());
     assert_eq!(cloned.num_rows(), 0);
     assert_eq!(cloned.num_cols(), 0);
-    assert_eq!(cloned.as_slice(), &[]);
+    assert_eq!(cloned, RowMatrix::empty());
+}
+
+#[test]
+fn eq_checks_shape() {
+    let source = [1, 2, 3, 4, 5, 6];
+    let matrix = RowMatrix::from_slice(&source, 2, 3);
+    let same_slice = RowMatrix::from_slice(&source, 3, 2);
+
+    assert_eq!(matrix, matrix.clone());
+    assert_ne!(matrix, same_slice);
+}
+
+#[test]
+fn eq_empty() {
+    assert_eq!(RowMatrix::<u8>::empty(), RowMatrix::<u8>::empty());
+    assert_ne!(
+        RowMatrix::<u8>::empty(),
+        RowMatrix::<u8>::from_slice(&[1], 1, 1)
+    );
 }
