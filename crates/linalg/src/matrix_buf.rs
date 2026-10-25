@@ -87,6 +87,17 @@ impl<T: Copy> Drop for RowMatrix<T> {
     }
 }
 
+impl<T: Copy> Clone for RowMatrix<T> {
+    fn clone(&self) -> Self {
+        Self {
+            // SAFETY: `self.values` has capacity `self.len()`
+            values: unsafe { self.values.duplicate(self.len()) },
+            num_rows: self.num_rows,
+            num_cols: self.num_cols,
+        }
+    }
+}
+
 // SAFETY: `RowMatrixBuf` owns its items.
 unsafe impl<T: Send + Copy> Send for RowMatrix<T> {}
 // SAFETY: `RowMatrixBuf` owns its items.

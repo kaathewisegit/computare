@@ -68,3 +68,41 @@ fn zero_dimension() {
         assert_eq!(buf.len(), 0);
     }
 }
+
+#[test]
+fn clone_copies_values_and_shape() {
+    let source = [1, 2, 3, 4, 5, 6];
+    let matrix = RowMatrix::from_slice(&source, 2, 3);
+    let cloned = matrix.clone();
+
+    assert_eq!(cloned.num_rows(), 2);
+    assert_eq!(cloned.num_cols(), 3);
+    assert_eq!(cloned.as_slice(), matrix.as_slice());
+    unsafe {
+        assert_eq!(cloned.row_u(0), &[1, 2, 3]);
+        assert_eq!(cloned.row_u(1), &[4, 5, 6]);
+    }
+}
+
+#[test]
+fn clone_is_deep() {
+    let source = [1, 2, 3, 4];
+    let mut matrix = RowMatrix::from_slice(&source, 2, 2);
+    let mut cloned = matrix.clone();
+
+    unsafe { *cloned.at_mut_u(0, 0) = 10 };
+
+    assert_eq!(matrix.as_slice(), &[1, 2, 3, 4]);
+    assert_eq!(cloned.as_slice(), &[10, 2, 3, 4]);
+}
+
+#[test]
+fn clone_empty() {
+    let matrix = RowMatrix::<u8>::from_slice(&[], 0, 0);
+    let cloned = matrix.clone();
+
+    assert!(cloned.is_empty());
+    assert_eq!(cloned.num_rows(), 0);
+    assert_eq!(cloned.num_cols(), 0);
+    assert_eq!(cloned.as_slice(), &[]);
+}
