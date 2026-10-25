@@ -2,6 +2,14 @@ use computare_core::{ConstZero, NumAssign};
 
 use crate::matrix::Matrix;
 
+/// Multiply `a` and `b` and write the result into `dst`
+///
+/// `dst` is completely overwritten.
+///
+/// # Safety
+///
+/// If `a` is `n` by `m`, then `b` must be `m` by `p` and `dst` must be `n` by
+/// `p`.
 pub unsafe fn mat_mul_u<T, A, B, Dst>(a: &A, b: &B, dst: &mut Dst)
 where
     T: NumAssign + ConstZero + Copy,
