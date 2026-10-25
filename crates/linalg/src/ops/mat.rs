@@ -35,3 +35,19 @@ where
         }
     }
 }
+
+/// Safe version of [`mat_mul_u`]
+pub fn mat_mul<T, A, B, Dst>(a: &A, b: &B, dst: &mut Dst)
+where
+    T: NumAssign + ConstZero + Copy,
+    A: Matrix<Item = T> + ?Sized,
+    B: Matrix<Item = T> + ?Sized,
+    Dst: Matrix<Item = T> + ?Sized,
+{
+    assert_eq!(a.num_cols(), b.num_rows());
+    assert_eq!(a.num_rows(), dst.num_rows());
+    assert_eq!(b.num_cols(), dst.num_cols());
+
+    // SAFETY: invariants checked above
+    unsafe { mat_mul_u(a, b, dst) }
+}
