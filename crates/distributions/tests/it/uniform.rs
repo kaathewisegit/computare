@@ -1,7 +1,9 @@
 use core::f64::consts::{LN_2, LN_10};
 
 use computare_core::tolerance::assert_almost_eq;
-use computare_distributions::{Continuous, Statistics, Uniform};
+use computare_distributions::{
+    Continuous, NoUniqueModeError, Statistics, Uniform,
+};
 use computare_testing::arbitrary::{arbtest, f64_range};
 
 use super::compare_cdf_roundtrip;
@@ -17,6 +19,14 @@ fn variance() {
     for ((min, max), expected) in cases {
         assert_almost_eq!(Uniform::new(min, max).variance().unwrap(), expected);
     }
+}
+
+#[test]
+fn mode_error() {
+    assert_eq!(
+        Uniform::new(0.0, 1.0).mode().unwrap_err(),
+        NoUniqueModeError,
+    );
 }
 
 #[test]

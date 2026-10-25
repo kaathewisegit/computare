@@ -1,12 +1,20 @@
 use core::num::NonZeroU32;
 
-use computare_distributions::{Chi, Continuous, Statistics};
+use computare_distributions::{Chi, Continuous, NoClosedFormError, Statistics};
 use computare_testing::arbitrary::{arbtest, f64_range};
 
 use super::{assert_almost_eq, compare_cdf_roundtrip};
 
 fn nz(n: u32) -> NonZeroU32 {
     NonZeroU32::new(n).unwrap()
+}
+
+#[test]
+fn median_error() {
+    assert_eq!(
+        Chi::new(3.try_into().unwrap()).median().unwrap_err(),
+        NoClosedFormError,
+    );
 }
 
 #[test]

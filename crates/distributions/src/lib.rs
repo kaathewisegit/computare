@@ -17,9 +17,15 @@ mod ziggurat;
 #[cfg(feature = "rand")]
 mod ziggurat_tables;
 
+pub mod error;
+
 pub use beta::Beta;
 pub use chi::Chi;
 pub use chi_squared::ChiSquared;
+pub use error::{
+    BetaUndefinedMode, InverseGammaUndefinedMean,
+    InverseGammaUndefinedVariance, NoClosedFormError, NoUniqueModeError,
+};
 pub use exponential::Exponential;
 pub use gamma::Gamma;
 pub use inverse_gamma::InverseGamma;

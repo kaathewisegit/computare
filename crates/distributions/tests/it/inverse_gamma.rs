@@ -1,4 +1,7 @@
-use computare_distributions::InverseGamma;
+use computare_distributions::{
+    InverseGamma, InverseGammaUndefinedMean, InverseGammaUndefinedVariance,
+    NoClosedFormError, Statistics,
+};
 use computare_testing::arbitrary::{arbtest, f64_range};
 
 use super::compare_cdf_roundtrip;
@@ -15,6 +18,30 @@ fn cdf_roundtrip_small_shape() {
             1e-12,
         )
     });
+}
+
+#[test]
+fn mean_error() {
+    assert_eq!(
+        InverseGamma::new(1.0, 2.0).mean().unwrap_err(),
+        InverseGammaUndefinedMean { shape: 1.0 },
+    );
+}
+
+#[test]
+fn median_error() {
+    assert_eq!(
+        InverseGamma::new(3.0, 2.0).median().unwrap_err(),
+        NoClosedFormError,
+    );
+}
+
+#[test]
+fn variance_error() {
+    assert_eq!(
+        InverseGamma::new(2.0, 2.0).variance().unwrap_err(),
+        InverseGammaUndefinedVariance { shape: 2.0 },
+    );
 }
 
 #[test]

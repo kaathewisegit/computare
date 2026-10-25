@@ -1,4 +1,6 @@
-use computare_distributions::{Continuous, Gamma, Statistics};
+use computare_distributions::{
+    Continuous, Gamma, NoClosedFormError, Statistics,
+};
 use computare_testing::arbitrary::{arbtest, f64_range};
 
 use super::{assert_almost_eq, compare_cdf_roundtrip};
@@ -15,6 +17,14 @@ fn mean() {
         let d = Gamma::new(shape, scale);
         assert_almost_eq!(d.mean().unwrap(), expected, relative = 1e-12);
     }
+}
+
+#[test]
+fn median_error() {
+    assert_eq!(
+        Gamma::new(2.0, 3.0).median().unwrap_err(),
+        NoClosedFormError,
+    );
 }
 
 #[test]

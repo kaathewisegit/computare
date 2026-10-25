@@ -5,7 +5,7 @@ use computare_special::gamma::{
     regularized_upper_gamma,
 };
 
-use crate::{Continuous, Statistics};
+use crate::{Continuous, Statistics, error::NoClosedFormError};
 
 /// [Chi distribution](https://en.wikipedia.org/wiki/Chi_distribution)
 #[derive(Clone, Copy, Debug)]
@@ -148,9 +148,9 @@ impl Statistics for Chi {
         }
     }
 
-    type MedianErr = &'static str;
-    fn median(&self) -> Result<f64, &'static str> {
-        Err("Simple closed form does not exist")
+    type MedianErr = NoClosedFormError;
+    fn median(&self) -> Result<f64, Self::MedianErr> {
+        Err(NoClosedFormError)
     }
 
     type ModeErr = Infallible;

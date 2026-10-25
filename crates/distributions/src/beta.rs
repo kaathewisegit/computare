@@ -5,7 +5,7 @@ use computare_special::{
     gamma::{digamma, gamma, ln_gamma},
 };
 
-use crate::{Continuous, Statistics};
+use crate::{Continuous, Statistics, error::BetaUndefinedMode};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Beta {
@@ -123,11 +123,14 @@ impl Statistics for Beta {
         Ok(inverse_regularized_beta(self.shape_a, self.shape_b, 0.5))
     }
 
-    type ModeErr = &'static str;
-    fn mode(&self) -> Result<f64, &'static str> {
+    type ModeErr = BetaUndefinedMode;
+    fn mode(&self) -> Result<f64, Self::ModeErr> {
         let (a, b) = (self.shape_a, self.shape_b);
         if a <= 1.0 || b <= 1.0 {
-            Err("Mode is only defined for α > 1 and β > 1")
+            Err(BetaUndefinedMode {
+                shape_a: a,
+                shape_b: b,
+            })
         } else {
             Ok((a - 1.0) / (a + b - 2.0))
         }

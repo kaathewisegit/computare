@@ -1,6 +1,6 @@
 use core::convert::Infallible;
 
-use crate::{Continuous, Statistics};
+use crate::{Continuous, Statistics, error::NoUniqueModeError};
 
 #[derive(Clone, Copy, Debug)]
 pub struct Uniform {
@@ -79,9 +79,9 @@ impl Statistics for Uniform {
         self.mean()
     }
 
-    type ModeErr = &'static str;
-    fn mode(&self) -> Result<f64, &'static str> {
-        Err("any value in (self.min, self.max)")
+    type ModeErr = NoUniqueModeError;
+    fn mode(&self) -> Result<f64, Self::ModeErr> {
+        Err(NoUniqueModeError)
     }
 
     type VarianceErr = Infallible;

@@ -5,7 +5,13 @@ use computare_special::gamma::{
     regularized_upper_gamma,
 };
 
-use crate::{Continuous, Statistics};
+use crate::{
+    Continuous, Statistics,
+    error::{
+        InverseGammaUndefinedMean, InverseGammaUndefinedVariance,
+        NoClosedFormError,
+    },
+};
 
 #[derive(Clone, Copy, Debug)]
 pub struct InverseGamma {
@@ -100,18 +106,18 @@ impl Continuous for InverseGamma {
 }
 
 impl Statistics for InverseGamma {
-    type MeanErr = &'static str;
-    fn mean(&self) -> Result<f64, &'static str> {
+    type MeanErr = InverseGammaUndefinedMean;
+    fn mean(&self) -> Result<f64, Self::MeanErr> {
         if self.shape <= 1.0 {
-            Err("Mean is undefined for shape <= 1")
+            Err(InverseGammaUndefinedMean { shape: self.shape })
         } else {
             Ok(self.scale / (self.shape - 1.0))
         }
     }
 
-    type MedianErr = &'static str;
-    fn median(&self) -> Result<f64, &'static str> {
-        Err("Simple closed form does not exist")
+    type MedianErr = NoClosedFormError;
+    fn median(&self) -> Result<f64, Self::MedianErr> {
+        Err(NoClosedFormError)
     }
 
     type ModeErr = Infallible;
@@ -119,11 +125,10 @@ impl Statistics for InverseGamma {
         Ok(self.scale / (self.shape + 1.0))
     }
 
-    // XXX: maybe a custom error type which includes `shape`?
-    type VarianceErr = &'static str;
-    fn variance(&self) -> Result<f64, &'static str> {
+    type VarianceErr = InverseGammaUndefinedVariance;
+    fn variance(&self) -> Result<f64, Self::VarianceErr> {
         if self.shape <= 2.0 {
-            Err("Variance is undefined for shape <= 2")
+            Err(InverseGammaUndefinedVariance { shape: self.shape })
         } else {
             let s = self.shape;
             Ok(self.scale * self.scale / ((s - 1.0) * (s - 1.0) * (s - 2.0)))

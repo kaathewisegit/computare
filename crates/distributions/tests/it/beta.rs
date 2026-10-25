@@ -1,4 +1,6 @@
-use computare_distributions::{Beta, Continuous, Statistics};
+use computare_distributions::{
+    Beta, BetaUndefinedMode, Continuous, Statistics,
+};
 use computare_testing::arbitrary::{arbtest, f64_range};
 
 use super::{assert_almost_eq, compare_cdf_roundtrip};
@@ -14,6 +16,24 @@ fn mean() {
         let d = Beta::new(a, b);
         assert_almost_eq!(d.mean().unwrap(), expected, relative = 1e-12);
     }
+}
+
+#[test]
+fn mode_error() {
+    assert_eq!(
+        Beta::new(1.0, 2.0).mode().unwrap_err(),
+        BetaUndefinedMode {
+            shape_a: 1.0,
+            shape_b: 2.0
+        },
+    );
+    assert_eq!(
+        Beta::new(3.0, 0.5).mode().unwrap_err(),
+        BetaUndefinedMode {
+            shape_a: 3.0,
+            shape_b: 0.5
+        },
+    );
 }
 
 #[test]
