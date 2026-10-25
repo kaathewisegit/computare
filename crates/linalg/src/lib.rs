@@ -11,7 +11,7 @@ mod vector_strided;
 
 pub use display::{DisplayMatrix, DisplayVector};
 pub use matrix::Matrix;
-pub use matrix_buf::RowMatrixBuf;
+pub use matrix_buf::RowMatrix;
 pub use matrix_refs::{ColMatrixRef, MatrixRef};
 pub use vector::Vector;
 pub use vector_strided::StridedVectorRef;

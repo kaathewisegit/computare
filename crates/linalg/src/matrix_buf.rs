@@ -9,13 +9,13 @@ use super::MatrixRef;
 use computare_buffer::RawBuffer;
 
 /// Owned row-major matrix
-pub struct RowMatrixBuf<T: Copy> {
+pub struct RowMatrix<T: Copy> {
     values: RawBuffer<T>,
     num_rows: u32,
     num_cols: u32,
 }
 
-impl<T: Copy> RowMatrixBuf<T> {
+impl<T: Copy> RowMatrix<T> {
     pub fn len(&self) -> usize {
         self.num_rows() * self.num_cols()
     }
@@ -81,18 +81,18 @@ impl<T: Copy> RowMatrixBuf<T> {
     }
 }
 
-impl<T: Copy> Drop for RowMatrixBuf<T> {
+impl<T: Copy> Drop for RowMatrix<T> {
     fn drop(&mut self) {
         unsafe { self.values.deallocate(self.len()) }
     }
 }
 
 // SAFETY: `RowMatrixBuf` owns its items.
-unsafe impl<T: Send + Copy> Send for RowMatrixBuf<T> {}
+unsafe impl<T: Send + Copy> Send for RowMatrix<T> {}
 // SAFETY: `RowMatrixBuf` owns its items.
-unsafe impl<T: Sync + Copy> Sync for RowMatrixBuf<T> {}
+unsafe impl<T: Sync + Copy> Sync for RowMatrix<T> {}
 
-impl<T: Copy> Deref for RowMatrixBuf<T> {
+impl<T: Copy> Deref for RowMatrix<T> {
     type Target = MatrixRef<T>;
 
     fn deref(&self) -> &MatrixRef<T> {
@@ -106,7 +106,7 @@ impl<T: Copy> Deref for RowMatrixBuf<T> {
     }
 }
 
-impl<T: Copy> DerefMut for RowMatrixBuf<T> {
+impl<T: Copy> DerefMut for RowMatrix<T> {
     fn deref_mut(&mut self) -> &mut MatrixRef<T> {
         unsafe {
             MatrixRef::from_raw_parts_mut(

@@ -1,9 +1,9 @@
-use computare_linalg::{Matrix, RowMatrixBuf};
+use computare_linalg::{Matrix, RowMatrix};
 
 #[test]
 fn from_slice_basic() {
     let source = [1, 2, 3, 4, 5, 6];
-    let matrix = RowMatrixBuf::from_slice(&source, 2, 3);
+    let matrix = RowMatrix::from_slice(&source, 2, 3);
 
     assert_eq!(matrix.num_rows(), 2);
     assert_eq!(matrix.num_cols(), 3);
@@ -17,7 +17,7 @@ fn from_slice_basic() {
 
 #[test]
 fn from_slice_empty() {
-    let matrix = RowMatrixBuf::<u8>::from_slice(&[], 0, 0);
+    let matrix = RowMatrix::<u8>::from_slice(&[], 0, 0);
     assert_eq!(matrix.num_rows(), 0);
     assert_eq!(matrix.num_cols(), 0);
     assert_eq!(matrix.as_slice(), &[]);
@@ -26,7 +26,7 @@ fn from_slice_empty() {
 #[test]
 fn from_slice_separate_allocations() {
     let source = [1, 2, 3, 4];
-    let mut matrix = RowMatrixBuf::from_slice(&source, 2, 2);
+    let mut matrix = RowMatrix::from_slice(&source, 2, 2);
     unsafe { *matrix.at_mut_u(0, 0) = 10 };
 
     assert_eq!(source, [1, 2, 3, 4]);
@@ -35,7 +35,7 @@ fn from_slice_separate_allocations() {
 
 #[test]
 fn zst() {
-    let matrix = RowMatrixBuf::from_slice(&[(); 4], 2, 2);
+    let matrix = RowMatrix::from_slice(&[(); 4], 2, 2);
     assert_eq!(matrix.num_rows(), 2);
     assert_eq!(matrix.num_cols(), 2);
 
@@ -48,7 +48,7 @@ fn zst() {
 
 #[test]
 fn zeroed() {
-    let matrix = RowMatrixBuf::<f64>::zeroed(3, 2);
+    let matrix = RowMatrix::<f64>::zeroed(3, 2);
 
     assert_eq!(matrix.num_rows(), 2);
     assert_eq!(matrix.num_cols(), 3);
@@ -60,7 +60,7 @@ fn zeroed() {
 #[test]
 fn zero_dimension() {
     for (num_cols, num_rows) in [(3, 0), (0, 3)] {
-        let buf = RowMatrixBuf::<u8>::zeroed(num_cols, num_rows);
+        let buf = RowMatrix::<u8>::zeroed(num_cols, num_rows);
 
         assert!(buf.is_empty());
         assert_eq!(buf.num_rows(), 0);
