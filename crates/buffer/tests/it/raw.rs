@@ -64,6 +64,73 @@ fn reallocate_larger() {
     }
 }
 
+#[test]
+fn duplicate() {
+    unsafe {
+        let len: usize = 10;
+        let mut buf = RawBuffer::<i32>::uninit(len);
+        for i in 0..len {
+            *buf.get_mut(i) = i as i32 * 2;
+        }
+
+        let mut dup = buf.duplicate(len);
+        assert_eq!(
+            &*dup.get_raw_slice(0, len),
+            &[0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+        );
+        assert_ne!(buf.ptr(), dup.ptr());
+
+        buf.deallocate(len);
+        dup.deallocate(len);
+    }
+}
+
+#[test]
+fn duplicate_empty() {
+    unsafe {
+        let buf = RawBuffer::<i32>::zeroed(0);
+        let dup = buf.duplicate(0);
+        assert_eq!(&*dup.get_raw_slice(0, 0), &[]);
+    }
+}
+
+#[test]
+fn duplicate_zst() {
+    unsafe {
+        let len: usize = 5;
+        let buf = RawBuffer::<(), 0>::uninit(len);
+        let dup = buf.duplicate(len);
+        assert_eq!(&*dup.get_raw_slice(0, len), &vec![(); len]);
+    }
+}
+
+fn duplicate_aligned<const A: usize>() {
+    arbtest(|u| unsafe {
+        let vec = u.arbitrary::<Vec<i32>>()?;
+        let mut raw = RawBuffer::<i32, A>::from_slice(&vec);
+        let mut dup = raw.duplicate(vec.len());
+        assert_eq!(&*dup.get_raw_slice(0, vec.len()), &vec);
+        if !vec.is_empty() {
+            raw.deallocate(vec.len());
+            dup.deallocate(vec.len());
+        }
+        Ok(())
+    });
+}
+
+#[test]
+fn test_duplicate_aligned_0() {
+    duplicate_aligned::<0>();
+}
+#[test]
+fn test_duplicate_aligned_8() {
+    duplicate_aligned::<8>();
+}
+#[test]
+fn test_duplicate_aligned_16() {
+    duplicate_aligned::<16>();
+}
+
 fn from_slice<const A: usize>() {
     arbtest(|u| unsafe {
         let vec = u.arbitrary::<Vec<i32>>()?;

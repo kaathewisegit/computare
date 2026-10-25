@@ -166,6 +166,26 @@ impl<T: Copy, const ALIGN: usize> RawBuffer<T, ALIGN> {
         *self = new_buf;
     }
 
+    /// Clone the buffer
+    ///
+    /// # Safety
+    ///
+    /// `capacity` must be the capacity of `self`.
+    pub unsafe fn duplicate(&self, capacity: usize) -> RawBuffer<T, ALIGN> {
+        let out = Self::uninit(capacity);
+
+        // SAFETY: `self` and `out` are of size `capacity` and do not overlap
+        unsafe {
+            copy_nonoverlapping::<T>(
+                self.ptr.as_ptr(),
+                out.ptr.as_ptr(),
+                capacity,
+            )
+        }
+
+        out
+    }
+
     pub fn from_slice(slice: &[T]) -> Self {
         let len = slice.len();
         if len == 0 {
