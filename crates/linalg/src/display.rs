@@ -88,7 +88,7 @@ where
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         f.write_char('[')?;
-        for i in 0..self.0.num_cols() {
+        for i in 0..self.0.num_rows() {
             if i != 0 {
                 f.write_char(',')?;
                 if f.alternate() {
@@ -98,7 +98,7 @@ where
             }
 
             f.write_str("[")?;
-            for j in 0..self.0.num_rows() {
+            for j in 0..self.0.num_cols() {
                 if j != 0 {
                     f.write_str(", ")?;
                 }

@@ -134,13 +134,13 @@ fn display() {
     let m = MatrixRef::from_slice(&m, 3, 2);
     let m = DisplayMatrix(m);
 
-    assert_eq!(format!("{m}"), "[[1, 2, 3], [3, 4, 5]]");
-    assert_eq!(format!("{m:#}"), "[[1, 2, 3],\n [3, 4, 5]]");
+    assert_eq!(format!("{m}"), "[[1, 2], [3, 4], [5, 6]]");
+    assert_eq!(format!("{m:#}"), "[[1, 2],\n [3, 4],\n [5, 6]]");
 
     let m = vec![1, 2];
     let m = MatrixRef::from_slice(&m, 2, 1);
     let m = DisplayMatrix(m);
 
-    assert_eq!(format!("{m}"), "[[1, 2]]");
-    assert_eq!(format!("{m:#}"), "[[1, 2]]");
+    assert_eq!(format!("{m}"), "[[1], [2]]");
+    assert_eq!(format!("{m:#}"), "[[1],\n [2]]");
 }

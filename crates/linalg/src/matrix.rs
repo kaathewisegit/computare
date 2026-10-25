@@ -15,14 +15,14 @@ pub trait Matrix {
     unsafe fn at_u(&self, row: usize, col: usize) -> &Self::Item;
 
     fn at(&self, row: usize, col: usize) -> &Self::Item {
-        assert!(row < self.num_rows() && col < self.num_rows());
+        assert!(row < self.num_rows() && col < self.num_cols());
         unsafe { self.at_u(row, col) }
     }
 
     unsafe fn at_mut_u(&mut self, row: usize, col: usize) -> &mut Self::Item;
 
     fn at_mut(&mut self, row: usize, col: usize) -> &mut Self::Item {
-        assert!(row < self.num_rows() && col < self.num_rows());
+        assert!(row < self.num_rows() && col < self.num_cols());
         unsafe { self.at_mut_u(row, col) }
     }
 
