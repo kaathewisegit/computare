@@ -1,4 +1,4 @@
-#![allow(unused)]
+#![expect(unused)]
 
 use crate::{matrix::Matrix, vector::Vector};
 use computare_core::Float;

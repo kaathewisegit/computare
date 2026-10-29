@@ -1,4 +1,4 @@
-#![allow(clippy::missing_safety_doc)]
+#![expect(clippy::missing_safety_doc)]
 
 mod display;
 mod matrix;
