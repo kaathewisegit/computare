@@ -14,6 +14,8 @@ pub trait Matrix {
 
     unsafe fn at_u(&self, row: usize, col: usize) -> &Self::Item;
 
+    unsafe fn at_ptr_u(&self, row: usize, col: usize) -> *mut Self::Item;
+
     fn at(&self, row: usize, col: usize) -> &Self::Item {
         assert!(row < self.num_rows() && col < self.num_cols());
         unsafe { self.at_u(row, col) }
@@ -79,6 +81,12 @@ impl<T, const N: usize, const M: usize> Matrix for [[T; M]; N] {
 
     unsafe fn at_u(&self, row: usize, col: usize) -> &T {
         unsafe { self.get_unchecked(row).get_unchecked(col) }
+    }
+
+    unsafe fn at_ptr_u(&self, row: usize, col: usize) -> *mut T {
+        unsafe {
+            self.get_unchecked(row).get_unchecked(col) as *const T as *mut T
+        }
     }
 
     unsafe fn at_mut_u(&mut self, row: usize, col: usize) -> &mut T {

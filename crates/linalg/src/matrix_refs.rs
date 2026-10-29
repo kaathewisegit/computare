@@ -57,6 +57,11 @@ impl<T> Matrix for MatrixRef<T> {
         unsafe { &*self.as_ptr().add(idx) }
     }
 
+    unsafe fn at_ptr_u(&self, row: usize, col: usize) -> *mut T {
+        let idx = self.index_of(row, col);
+        unsafe { self.as_ptr().add(idx) as *mut T }
+    }
+
     unsafe fn at_mut_u(&mut self, row: usize, col: usize) -> &mut T {
         let idx = self.index_of(row, col);
         unsafe { &mut *self.as_mut_ptr().add(idx) }
@@ -226,6 +231,11 @@ impl<T> Matrix for ColMatrixRef<T> {
     unsafe fn at_u(&self, row: usize, col: usize) -> &T {
         let idx = self.index_of(row, col);
         unsafe { &*self.as_ptr().add(idx) }
+    }
+
+    unsafe fn at_ptr_u(&self, row: usize, col: usize) -> *mut T {
+        let idx = self.index_of(row, col);
+        unsafe { self.as_ptr().add(idx) as *mut T }
     }
 
     unsafe fn at_mut_u(&mut self, row: usize, col: usize) -> &mut T {
