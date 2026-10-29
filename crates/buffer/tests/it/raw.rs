@@ -183,3 +183,15 @@ fn zst() {
 }
 
 // TODO: simulation testing
+
+#[test]
+fn repeat() {
+    unsafe {
+        let len = 5;
+        let buf = RawBuffer::<i32, 0>::repeat(7, len);
+        assert_eq!(&*buf.get_raw_slice(0, len), &[7; 5]);
+
+        let empty = RawBuffer::<i32, 0>::repeat(7, 0);
+        assert_eq!(&*empty.get_raw_slice(0, 0), &[] as &[i32]);
+    }
+}

@@ -208,6 +208,22 @@ impl<T: Copy, const ALIGN: usize> RawBuffer<T, ALIGN> {
         out
     }
 
+    pub fn repeat(value: T, len: usize) -> Self {
+        if len == 0 {
+            return Self::dangling();
+        }
+
+        let out = Self::uninit(len);
+
+        for index in 0..len {
+            // SAFETY: `index` is less than the buffer capacity
+            unsafe { out.ptr().as_ptr().add(index).write(value) };
+        }
+
+        // SAFETY: all of the uninitialized elements have been overwritten
+        out
+    }
+
     /// # Safety
     ///
     /// - `index * size_of::<T>()` must not overflow `isize`.

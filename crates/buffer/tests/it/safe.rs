@@ -74,6 +74,17 @@ fn zeroed() {
 }
 
 #[test]
+fn repeat() {
+    let buf = Buffer::<i32, 0>::repeat(7, 4);
+    assert_eq!(buf.len(), 4);
+    assert_eq!(buf.as_slice(), &[7; 4]);
+
+    let empty = Buffer::<i32, 0>::repeat(7, 0);
+    assert!(empty.is_empty());
+    assert_eq!(empty.as_slice(), &[] as &[i32]);
+}
+
+#[test]
 fn clone() {
     let buf = Buffer::<i32, 8>::from_slice(&[1, 2, 3]);
     assert_eq!(buf.clone().as_slice(), [1, 2, 3]);

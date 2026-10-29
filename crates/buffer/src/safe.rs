@@ -121,20 +121,27 @@ impl<T: Copy, const ALIGN: usize> Buffer<T, ALIGN> {
         }
     }
 
-    pub fn from_slice(values: &[T]) -> Self {
-        Self {
-            len: values.len(),
-            raw: RawBuffer::from_slice(values),
-        }
-    }
-
     pub fn zeroed(len: usize) -> Self
     where
         T: Zeroable,
     {
         Self {
-            len,
             raw: RawBuffer::zeroed(len),
+            len,
+        }
+    }
+
+    pub fn repeat(value: T, len: usize) -> Self {
+        Self {
+            raw: RawBuffer::repeat(value, len),
+            len,
+        }
+    }
+
+    pub fn from_slice(values: &[T]) -> Self {
+        Self {
+            raw: RawBuffer::from_slice(values),
+            len: values.len(),
         }
     }
 }
