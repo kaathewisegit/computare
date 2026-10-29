@@ -1,3 +1,5 @@
+use bytemuck::Zeroable;
+
 use alloc::alloc::{Layout, alloc, alloc_zeroed, dealloc, handle_alloc_error};
 use core::{
     cmp,
@@ -81,7 +83,10 @@ impl<T: Copy, const ALIGN: usize> RawBuffer<T, ALIGN> {
     }
 
     /// Allocates a new buffer of size `capacity` with all bits set to 0
-    pub fn zeroed(capacity: usize) -> Self {
+    pub fn zeroed(capacity: usize) -> Self
+    where
+        T: Zeroable,
+    {
         #[expect(unused)]
         {
             Self::_CHECK_ALIGN_POW2;
@@ -147,7 +152,9 @@ impl<T: Copy, const ALIGN: usize> RawBuffer<T, ALIGN> {
         &mut self,
         old_capacity: usize,
         new_capacity: usize,
-    ) {
+    ) where
+        T: Zeroable,
+    {
         // SAFETY: `new_capacity` is not zero per the function invariant
         let new_buf = Self::zeroed(new_capacity);
         let count = cmp::min(old_capacity, new_capacity);

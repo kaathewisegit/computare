@@ -1,3 +1,5 @@
+use bytemuck::Zeroable;
+
 use core::{
     fmt,
     ops::{Deref, DerefMut, Index, IndexMut},
@@ -99,6 +101,16 @@ impl<T: Copy, const ALIGN: usize> Buffer<T, ALIGN> {
         Self {
             len: values.len(),
             raw: RawBuffer::from_slice(values),
+        }
+    }
+
+    pub fn zeroed(len: usize) -> Self
+    where
+        T: Zeroable,
+    {
+        Self {
+            len,
+            raw: RawBuffer::zeroed(len),
         }
     }
 }
