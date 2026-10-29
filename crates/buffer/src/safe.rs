@@ -2,7 +2,9 @@ use bytemuck::Zeroable;
 
 use core::{
     fmt,
-    ops::{Deref, DerefMut, Index, IndexMut},
+    ops::{
+        Bound, Deref, DerefMut, Index, IndexMut, Range, RangeBounds, RangeTo,
+    },
 };
 
 use crate::RawBuffer;
@@ -33,6 +35,28 @@ impl<T: Copy, const ALIGN: usize> Buffer<T, ALIGN> {
             "index {index} is out of bounds, this `Buffer` has length {}",
             self.len
         );
+    }
+
+    fn to_range(&self, range: impl RangeBounds<usize>) -> (usize, usize) {
+        let start = match range.start_bound() {
+            Bound::Included(&start) => start,
+            Bound::Unbounded => 0,
+            _ => unreachable!(),
+        };
+        let end = match range.end_bound() {
+            Bound::Included(&end) => end.saturating_add(1),
+            Bound::Excluded(&end) => end,
+            Bound::Unbounded => self.len,
+        };
+
+        assert!(
+            start <= end && end <= self.len,
+            "range start {start} must be <= range end {end}, and end must be \
+             <= this `Buffer`'s length {}",
+            self.len
+        );
+
+        (start, end - start)
     }
 
     /// # Safety
@@ -189,5 +213,47 @@ impl<T: Copy, const ALIGN: usize> IndexMut<usize> for Buffer<T, ALIGN> {
 
         // SAFETY: the index was checked above.
         unsafe { self.get_unchecked_mut(index) }
+    }
+}
+
+impl<T: Copy, const ALIGN: usize> Index<Range<usize>> for Buffer<T, ALIGN> {
+    type Output = [T];
+
+    fn index(&self, index: Range<usize>) -> &[T] {
+        let (start, len) = self.to_range(index);
+
+        // SAFETY: the range was checked above.
+        unsafe { &*self.raw.get_raw_slice(start, len) }
+    }
+}
+
+impl<T: Copy, const ALIGN: usize> Index<RangeTo<usize>> for Buffer<T, ALIGN> {
+    type Output = [T];
+
+    fn index(&self, index: RangeTo<usize>) -> &[T] {
+        let (start, len) = self.to_range(index);
+
+        // SAFETY: the range was checked above.
+        unsafe { &*self.raw.get_raw_slice(start, len) }
+    }
+}
+
+impl<T: Copy, const ALIGN: usize> IndexMut<Range<usize>> for Buffer<T, ALIGN> {
+    fn index_mut(&mut self, index: Range<usize>) -> &mut [T] {
+        let (start, len) = self.to_range(index);
+
+        // SAFETY: the range was checked above.
+        unsafe { &mut *self.raw.get_raw_slice_mut(start, len) }
+    }
+}
+
+impl<T: Copy, const ALIGN: usize> IndexMut<RangeTo<usize>>
+    for Buffer<T, ALIGN>
+{
+    fn index_mut(&mut self, index: RangeTo<usize>) -> &mut [T] {
+        let (start, len) = self.to_range(index);
+
+        // SAFETY: the range was checked above.
+        unsafe { &mut *self.raw.get_raw_slice_mut(start, len) }
     }
 }

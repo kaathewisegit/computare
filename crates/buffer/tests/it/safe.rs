@@ -17,6 +17,52 @@ fn edit() {
 }
 
 #[test]
+fn index_range() {
+    let buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3, 4]);
+    assert_eq!(&buf[1..3], &[2, 3]);
+    assert_eq!(&buf[0..4], &[1, 2, 3, 4]);
+    assert_eq!(&buf[2..2], &[] as &[i32]);
+
+    let mut buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3, 4]);
+    buf[1..3].copy_from_slice(&[5, 6]);
+    assert_eq!(buf.as_slice(), &[1, 5, 6, 4]);
+}
+
+#[test]
+#[should_panic]
+fn index_range_out_of_bounds() {
+    let buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3]);
+    let _ = &buf[1..4];
+}
+
+#[test]
+#[should_panic]
+#[expect(clippy::reversed_empty_ranges)]
+fn index_range_reversed() {
+    let buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3]);
+    let _ = &buf[2..1];
+}
+
+#[test]
+fn index_range_to() {
+    let buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3, 4]);
+    assert_eq!(&buf[..2], &[1, 2]);
+    assert_eq!(&buf[..4], &[1, 2, 3, 4]);
+    assert_eq!(&buf[..0], &[] as &[i32]);
+
+    let mut buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3, 4]);
+    buf[..2].copy_from_slice(&[7, 8]);
+    assert_eq!(buf.as_slice(), &[7, 8, 3, 4]);
+}
+
+#[test]
+#[should_panic]
+fn index_range_to_out_of_bounds() {
+    let buf = Buffer::<i32, 0>::from_slice(&[1, 2, 3]);
+    let _ = &buf[..4];
+}
+
+#[test]
 fn zeroed() {
     let buf = Buffer::<i32, 0>::zeroed(4);
     assert_eq!(buf.len(), 4);
